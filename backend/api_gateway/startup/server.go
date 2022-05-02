@@ -1,0 +1,47 @@
+package startup
+
+import (
+	"fmt"
+	"log"
+	"net/http"
+
+	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
+	cfg "github.com/velibor7/XML/api_gateway/startup/config"
+)
+
+type Server struct {
+	config *cfg.Config
+	mux    *runtime.ServeMux
+}
+
+func NewServer(config *cfg.Config) *Server {
+	server := &Server{
+		config: config,
+		mux:    runtime.NewServeMux(),
+	}
+	server.initHandlers()
+	server.initCustomHandlers()
+	return server
+}
+
+func (server *Server) initHandlers() {
+	//opts := []grpc.DialOption{grpc.WithTransportCredentials(insecure.NewCredentials())}
+
+	//authenticationEndpoint := fmt.Sprintf("%s:%s", server.config.AuthenticationHost, server.config.AuthenticationPort)
+	//inventoryGw.RegisterAuthenticationServiceHandlerFromEndpoint(context.TODO(), server.mux, authenticationEndpoint, opts)
+	// if err != nil {
+	// 	panic(err)
+	// }err =
+}
+
+func (server *Server) initCustomHandlers() {
+	// catalogueEmdpoint := fmt.Sprintf("%s:%s", server.config.CatalogueHost, server.config.CataloguePort)
+	// orderingEmdpoint := fmt.Sprintf("%s:%s", server.config.OrderingHost, server.config.OrderingPort)
+	// shippingEmdpoint := fmt.Sprintf("%s:%s", server.config.ShippingHost, server.config.ShippingPort)
+	// orderingHandler := api.NewOrderingHandler(orderingEmdpoint, catalogueEmdpoint, shippingEmdpoint)
+	// orderingHandler.Init(server.mux)
+}
+
+func (server *Server) Start() {
+	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", server.config.Port), server.mux))
+}
