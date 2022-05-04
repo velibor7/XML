@@ -1,0 +1,64 @@
+package api
+
+import (
+	"context"
+
+	"github.com/velibor7/XML/auth_service/application"
+	pb "github.com/velibor7/XML/common/proto/auth_service"
+	"go.mongodb.org/mongo-driver/bson/primitive"
+)
+
+type UserHandler struct {
+	pb.UnimplementedAuthenticationServiceServer
+	service *application.UserService
+}
+
+func NewUserHandler(service *application.UserService) *UserHandler {
+	return &UserHandler{
+		service: service,
+	}
+}
+
+func (handler *UserHandler) Get(ctx context.Context, request *pb.GetRequest) (*pb.GetResponse, error) {
+	username := request.Username
+	objectUsername, err := primitive.ObjectIDFromHex(username)
+	if err != nil {
+		return nil, err
+	}
+	product, err := handler.service.Get(objectUsername.String())
+	if err != nil {
+		return nil, err
+	}
+	productPb := mapUserToPb(product)
+	response := &pb.GetResponse{
+		User: productPb,
+	}
+	return response, nil
+}
+
+func (handler *UserHandler) GetAll(ctx context.Context, request *pb.GetAllRequest) (*pb.GetAllResponse, error) {
+	Users, err := handler.service.GetAll()
+	if err != nil {
+		return nil, err
+	}
+	response := &pb.GetAllResponse{
+		Users: []*pb.User{},
+	}
+	for _, User := range Users {
+		current := mapUserToPb(User)
+		response.Users = append(response.Users, current)
+	}
+	return response, nil
+}
+
+func (handler UserHandler) Register(ctx context.Context, request *pb.GetRequest) (*pb.GetResponse, error) {
+	user := mapPbToUser(request.User)
+	err := handler.service.Register(user)
+	if err != nil {
+		return nil, err
+	}
+	return &pb.RegisterResponse{
+		User: mapUserToPb(user),
+	}, nil
+
+}
