@@ -15,6 +15,19 @@ services:
     networks:
       - network
 
+  auth_service:
+    image: auth_service
+    container_name: auth_service
+    build:
+      context: .
+      dockerfile: ./auth_service/Dockerfile
+    restart: on-failure
+    ports:
+      - 8000:8000
+    environment:
+      GATEWAY_PORT: 8000
+    networks:
+      - network
   nats:
     image: nats
     container_name: nats
