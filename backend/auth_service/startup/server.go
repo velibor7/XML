@@ -13,6 +13,7 @@ import (
 	security "github.com/velibor7/XML/common/proto/auth_service"
 	"go.mongodb.org/mongo-driver/mongo"
 	"google.golang.org/grpc"
+	//
 )
 
 type Server struct {
@@ -62,7 +63,7 @@ func (server *Server) initUserInterface(client *mongo.Client) domain.UserInterfa
 	return inf
 }
 
-func (server *Server) initSecurityService(inf domain.UserInterface) *application.UserService {
+func (server *Server) initAuthenticationService(inf domain.UserInterface) *application.UserService {
 	return application.NewUsersService(inf)
 }
 
