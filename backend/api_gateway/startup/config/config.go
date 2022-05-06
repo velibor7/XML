@@ -1,6 +1,11 @@
 package config
 
-import "os"
+import (
+	"log"
+	"os"
+
+	"github.com/joho/godotenv"
+)
 
 type Config struct {
 	Port               string
@@ -14,4 +19,13 @@ func NewConfig() *Config {
 		AuthenticationHost: os.Getenv("AUTHENTICATION_SERVICE_HOST"),
 		AuthenticationPort: os.Getenv("AUTHENTICATION_SERVICE_PORT"),
 	}
+}
+
+func SetEnvironment() error {
+	if os.Getenv("OS_ENV") != "docker" {
+		if err := godotenv.Load("../.env.dev"); err != nil {
+			log.Fatal("Error loading .env file")
+		}
+	}
+	return nil
 }

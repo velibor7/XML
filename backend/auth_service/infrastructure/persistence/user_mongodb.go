@@ -74,6 +74,7 @@ func (store *UserMongoDB) filterOne(filter interface{}) (User *domain.User, err 
 	return
 }
 
+//decode mozda i ne treba
 func decode(cursor *mongo.Cursor) (users []*domain.User, err error) {
 	for cursor.Next(context.TODO()) {
 		var User domain.User
