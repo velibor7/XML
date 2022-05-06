@@ -1,0 +1,92 @@
+syntax = "proto3";
+
+package post_service;
+
+option go_package = "github.com/velibor7/XML/common/proto/post";
+
+import "google/api/annotations.proto";
+import "google/protobuf/timestamp.proto";
+
+service PostService{
+  rpc Get(GetRequest) returns(GetResponse) {
+    option (google.api.http) = {
+      get: "/posts/{id}"
+    };
+  }
+  rpc GetAll(GetAllRequest) returns(GetAllResponse) {
+    option (google.api.http) = {
+      get: "/posts"
+    };
+  }
+  rpc Insert(InsertRequest) returns(InsertResponse) {
+    option (google.api.http) = {
+      post: "/posts"
+      body: "posts"
+    };
+  }
+  rpc Update(UpdateRequest) returns(UpdateResponse) {
+    option (google.api.http) = {
+      put: "/posts"
+      body: "posts"
+    };
+  }
+}
+
+message GetRequest {
+  string id = 1;
+}
+
+message GetResponse {
+  Post post = 1;
+}
+
+message GetAllRequest {
+}
+
+message GetAllResponse {
+  repeated Post posts = 1;
+}
+
+message InsertRequest {
+  Post post = 1;
+}
+
+message InsertResponse {
+  string success = 1;
+}
+
+message UpdateRequest {
+  Post post = 1;
+}
+
+message UpdateResponse {
+  string success = 1;
+}
+
+message Post {
+  string id = 1;
+  string text = 2;
+  repeated string images = 3;
+  repeated string links = 4;
+  google.protobuf.Timestamp created = 5;
+  repeated Like likes = 6;
+  repeated Dislike dislikes = 7;
+  repeated Comment comments = 8;
+  string user_id = 9;
+}
+
+message Comment {
+  string id = 1;
+  string text = 2;
+  string user_id = 3;
+}
+
+message Like {
+  string id = 1;
+  string user_id = 2;
+}
+
+message Dislike {
+  string id = 1;
+  string user_id = 2;
+}
