@@ -22,13 +22,13 @@ service PostService{
   rpc Create(CreateRequest) returns(CreateResponse) {
     option (google.api.http) = {
       post: "/posts"
-      body: "posts"
+      body: "post"
     };
   }
   rpc Update(UpdateRequest) returns(UpdateResponse) {
     option (google.api.http) = {
       put: "/posts"
-      body: "posts"
+      body: "post"
     };
   }
 }
