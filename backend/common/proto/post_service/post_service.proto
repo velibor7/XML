@@ -4,6 +4,7 @@ package post_service;
 
 option go_package = "github.com/velibor7/XML/common/proto/post";
 
+
 import "google/api/annotations.proto";
 import "google/protobuf/timestamp.proto";
 
