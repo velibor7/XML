@@ -68,20 +68,20 @@ func (handler *PostHandler) GetAllByUser(ctx context.Context, request *pb.GetReq
 	return response, nil
 }
 
-func (handler *PostHandler) Create(ctx context.Context, request *pb.InsertRequest) (*pb.InsertResponse, error) {
+func (handler *PostHandler) Create(ctx context.Context, request *pb.CreateRequest) (*pb.CreateResponse, error) {
 
-	if request.Post.UserId == "" { // mora postojati user koji je kreirao post
-		return nil, error(nil) // vrati status 500
+	if request.Post.UserId == "" {
+		return nil, error(nil)
 	}
 
 	post := mapCreatePost(request.Post)
 	userId := ctx.Value(interceptor.LoggedInUserKey{}).(string)
 	post.UserId = userId
-	success, err := handler.service.Insert(post)
+	success, err := handler.service.Create(post)
 	if err != nil {
 		return nil, err
 	}
-	response := &pb.InsertResponse{
+	response := &pb.CreateResponse{
 		Success: success,
 	}
 	return response, err
