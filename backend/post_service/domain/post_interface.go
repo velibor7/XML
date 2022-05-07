@@ -7,6 +7,6 @@ type PostInterface interface {
 	GetAll() ([]*Post, error)
 	Create(post *Post) (string, error)
 	Update(post *Post) (string, error)
-	Delete(id primitive.ObjectID) error
+	Delete(id primitive.ObjectID)
 	DeleteAll()
 }

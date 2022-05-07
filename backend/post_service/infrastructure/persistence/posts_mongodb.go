@@ -72,8 +72,8 @@ func (store *PostMongoDB) Update(post *domain.Post) (string, error) {
 	return "success", nil
 }
 
-func (store *PostMongoDB) Delete(post_id primitive.ObjectID) {
-	store.posts.DeleteOne(context.TODO(), bson.M{"_id": post_id}, nil)
+func (store *PostMongoDB) Delete(id primitive.ObjectID) {
+	store.posts.DeleteOne(context.TODO(), bson.M{"_id": id}, nil)
 }
 
 func (store *PostMongoDB) DeleteAll() {
