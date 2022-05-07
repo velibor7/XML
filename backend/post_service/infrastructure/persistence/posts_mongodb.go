@@ -38,7 +38,7 @@ func (store *PostMongoDB) GetAll() ([]*domain.Post, error) {
 	return store.filter(filter)
 }
 
-func (store *PostMongoDB) Insert(post *domain.Post) (string, error) {
+func (store *PostMongoDB) Create(post *domain.Post) (string, error) {
 	post.Id = primitive.NewObjectID()
 	result, err := store.posts.InsertOne(context.TODO(), post)
 	if err != nil {

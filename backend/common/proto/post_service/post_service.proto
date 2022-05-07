@@ -19,7 +19,7 @@ service PostService{
       get: "/posts"
     };
   }
-  rpc Insert(InsertRequest) returns(InsertResponse) {
+  rpc Create(CreateRequest) returns(CreateResponse) {
     option (google.api.http) = {
       post: "/posts"
       body: "posts"
@@ -48,11 +48,11 @@ message GetAllResponse {
   repeated Post posts = 1;
 }
 
-message InsertRequest {
+message CreateRequest {
   Post post = 1;
 }
 
-message InsertResponse {
+message CreateResponse {
   string success = 1;
 }
 
