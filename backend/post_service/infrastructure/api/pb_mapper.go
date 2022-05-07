@@ -45,7 +45,7 @@ func mapPost(post *domain.Post) *pb.Post {
 	return postPb
 }
 
-func mapInsertPost(post *pb.Post) *domain.Post {
+func mapCreatePost(post *pb.Post) *domain.Post {
 	id, _ := primitive.ObjectIDFromHex(post.Id)
 
 	postPb := &domain.Post{

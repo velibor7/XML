@@ -53,10 +53,7 @@ func (handler *PostHandler) GetAll(ctx context.Context, request *pb.GetAllReques
 
 func (handler *PostHandler) GetAllByUser(ctx context.Context, request *pb.GetRequest) (*pb.GetAllResponse, error) {
 	id := request.Id
-	//objectId, err := primitive.ObjectIDFromHex(id)
-	//if err != nil {
-	//	return nil, err
-	//}
+
 	posts, err := handler.service.GetAllByUser(id)
 	if err != nil {
 		return nil, err
@@ -71,18 +68,13 @@ func (handler *PostHandler) GetAllByUser(ctx context.Context, request *pb.GetReq
 	return response, nil
 }
 
-func (handler *PostHandler) Insert(ctx context.Context, request *pb.InsertRequest) (*pb.InsertResponse, error) {
-	//if request.Post.UserId == "" { // mora postojati user koji je kreirao post
-	//	return &pb.InsertResponse{
-	//		Success: "error",
-	//	}, error(nil)
-	//}		// vrati status 200 ok, ali success: error
+func (handler *PostHandler) Create(ctx context.Context, request *pb.InsertRequest) (*pb.InsertResponse, error) {
 
 	if request.Post.UserId == "" { // mora postojati user koji je kreirao post
 		return nil, error(nil) // vrati status 500
 	}
 
-	post := mapInsertPost(request.Post)
+	post := mapCreatePost(request.Post)
 	userId := ctx.Value(interceptor.LoggedInUserKey{}).(string)
 	post.UserId = userId
 	success, err := handler.service.Insert(post)
