@@ -21,7 +21,7 @@ type PostMongoDB struct {
 	posts *mongo.Collection
 }
 
-func NewPostMongoDBStore(client *mongo.Client) domain.PostInterface {
+func NewPostMongoDB(client *mongo.Client) domain.PostInterface {
 	posts := client.Database(DATABASE).Collection(COLLECTION)
 	return &PostMongoDB{
 		posts: posts,
