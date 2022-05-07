@@ -9,9 +9,9 @@ type PostService struct {
 	posts domain.PostInterface
 }
 
-func NewPostService(service domain.PostInterface) *PostService {
+func NewPostService(post_inf domain.PostInterface) *PostService {
 	return &PostService{
-		posts: posts,
+		posts: post_inf,
 	}
 }
 
@@ -31,9 +31,9 @@ func (service *PostService) Update(post *domain.Post) (string, error) {
 	return service.posts.Update(post)
 }
 
-func (service *PostService) Delete(post_id primitive.ObjectID) error {
-	return service.posts.Delete(post_id)
-}
+// func (service *PostService) Delete(id primitive.ObjectID) error {
+// 	return service.posts.Delete(id)
+// }
 
 func (service *PostService) DeleteAll() {
 	service.posts.DeleteAll()
