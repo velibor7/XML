@@ -5,7 +5,6 @@ import (
 
 	"github.com/velibor7/XML/auth_service/application"
 	pb "github.com/velibor7/XML/common/proto/auth_service"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type UserHandler struct {
@@ -21,11 +20,9 @@ func NewUserHandler(service *application.UserService) *UserHandler {
 
 func (handler *UserHandler) Get(ctx context.Context, request *pb.GetRequest) (*pb.GetResponse, error) {
 	username := request.Username
-	objectUsername, err := primitive.ObjectIDFromHex(username)
-	if err != nil {
-		return nil, err
-	}
-	product, err := handler.service.Get(objectUsername.String())
+	objectUsername := username
+
+	product, err := handler.service.Get(objectUsername)
 	if err != nil {
 		return nil, err
 	}

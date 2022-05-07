@@ -1,0 +1,99 @@
+syntax = "proto3";
+
+option go_package = "github.com/velibor7/XML/common/profile"
+
+package profile;
+
+import "google/api/annotations.proto";
+import "google/protobuf/timestamp.proto";
+
+service ProfileService{
+    rpc Get(GetRequest) returns (GetResponse){
+        option (google.api.http) = {
+            get: "/profiles/{username}"
+        };
+    }
+    rpc GetAll(GetAllRequest) returns (GetAllResponse){
+        option (google.api.http) = {
+            get:"/profiles"
+        };
+    }
+    rpc Create (CreateRequest) returns (CreateResponse){
+        option (google.api.http) = {
+            post: "/profiles"
+            body:"profile"
+        };
+    }
+    rpc Update (UpdateRequest) returns (UpdateResponse){
+        option (google.api.http) = {
+            put: "/profiles/{username}"
+            body: "profile"
+        };
+    }
+}
+
+message GetRequest {
+    string username = 1;
+}
+
+message GetResponse {
+    Profile profile = 1;
+}
+
+message GetAllRequest {
+}
+
+message GetAllResponse {
+    repeated Profile profile = 1;
+}
+
+message CreateRequest {
+    Profile profile = 1;
+}
+
+message CreateResponse {
+    Profile profile = 1;
+}
+
+message UpdateRequest {
+    string username = 1;
+    Profile profile = 2;
+}
+
+message UpdateResponse {
+    Profile profile = 1;
+}
+
+message Profile {
+    string id = 1;
+    string username = 2;
+    string fullname = 3;
+    google.protobuf.Timestamp dateOfBirth = 4;
+    string phoneNumber = 5;
+    string email = 6;
+    string gender = 7;
+    string biography = 8;
+    repeated Education education = 9;
+    repeated WorkExperience workExperience = 10;
+    repeated string skills = 11;
+    repeated string interests = 12;
+}
+
+message Education{
+    string school = 1;
+    string degree = 2;
+    string fieldOfStudy = 3;
+    string description = 4;
+}
+
+message WorkExperience{
+    string title = 1;
+    string company = 2;
+    enum EmploymentType {
+      FULL_TIME = 0;
+      PART_TIME = 1;
+      FREELANCE = 2;
+      INTERNSHIP = 3;
+    };
+    EmploymentType employmentType = 3;
+}

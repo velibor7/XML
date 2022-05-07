@@ -10,9 +10,10 @@ import (
 	"github.com/velibor7/XML/auth_service/infrastructure/api"
 	"github.com/velibor7/XML/auth_service/infrastructure/persistence"
 	"github.com/velibor7/XML/auth_service/startup/config"
-	security "github.com/velibor7/XML/common/proto/auth_service"
+	authentication "github.com/velibor7/XML/common/proto/auth_service"
 	"go.mongodb.org/mongo-driver/mongo"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/reflection"
 	//
 )
 
@@ -32,9 +33,13 @@ const (
 
 func (server *Server) Start() {
 	mongoClient := server.initMongoClient()
+
 	userInterface := server.initUserInterface(mongoClient)
+
 	authenticationService := server.initAuthenticationService(userInterface)
+
 	userHandler := server.initUserHandler(authenticationService)
+
 	server.startGrpcServer(userHandler)
 }
 
@@ -77,7 +82,8 @@ func (server *Server) startGrpcServer(userHandler *api.UserHandler) {
 		log.Fatalf("failed to listen: %v", err)
 	}
 	grpcServer := grpc.NewServer()
-	security.RegisterAuthenticationServiceServer(grpcServer, userHandler)
+	reflection.Register(grpcServer)
+	authentication.RegisterAuthenticationServiceServer(grpcServer, userHandler)
 	if err := grpcServer.Serve(listener); err != nil {
 		log.Fatalf("failed to serve: %s", err)
 	}

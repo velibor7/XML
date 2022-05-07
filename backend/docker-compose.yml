@@ -9,9 +9,13 @@ services:
       dockerfile: ./api_gateway/Dockerfile
     restart: on-failure
     ports:
-      - 8000:8000
+      - ${GATEWAY_PORT}:${GATEWAY_PORT}
     environment:
-      GATEWAY_PORT: 8000
+      GATEWAY_PORT: ${GATEWAY_PORT}
+      AUTHENTICATION_SERVICE_HOST: ${AUTHENTICATION_SERVICE_HOST}
+      AUTHENTICATION_SERVICE_PORT: ${AUTHENTICATION_SERVICE_PORT}
+      PROFILE_SERVICE_PORT: ${PROFILE_SERVICE_PORT}
+      PROFILE_SERVICE_HOST: ${PROFILE_SERVICE_HOST}
     networks:
       - network
 
@@ -22,41 +26,50 @@ services:
       context: .
       dockerfile: ./auth_service/Dockerfile
     restart: on-failure
-    ports:
-      - 8000:8000
     environment:
-      GATEWAY_PORT: 8000
-    networks:
-      - network
-  nats:
-    image: nats
-    container_name: nats
-    restart: on-failure
+      AUTHENTICATION_DB_PORT: ${AUTHENTICATION_DB_PORT}
+      AUTHENTICATION_DB_HOST: ${AUTHENTICATION_DB_HOST}
+      AUTHENTICATION_SERVICE_PORT: ${AUTHENTICATION_SERVICE_PORT}
+      NATS_PORT: ${NATS_PORT}
+      NATS_HOST: ${NATS_HOST}
+      NATS_USER: ${NATS_USER}
+      NATS_PASS: ${NATS_PASS}
+    depends_on:
+      - auth_db
     networks:
       - network
 
-  post_service:
-    image: post_service
-    container_name: post_service
+  profile_service:
+    image: profile_service
+    container_name: profile_service
     build:
       context: .
-      dockerfile: ./post_service/Dockerfile
+      dockerfile: ./profile_service/Dockerfile
     restart: on-failure
     environment:
-      POST_DB_HOST: ${POST_DB_HOST}
-      POST_DB_PORT: ${POST_DB_PORT}
-      POST_SERVICE_PORT: ${POST_SERVICE_PORT}
+      PROFILE_DB_PORT: ${PROFILE_DB_PORT}
+      PROFILE_DB_HOST: ${PROFILE_DB_HOST}
+      PROFILE_SERVICE_PORT: ${PROFILE_SERVICE_PORT}
+      NATS_HOST: ${NATS_HOST}
+      NATS_PORT: ${NATS_PORT}
+      NATS_USER: ${NATS_USER}
+      NATS_PASS: ${NATS_PASS}
     depends_on:
-      - post_db
+      - profile_db
     networks:
       - network
 
-  post_db:
+  auth_db:
     image: mongo
-    container_name: post_db
+    container_name: auth_db
     restart: on-failure
-    ports:
-      - 27019:27017
+    networks:
+      - network
+
+  profile_db:
+    image: mongo
+    container_name: profile_db
+    restart: on-failure
     networks:
       - network
 
