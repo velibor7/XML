@@ -14,7 +14,7 @@ type Config struct {
 
 func NewConfig() *Config {
 	return &Config{
-		Port:                 os.Getenv("AUTHENTICATION_PORT"),
+		Port:                 os.Getenv("AUTHENTICATION_SERVICE_PORT"),
 		AuthenticationDBHost: os.Getenv("AUTHENTICATION_DB_HOST"),
 		AuthenticationDBPort: os.Getenv("AUTHENTICATION_DB_PORT"),
 		//		NatsHost:             os.Getenv("NATS_HOST"),
