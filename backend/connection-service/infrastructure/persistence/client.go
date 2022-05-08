@@ -2,6 +2,7 @@ package persistence
 
 import (
 	"fmt"
+
 	"github.com/neo4j/neo4j-go-driver/v4/neo4j"
 )
 
@@ -12,5 +13,5 @@ func GetClient(uri, username, password string) (*neo4j.Driver, error) {
 		fmt.Println(err)
 		return nil, err
 	}
-	return &driver, nil
+	return &driver, err
 }

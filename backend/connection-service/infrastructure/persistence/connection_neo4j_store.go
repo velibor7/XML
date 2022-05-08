@@ -28,7 +28,7 @@ func (store *ConnectionDBStore) Register(userID string, isPublic bool) (*pb.Acti
 
 		actionResult := &pb.ActionResult{}
 
-		if checkIfUserExist(userID, transaction) {
+		if UserExists(userID, transaction) {
 			actionResult.Status = 406
 			actionResult.Msg = "error user with ID:" + userID + " already exist"
 			return actionResult, nil
@@ -82,13 +82,6 @@ func (store *ConnectionDBStore) GetConnections(userID string) ([]domain.UserConn
 }
 
 func (store *ConnectionDBStore) AddConnection(userIDa, userIDb string) (*pb.ActionResult, error) {
-	/*
-				Dodavanje novog prijatelja je moguce ako:
-		         - userA i userB postoji
-				 - userA nije prijatelj sa userB
-				 - userA nije blokirao userB
-			   	 - userA nije blokiran od strane userB
-	*/
 
 	if userIDa == userIDb {
 		return &pb.ActionResult{Msg: "userIDa is same as userIDb", Status: 400}, nil
@@ -101,8 +94,7 @@ func (store *ConnectionDBStore) AddConnection(userIDa, userIDb string) (*pb.Acti
 
 		actionResult := &pb.ActionResult{Msg: "msg", Status: 0}
 
-		//ako ne postoji userA, kreira ga
-		if !checkIfUserExist(userIDa, transaction) {
+		if !UserExists(userIDa, transaction) {
 			_, err := transaction.Run(
 				"CREATE (new_user:USER{userID:$userID, isPublic:$isPublic})",
 				map[string]interface{}{"userID": userIDa, "isPublic": true})
@@ -113,8 +105,8 @@ func (store *ConnectionDBStore) AddConnection(userIDa, userIDb string) (*pb.Acti
 				return actionResult, err
 			}
 		}
-		//ako ne postoji userB, kreira ga
-		if !checkIfUserExist(userIDb, transaction) {
+
+		if !UserExists(userIDb, transaction) {
 			_, err := transaction.Run(
 				"CREATE (new_user:USER{userID:$userID, isPublic:$isPublic})",
 				map[string]interface{}{"userID": userIDb, "isPublic": false})
@@ -126,20 +118,13 @@ func (store *ConnectionDBStore) AddConnection(userIDa, userIDb string) (*pb.Acti
 			}
 		}
 
-		if checkIfUserExist(userIDa, transaction) && checkIfUserExist(userIDb, transaction) {
-			if checkIfFriendExist(userIDa, userIDb, transaction) || checkIfFriendExist(userIDb, userIDa, transaction) {
+		if UserExists(userIDa, transaction) && UserExists(userIDb, transaction) {
+			if FriendExists(userIDa, userIDb, transaction) || FriendExists(userIDb, userIDa, transaction) {
 				actionResult.Msg = "users are already friends"
 				actionResult.Status = 400 //bad request
 				return actionResult, nil
 			} else {
-				//if checkIfBlockExist(userIDa, userIDb, transaction) || checkIfBlockExist(userIDb, userIDa, transaction) {
-				//	actionResult.Msg = "block already exist"
-				//	actionResult.Status = 400 //bad request
-				//	return actionResult, nil
-				//} else {
-
-				//ako je userB public, odmah ce kreirati konekciju
-				if checkIfPublicUser(userIDb, transaction) {
+				if IsPublicUser(userIDb, transaction) {
 					dateNow := time.Now().Local().Unix()
 
 					result, err := transaction.Run(
@@ -156,7 +141,6 @@ func (store *ConnectionDBStore) AddConnection(userIDa, userIDb string) (*pb.Acti
 						return actionResult, err
 					}
 				} else {
-					//ako je user private kreirace konekciju koja nije odobrena
 					dateNow := time.Now().Local().Unix()
 					result, err := transaction.Run(
 						"MATCH (u1:USER) WHERE u1.userID=$uIDa "+
@@ -172,7 +156,6 @@ func (store *ConnectionDBStore) AddConnection(userIDa, userIDb string) (*pb.Acti
 					}
 				}
 			}
-			//}
 		} else {
 			actionResult.Msg = "user does not exist"
 			actionResult.Status = 400 //bad request
@@ -208,11 +191,7 @@ func (store *ConnectionDBStore) ApproveConnection(userIDa, userIDb string) (*pb.
 
 		actionResult := &pb.ActionResult{Msg: "msg", Status: 0}
 
-		if checkIfUserExist(userIDa, transaction) && checkIfUserExist(userIDb, transaction) {
-			//provjeri da li su vec prijatelji
-			//provjeri da li postoji uopste zahtjev/konekcija
-
-			//prebacuje status zahtjeva na true -> approved
+		if UserExists(userIDa, transaction) && UserExists(userIDb, transaction) {
 			_, err := transaction.Run(
 				"MATCH (n1{userID:$u1ID})-[r:FRIEND]->(n2{userID:$u2ID}) set r.isApproved = $isApproved RETURN r",
 				map[string]interface{}{"u1ID": userIDa, "u2ID": userIDb, "isApproved": true})
@@ -222,9 +201,6 @@ func (store *ConnectionDBStore) ApproveConnection(userIDa, userIDb string) (*pb.
 				actionResult.Status = 501
 				return actionResult, err
 			}
-
-			//kreira konekciju od user2 do user1
-			//TODO:azurirati vrijeme konekcije u1->u2 kad se odobri
 			dateNow := time.Now().Local().Unix()
 			_, err2 := transaction.Run(
 				"MATCH (u1:USER) WHERE u1.userID=$u1ID MATCH (u2:USER) WHERE u2.userID=$u2ID CREATE (u2)-[f:FRIEND{date: $dateNow, isApproved:$isApproved}]->(u1) RETURN u1, u2",
@@ -270,10 +246,8 @@ func (store *ConnectionDBStore) RejectConnection(userIDa, userIDb string) (*pb.A
 
 		actionResult := &pb.ActionResult{Msg: "msg", Status: 0}
 
-		if checkIfUserExist(userIDa, transaction) && checkIfUserExist(userIDb, transaction) {
-			//TODO:provjeri da li postoji uopste zahtjev/konekcija
+		if UserExists(userIDa, transaction) && UserExists(userIDb, transaction) {
 
-			//brise vezu/zahjev
 			_, err := transaction.Run(
 				"MATCH (u1:USER{userID:$u1ID})<-[rel:FRIEND]-(u2:USER{userID:$u2ID}) DELETE rel",
 				map[string]interface{}{"u1ID": userIDa, "u2ID": userIDb})
@@ -284,12 +258,10 @@ func (store *ConnectionDBStore) RejectConnection(userIDa, userIDb string) (*pb.A
 				return actionResult, err
 			}
 
-			//prebrojava broj preostalih veza kod cvorova, ako je 0, obrisacemo cvorove
 			result, _ := transaction.Run(
 				"MATCH (n:USER{userID:$u1ID})-[rel:FRIEND]-() RETURN COUNT (rel) as broj",
 				map[string]interface{}{"u1ID": userIDa})
 
-			//broj veza za userA
 			for result.Next() {
 				record := result.Record()
 				numRelA, _ := record.Get("broj")
@@ -311,7 +283,6 @@ func (store *ConnectionDBStore) RejectConnection(userIDa, userIDb string) (*pb.A
 				"MATCH (n:USER{userID:$u1ID})-[rel:FRIEND]-() RETURN COUNT (rel) as numRel",
 				map[string]interface{}{"u1ID": userIDb})
 
-			//broj veza za userB
 			for resultB.Next() {
 				record := resultB.Record()
 				numRelB, _ := record.Get("numRel")

@@ -9,12 +9,6 @@ type ConnectionService struct {
 	store domain.ConnectionStore
 }
 
-func NewConnectionService(store domain.ConnectionStore) *ConnectionService {
-	return &ConnectionService{
-		store: store,
-	}
-}
-
 func (service *ConnectionService) GetConnections(id string) ([]*domain.UserConn, error) {
 
 	var friendsRetVal []*domain.UserConn
@@ -29,18 +23,22 @@ func (service *ConnectionService) GetConnections(id string) ([]*domain.UserConn,
 	return friendsRetVal, nil
 }
 
+func NewConnectionService(store domain.ConnectionStore) *ConnectionService {
+	return &ConnectionService{
+		store: store,
+	}
+}
+
 func (service *ConnectionService) Register(userID string, isPublic bool) (*pb.ActionResult, error) {
 	return service.store.Register(userID, isPublic)
 }
-
-func (service *ConnectionService) AddConnection(userIDa, userIDb string) (*pb.ActionResult, error) {
-	return service.store.AddConnection(userIDa, userIDb)
-}
-
 func (service *ConnectionService) ApproveConnection(userIDa, userIDb string) (*pb.ActionResult, error) {
 	return service.store.ApproveConnection(userIDa, userIDb)
 }
 
 func (service *ConnectionService) RejectConnection(userIDa, userIDb string) (*pb.ActionResult, error) {
 	return service.store.RejectConnection(userIDa, userIDb)
+}
+func (service *ConnectionService) AddConnection(userIDa, userIDb string) (*pb.ActionResult, error) {
+	return service.store.AddConnection(userIDa, userIDb)
 }

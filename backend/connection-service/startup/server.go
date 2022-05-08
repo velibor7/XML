@@ -30,20 +30,16 @@ const (
 )
 
 func (server *Server) Start() {
-	neo4jClient := server.initNeo4J()
+	neo4jClient := server.InitializeNeo4J()
+	connectionStore := server.InitializConnectionStore(neo4jClient)
+	connectionService := server.InitializConnectionService(connectionStore)
+	connectionHandler := server.InitializConnectionHandler(connectionService)
 
-	connectionStore := server.initConnectionStore(neo4jClient)
-
-	connectionService := server.initConnectionService(connectionStore)
-
-	connectionHandler := server.initConnectionHandler(connectionService)
-
-	server.startGrpcServer(connectionHandler)
+	server.StartGrpcServer(connectionHandler)
 }
 
-func (server *Server) initNeo4J() *neo4j.Driver {
+func (server *Server) InitializeNeo4J() *neo4j.Driver {
 
-	//uri := "bolt:\\" + server.config.ConnectionDBHost + ":" + server.config.ConnectionDBPort
 	dbUri := "bolt://localhost:7687"
 
 	client, err := persistence.GetClient(dbUri, server.config.Neo4jUsername, server.config.Neo4jPassword)
@@ -53,29 +49,20 @@ func (server *Server) initNeo4J() *neo4j.Driver {
 	return client
 }
 
-func (server *Server) initConnectionStore(client *neo4j.Driver) domain.ConnectionStore {
+func (server *Server) InitializConnectionStore(client *neo4j.Driver) domain.ConnectionStore {
 	store := persistence.NewConnectionDBStore(client)
-	/*
-		store.DeleteAll()
-		for _, product := range products {
-			err := store.Insert(product)
-			if err != nil {
-				log.Fatal(err)
-			}
-		}
-	*/
 	return store
 }
 
-func (server *Server) initConnectionService(store domain.ConnectionStore) *application.ConnectionService {
+func (server *Server) InitializConnectionService(store domain.ConnectionStore) *application.ConnectionService {
 	return application.NewConnectionService(store)
 }
 
-func (server *Server) initConnectionHandler(service *application.ConnectionService) *api.ConnectionHandler {
+func (server *Server) InitializConnectionHandler(service *application.ConnectionService) *api.ConnectionHandler {
 	return api.NewConnectionHandler(service)
 }
 
-func (server *Server) startGrpcServer(connectionHandler *api.ConnectionHandler) {
+func (server *Server) StartGrpcServer(connectionHandler *api.ConnectionHandler) {
 	listener, err := net.Listen("tcp", fmt.Sprintf(":%s", server.config.Port))
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
