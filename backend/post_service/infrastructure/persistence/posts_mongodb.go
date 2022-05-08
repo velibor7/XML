@@ -72,12 +72,19 @@ func (store *PostMongoDB) Update(post *domain.Post) (string, error) {
 	return "success", nil
 }
 
-func (store *PostMongoDB) Delete(id primitive.ObjectID) {
-	store.posts.DeleteOne(context.TODO(), bson.M{"_id": id}, nil)
-}
+// todo ovo ce trebati da se zakomentarise
+// func (store *PostMongoDB) Delete(id primitive.ObjectID) {
+// 	store.posts.DeleteOne(context.TODO(), bson.M{"_id": id}, nil)
+// }
 
 func (store *PostMongoDB) DeleteAll() {
 	store.posts.DeleteMany(context.TODO(), bson.D{{}})
+}
+
+func (store *PostMongoDB) GetAllByUser(id string) ([]*domain.Post, error) {
+	filter := bson.M{"user_id": id}
+	// return store.posts.filter(filter)
+	return store.filter(filter)
 }
 
 func (store *PostMongoDB) filter(filter interface{}) ([]*domain.Post, error) {

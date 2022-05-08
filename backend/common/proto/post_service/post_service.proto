@@ -67,8 +67,8 @@ message UpdateResponse {
 message Post {
   string id = 1;
   string text = 2;
-  repeated string images = 3;
-  repeated string links = 4;
+  string images = 3;
+  string links = 4;
   google.protobuf.Timestamp created = 5;
   repeated Like likes = 6;
   repeated Dislike dislikes = 7;
