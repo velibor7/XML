@@ -27,10 +27,6 @@ func NewServer(config *config.Config) *Server {
 	}
 }
 
-const (
-	QueueGroup = "auth_service"
-)
-
 func (server *Server) Start() {
 	mongoClient := server.initMongoClient()
 

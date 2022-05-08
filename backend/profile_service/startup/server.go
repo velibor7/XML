@@ -26,7 +26,7 @@ func NewServer(config *config.Config) *Server {
 	}
 }
 
-func Start(server *Server) {
+func (server *Server) Start() {
 	mongoClient := server.initMongoClient()
 	profileInterface := server.initProfileInterface(mongoClient)
 	profileService := server.initProfileService(profileInterface)

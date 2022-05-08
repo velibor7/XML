@@ -2,7 +2,6 @@ package api
 
 import (
 	"context"
-	"strings"
 
 	pb "github.com/velibor7/XML/common/proto/profile_service"
 	"github.com/velibor7/XML/profile_service/application"
@@ -20,12 +19,13 @@ func NewProfileHandler(service *application.ProfileService) *ProfileHandler {
 }
 
 func (handler *ProfileHandler) Get(ctx context.Context, request *pb.GetRequest) (*pb.GetResponse, error) {
-	username := request.Username
-	Profile, err := handler.service.Get(username)
+	profileId := request.Id
+	Profile, err := handler.service.Get(profileId)
 	if err != nil {
 		return nil, err
 	}
 	ProfilePb := mapProfileToPb(Profile)
+
 	response := &pb.GetResponse{
 		Profile: ProfilePb,
 	}
@@ -33,16 +33,16 @@ func (handler *ProfileHandler) Get(ctx context.Context, request *pb.GetRequest) 
 }
 
 func (handler *ProfileHandler) GetAll(ctx context.Context, request *pb.GetAllRequest) (*pb.GetAllResponse, error) {
-	Profiles, err := handler.service.GetAll(strings.ReplaceAll(request.Search, " ", ""))
+	Profiles, err := handler.service.GetAll()
 	if err != nil {
 		return nil, err
 	}
 	response := &pb.GetAllResponse{
-		Profiles: []*pb.Profile{},
+		Profile: []*pb.Profile{},
 	}
 	for _, Profile := range Profiles {
 		current := mapProfileToPb(Profile)
-		response.Profiles = append(response.Profiles, current)
+		response.Profile = append(response.Profile, current)
 	}
 	return response, nil
 }
@@ -59,9 +59,13 @@ func (handler ProfileHandler) Create(ctx context.Context, request *pb.CreateRequ
 }
 
 func (handler ProfileHandler) Update(ctx context.Context, request *pb.UpdateRequest) (*pb.UpdateResponse, error) {
-	username := request.Username
+	id := request.Id
+	oldProfile, er := handler.service.Get(request.Profile.Id)
+	if er != nil {
+		return nil, er
+	}
 	profile := mapPbToProfile(request.Profile)
-	err := handler.service.Update(username, profile)
+	err := handler.service.Update(id, oldProfile)
 	if err != nil {
 		return nil, err
 	}

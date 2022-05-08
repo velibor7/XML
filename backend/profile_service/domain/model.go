@@ -9,11 +9,13 @@ import (
 type Profile struct {
 	Id             primitive.ObjectID `bson:"_id"`
 	Username       string             `bson:"username"`
+	FirstName      string             `bson:"firstName"`
+	LastName       string             `bson:"lastName"`
 	FullName       string             `bson:"fullName"`
-	Email          string             `bson:"email"`
-	Gender         string             `bson:"gender"`
 	DateOfBirth    time.Time          `bson:"dateOfBirth"`
 	PhoneNumber    string             `bson:"phoneNumber"`
+	Email          string             `bson:"email"`
+	Gender         string             `bson:"gender"`
 	Biography      string             `bson:"biography"`
 	Education      []Education        `bson:"education"`
 	WorkExperience []WorkExperience   `bson:"workExperience"`
