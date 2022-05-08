@@ -9,6 +9,7 @@ import (
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	cfg "github.com/velibor7/XML/api_gateway/startup/config"
 	authenticationGw "github.com/velibor7/XML/common/proto/auth_service"
+	connectionGw "github.com/velibor7/XML/common/proto/connection_service"
 	postGw "github.com/velibor7/XML/common/proto/post_service"
 	profileGw "github.com/velibor7/XML/common/proto/profile_service"
 
@@ -37,11 +38,19 @@ func (server *Server) initHandlers() {
 	if err != nil {
 		panic(err)
 	}
+
+	connectionEndPoint := fmt.Sprintf("%s:%s", server.config.ConnectionHost, server.config.ConnectionPort)
+	err = connectionGw.RegisterConnectionServiceHandlerFromEndpoint(context.TODO(), server.mux, connectionEndPoint, opts)
+	if err != nil {
+		panic(err)
+	}
+
 	profileEndpoint := fmt.Sprintf("%s:%s", server.config.ProfileHost, server.config.ProfilePort)
 	er := profileGw.RegisterProfileServiceHandlerFromEndpoint(context.TODO(), server.mux, profileEndpoint, opts)
 	if er != nil {
 		panic(er)
 	}
+
 	postEndpoint := fmt.Sprintf("%s:%s", server.config.PostHost, server.config.PostPort)
 	er_post := postGw.RegisterPostServiceHandlerFromEndpoint(context.TODO(), server.mux, postEndpoint, opts)
 	if er_post != nil {
