@@ -11,6 +11,8 @@ var profiles = []*domain.Profile{
 	{
 		Id:             getObjectId("12306b1b644b3pa649s63l13"),
 		Username:       "velibor",
+		FirstName:      "Veljo",
+		LastName:       "Vasic",
 		FullName:       "VeliborVas",
 		DateOfBirth:    time.Time{},
 		PhoneNumber:    "012341123",
