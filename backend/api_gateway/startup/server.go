@@ -9,7 +9,9 @@ import (
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	cfg "github.com/velibor7/XML/api_gateway/startup/config"
 	authenticationGw "github.com/velibor7/XML/common/proto/auth_service"
+	postGw "github.com/velibor7/XML/common/proto/post_service"
 	profileGw "github.com/velibor7/XML/common/proto/profile_service"
+
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )
@@ -39,6 +41,11 @@ func (server *Server) initHandlers() {
 	er := profileGw.RegisterProfileServiceHandlerFromEndpoint(context.TODO(), server.mux, profileEndpoint, opts)
 	if er != nil {
 		panic(er)
+	}
+	postEndpoint := fmt.Sprintf("%s:%s", server.config.PostHost, server.config.PostPort)
+	er_post := postGw.RegisterPostServiceHandlerFromEndpoint(context.TODO(), server.mux, postEndpoint, opts)
+	if er_post != nil {
+		panic(er_post)
 	}
 }
 

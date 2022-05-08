@@ -35,6 +35,10 @@ func (service *PostService) Update(post *domain.Post) (string, error) {
 // 	return service.posts.Delete(id)
 // }
 
+func (service *PostService) GetAllByUser(id string) ([]*domain.Post, error) {
+	return service.posts.GetAllByUser(id)
+}
+
 func (service *PostService) DeleteAll() {
 	service.posts.DeleteAll()
 }

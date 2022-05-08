@@ -63,6 +63,8 @@ func mapCreatePost(post *pb.Post) *domain.Post {
 func mapUpdatePost(oldData *pb.Post, newData *pb.Post) *domain.Post {
 	id, _ := primitive.ObjectIDFromHex(oldData.Id)
 
+	fmt.Println(id)
+
 	postPb := &domain.Post{
 		Id:      id,
 		Text:    newData.Text,

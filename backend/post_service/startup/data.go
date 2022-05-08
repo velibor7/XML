@@ -7,7 +7,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-var post = []*domain.Post{
+var posts = []*domain.Post{
 	{
 		Id:       getObjectId("5789o4236423k5vjbhrwetkjbhbf980d"),
 		Text:     "Neki post blablabla",

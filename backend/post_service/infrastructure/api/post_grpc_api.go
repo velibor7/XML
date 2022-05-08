@@ -2,6 +2,7 @@ package api
 
 import (
 	"context"
+	"fmt"
 
 	pb "github.com/velibor7/XML/common/proto/post_service"
 	"github.com/velibor7/XML/post_service/application"
@@ -70,26 +71,37 @@ func (handler *PostHandler) GetAllByUser(ctx context.Context, request *pb.GetReq
 
 func (handler *PostHandler) Create(ctx context.Context, request *pb.CreateRequest) (*pb.CreateResponse, error) {
 
-	if request.Post.UserId == "" {
-		return nil, error(nil)
-	}
+	// if request.Post.UserId == "" {
+	// 	return nil, error(nil)
+	// }
 
+	fmt.Println(request.Post.Text)
+	fmt.Println(request.Post.Id)
 	post := mapCreatePost(request.Post)
-	userId := ctx.Value(interceptor.LoggedInUserKey{}).(string)
-	post.UserId = userId
+
+	fmt.Println(post.Text)
+	// userId := ctx.Value(interceptor.LoggedInUserKey{}).(string)
+	// post.UserId = userId
 	success, err := handler.service.Create(post)
+
 	if err != nil {
 		return nil, err
 	}
+
 	response := &pb.CreateResponse{
 		Success: success,
 	}
+
 	return response, err
 }
 
 func (handler *PostHandler) Update(ctx context.Context, request *pb.UpdateRequest) (*pb.UpdateResponse, error) {
 	id, _ := primitive.ObjectIDFromHex(request.Post.Id)
+	fmt.Println("id: ")
+	fmt.Println(id)
 	oldPost, err := handler.service.Get(id)
+	fmt.Println("oldPost: ")
+	fmt.Println(oldPost)
 	if err != nil {
 		return &pb.UpdateResponse{
 			Success: "error",
