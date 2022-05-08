@@ -22,8 +22,8 @@ services:
       - network
 
   auth_service:
-    image: auth_service
-    container_name: auth_service
+    image: authentication_service
+    container_name: authentication_service
     build:
       context: .
       dockerfile: ./auth_service/Dockerfile
