@@ -27,7 +27,7 @@ service PostService{
   }
   rpc Update(UpdateRequest) returns(UpdateResponse) {
     option (google.api.http) = {
-      put: "/posts"
+      put: "/posts/{id}"
       body: "post"
     };
   }
@@ -58,6 +58,7 @@ message CreateResponse {
 
 message UpdateRequest {
   Post post = 1;
+  string id = 2;
 }
 
 message UpdateResponse {

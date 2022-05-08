@@ -97,7 +97,11 @@ func (handler *PostHandler) Create(ctx context.Context, request *pb.CreateReques
 
 func (handler *PostHandler) Update(ctx context.Context, request *pb.UpdateRequest) (*pb.UpdateResponse, error) {
 	id, _ := primitive.ObjectIDFromHex(request.Post.Id)
+	fmt.Println("id: ")
+	fmt.Println(id)
 	oldPost, err := handler.service.Get(id)
+	fmt.Println("oldPost: ")
+	fmt.Println(oldPost)
 	if err != nil {
 		return &pb.UpdateResponse{
 			Success: "error",
