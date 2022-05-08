@@ -11,7 +11,7 @@ import (
 )
 
 const (
-	DATABASE   = "auth_service"
+	DATABASE   = "auth"
 	COLLECTION = "user"
 )
 
@@ -37,6 +37,7 @@ func (store *UserMongoDB) GetAll() ([]*domain.User, error) {
 }
 
 func (store *UserMongoDB) Register(User *domain.User) error {
+	User.Id = primitive.NewObjectID()
 	result, err := store.users.InsertOne(context.TODO(), User)
 	if err != nil {
 		return err

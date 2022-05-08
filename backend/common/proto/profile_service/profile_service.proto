@@ -67,16 +67,17 @@ message UpdateResponse {
 message Profile {
     string id = 1;
     string username = 2;
-    string fullname = 3;
-    google.protobuf.Timestamp dateOfBirth = 4;
-    string phoneNumber = 5;
-    string email = 6;
-    string gender = 7;
-    string biography = 8;
-    repeated Education education = 9;
-    repeated WorkExperience workExperience = 10;
-    repeated string skills = 11;
-    repeated string interests = 12;
+    string firstName = 3;
+    string lastName = 4;
+    google.protobuf.Timestamp dateOfBirth = 5;
+    string phoneNumber = 6;
+    string email = 7;
+    string gender = 8;
+    string biography = 9;
+    repeated Education education = 10;
+    repeated WorkExperience workExperience = 11;
+    repeated string skills = 12;
+    repeated string interests = 13;
 }
 
 message Education{

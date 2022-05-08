@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net"
+	"time"
 
 	profile "github.com/velibor7/XML/common/proto/profile_service"
 	"github.com/velibor7/XML/profile_service/application"
@@ -11,6 +12,7 @@ import (
 	"github.com/velibor7/XML/profile_service/infrastructure/api"
 	"github.com/velibor7/XML/profile_service/infrastructure/persistence"
 	"github.com/velibor7/XML/profile_service/startup/config"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
@@ -79,4 +81,28 @@ func (server *Server) startGrpcServer(userHandler *api.ProfileHandler) {
 	if err := grpcServer.Serve(listener); err != nil {
 		log.Fatalf("failed to serve: %s", err)
 	}
+}
+
+var profiles = []*domain.Profile{
+	{
+		Id:             getObjectId("12306b1b644b3pa649s63l13"),
+		Username:       "velibor",
+		FullName:       "VeliborVas",
+		DateOfBirth:    time.Time{},
+		PhoneNumber:    "012341123",
+		Email:          "veljas7@gmail.com",
+		Gender:         "male",
+		Biography:      "Data Scientist",
+		Education:      nil,
+		WorkExperience: nil,
+		Skills:         nil,
+		Interests:      nil,
+	},
+}
+
+func getObjectId(id string) primitive.ObjectID {
+	if objectId, err := primitive.ObjectIDFromHex(id); err == nil {
+		return objectId
+	}
+	return primitive.NewObjectID()
 }

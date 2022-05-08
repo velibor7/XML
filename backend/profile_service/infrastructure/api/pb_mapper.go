@@ -11,7 +11,8 @@ func mapProfileToPb(profile *domain.Profile) *pb.Profile {
 	pbProfile := &pb.Profile{
 		Id:             profile.Id.Hex(),
 		Username:       profile.Username,
-		FullName:       profile.FullName,
+		FirstName:      profile.FirstName,
+		LastName:       profile.LastName,
 		DateOfBirth:    timestamppb.New(profile.DateOfBirth),
 		PhoneNumber:    profile.PhoneNumber,
 		Email:          profile.Email,

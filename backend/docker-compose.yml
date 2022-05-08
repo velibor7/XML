@@ -34,6 +34,8 @@ services:
       NATS_HOST: ${NATS_HOST}
       NATS_USER: ${NATS_USER}
       NATS_PASS: ${NATS_PASS}
+      CREATE_ORDER_COMMAND_SUBJECT: ${CREATE_ORDER_COMMAND_SUBJECT}
+      CREATE_ORDER_REPLY_SUBJECT: ${CREATE_ORDER_REPLY_SUBJECT}
     depends_on:
       - auth_db
     networks:
@@ -54,8 +56,18 @@ services:
       NATS_PORT: ${NATS_PORT}
       NATS_USER: ${NATS_USER}
       NATS_PASS: ${NATS_PASS}
+      CREATE_ORDER_COMMAND_SUBJECT: ${CREATE_ORDER_COMMAND_SUBJECT}
+      CREATE_ORDER_REPLY_SUBJECT: ${CREATE_ORDER_REPLY_SUBJECT}      
     depends_on:
       - profile_db
+    networks:
+      - network
+
+
+  post_db:
+    image: mongo
+    container_name: post_db
+    restart: on-failure
     networks:
       - network
 
@@ -69,6 +81,13 @@ services:
   profile_db:
     image: mongo
     container_name: profile_db
+    restart: on-failure
+    networks:
+      - network
+
+  nats:
+    image: nats
+    container_name: nats
     restart: on-failure
     networks:
       - network
