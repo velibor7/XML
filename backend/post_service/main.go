@@ -8,10 +8,8 @@ import (
 )
 
 func main() {
-	fmt.Println("Hello world from posts")
-
+	fmt.Println("Server started.")
 	config := cfg.NewConfig()
 	server := startup.NewServer(config)
 	server.Start()
-
 }

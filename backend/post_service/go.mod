@@ -5,7 +5,6 @@ go 1.18
 replace github.com/velibor7/XML/common => ../common
 
 require (
-	github.com/joho/godotenv v1.4.0
 	github.com/velibor7/XML/common v1.0.0
 	go.mongodb.org/mongo-driver v1.9.1
 	google.golang.org/grpc v1.46.0

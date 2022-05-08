@@ -2,6 +2,7 @@ package application
 
 import (
 	"github.com/velibor7/XML/profile_service/domain"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type ProfileService struct {
@@ -26,6 +27,6 @@ func (service *ProfileService) Create(profile *domain.Profile) error {
 	return service.profiles.Create(profile)
 }
 
-func (service *ProfileService) Update(id string, profile *domain.Profile) error {
+func (service *ProfileService) Update(id primitive.ObjectID, profile *domain.Profile) error {
 	return service.profiles.Update(id, profile)
 }

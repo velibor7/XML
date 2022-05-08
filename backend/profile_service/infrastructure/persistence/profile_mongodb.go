@@ -11,7 +11,7 @@ import (
 )
 
 const (
-	DATABASE   = "profile_service"
+	DATABASE   = "profile_db"
 	COLLECTION = "profile"
 )
 
@@ -48,20 +48,11 @@ func (store *ProfileMongoDB) Create(profile *domain.Profile) error {
 	return nil
 }
 
-func toDoc(v interface{}) (doc *bson.D, err error) {
-	data, err := bson.Marshal(v)
-	if err != nil {
-		return
-	}
+func (store *ProfileMongoDB) Update(profileId primitive.ObjectID, profile *domain.Profile) error {
 
-	err = bson.Unmarshal(data, &doc)
-	return
-}
-
-func (store *ProfileMongoDB) Update(username string, profile *domain.Profile) error {
 	result, err := store.profiles.ReplaceOne(
 		context.TODO(),
-		bson.M{"username": username},
+		bson.M{"_id": profileId},
 		profile,
 	)
 	if err != nil {

@@ -26,14 +26,13 @@ func NewServer(config *config.Config) *Server {
 	}
 }
 
-func Start(server *Server) {
+func (server *Server) Start() {
 	mongoClient := server.initMongoClient()
 	postInterface := server.initPostInterface(mongoClient)
 	postService := server.initPostService(postInterface)
 	postHandler := server.initPostHandler(postService)
 
 	server.startGrpcServer(postHandler)
-
 }
 
 func (server *Server) initMongoClient() *mongo.Client {
@@ -46,12 +45,9 @@ func (server *Server) initMongoClient() *mongo.Client {
 
 func (server *Server) initPostInterface(client *mongo.Client) domain.PostInterface {
 	inf := persistence.NewPostMongoDB(client)
-	err := inf.DeleteAll()
-	if err != nil {
-		log.Fatal(err)
-	}
-	for _, Post := range post {
-		err := inf.Create(Post)
+	inf.DeleteAll()
+	for _, Post := range posts {
+		_, err := inf.Create(Post)
 		if err != nil {
 			panic(err)
 		}

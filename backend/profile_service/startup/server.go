@@ -68,14 +68,14 @@ func (server *Server) initProfileHandler(service *application.ProfileService) *a
 	return api.NewProfileHandler(service)
 }
 
-func (server *Server) startGrpcServer(userHandler *api.ProfileHandler) {
+func (server *Server) startGrpcServer(profileHandler *api.ProfileHandler) {
 	listener, err := net.Listen("tcp", fmt.Sprintf(":%s", server.config.Port))
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}
 	grpcServer := grpc.NewServer()
 	reflection.Register(grpcServer)
-	profile.RegisterProfileServiceServer(grpcServer, userHandler)
+	profile.RegisterProfileServiceServer(grpcServer, profileHandler)
 	if err := grpcServer.Serve(listener); err != nil {
 		log.Fatalf("failed to serve: %s", err)
 	}
