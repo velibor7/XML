@@ -10,6 +10,8 @@ type Config struct {
 	AuthenticationPort string
 	ProfileHost        string
 	ProfilePort        string
+	ConnectionPort     string
+	ConnectionHost     string
 	PostHost           string
 	PostPort           string
 }
@@ -23,5 +25,7 @@ func NewConfig() *Config {
 		ProfilePort:        os.Getenv("PROFILE_SERVICE_PORT"),
 		PostHost:           os.Getenv("POST_SERVICE_HOST"),
 		PostPort:           os.Getenv("POST_SERVICE_PORT"),
+		ConnectionHost:     os.Getenv("CONNECTION_SERVICE_HOST"),
+		ConnectionPort:     os.Getenv("CONNECTION_SERVICE_PORT"),
 	}
 }
