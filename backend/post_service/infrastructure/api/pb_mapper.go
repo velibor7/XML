@@ -150,3 +150,10 @@ func dislikedPostByUser(post *pb.Post, userId string) bool {
 	}
 	return false
 }
+
+func getObjectId(id string) primitive.ObjectID {
+	if objectId, err := primitive.ObjectIDFromHex(id); err == nil {
+		return objectId
+	}
+	return primitive.NewObjectID()
+}

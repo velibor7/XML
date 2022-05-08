@@ -2,6 +2,7 @@ package api
 
 import (
 	"context"
+	"fmt"
 
 	pb "github.com/velibor7/XML/common/proto/post_service"
 	"github.com/velibor7/XML/post_service/application"
@@ -74,7 +75,11 @@ func (handler *PostHandler) Create(ctx context.Context, request *pb.CreateReques
 	// 	return nil, error(nil)
 	// }
 
+	fmt.Println(request.Post.Text)
+	fmt.Println(request.Post.Id)
 	post := mapCreatePost(request.Post)
+
+	fmt.Println(post.Text)
 	// userId := ctx.Value(interceptor.LoggedInUserKey{}).(string)
 	// post.UserId = userId
 	success, err := handler.service.Create(post)
