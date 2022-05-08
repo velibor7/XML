@@ -14,8 +14,8 @@ func NewProfileService(profiles domain.ProfileInterface) *ProfileService {
 	}
 }
 
-func (service *ProfileService) Get(username string) (*domain.Profile, error) {
-	return service.profiles.Get(username)
+func (service *ProfileService) Get(id string) (*domain.Profile, error) {
+	return service.profiles.Get(id)
 }
 
 func (service *ProfileService) GetAll() ([]*domain.Profile, error) {
@@ -26,6 +26,6 @@ func (service *ProfileService) Create(profile *domain.Profile) error {
 	return service.profiles.Create(profile)
 }
 
-func (service *ProfileService) Update(username string, profile *domain.Profile) error {
-	return service.profiles.Update(username, profile)
+func (service *ProfileService) Update(id string, profile *domain.Profile) error {
+	return service.profiles.Update(id, profile)
 }

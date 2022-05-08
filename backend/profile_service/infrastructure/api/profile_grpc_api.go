@@ -38,11 +38,11 @@ func (handler *ProfileHandler) GetAll(ctx context.Context, request *pb.GetAllReq
 		return nil, err
 	}
 	response := &pb.GetAllResponse{
-		Profiles: []*pb.Profile{},
+		Profile: []*pb.Profile{},
 	}
 	for _, Profile := range Profiles {
 		current := mapProfileToPb(Profile)
-		response.Profiles = append(response.Profiles, current)
+		response.Profile = append(response.Profile, current)
 	}
 	return response, nil
 }
@@ -59,9 +59,13 @@ func (handler ProfileHandler) Create(ctx context.Context, request *pb.CreateRequ
 }
 
 func (handler ProfileHandler) Update(ctx context.Context, request *pb.UpdateRequest) (*pb.UpdateResponse, error) {
-	username := request.Username
+	id := request.Id
+	oldProfile, er := handler.service.Get(request.Profile.Id)
+	if er != nil {
+		return nil, er
+	}
 	profile := mapPbToProfile(request.Profile)
-	err := handler.service.Update(username, profile)
+	err := handler.service.Update(id, oldProfile)
 	if err != nil {
 		return nil, err
 	}
