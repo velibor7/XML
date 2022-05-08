@@ -6,12 +6,12 @@ import (
 	"net"
 
 	"github.com/neo4j/neo4j-go-driver/v4/neo4j"
-	inventory "github.com/velibor7/XML/tree/main/backend/common/proto/connection_service"
-	"github.com/velibor7/XML/tree/main/backend/connection_service/application"
-	"github.com/velibor7/XML/tree/main/backend/connection_service/domain"
-	"github.com/velibor7/XML/tree/main/backend/connection_service/infrastructure/api"
-	"github.com/velibor7/XML/tree/main/backend/connection_service/infrastructure/persistence"
-	"github.com/velibor7/XML/tree/main/backend/connection_service/startup/config"
+	inventory "github.com/velibor7/XML/common/proto/connection_service"
+	"github.com/velibor7/XML/connection_service/application"
+	"github.com/velibor7/XML/connection_service/domain"
+	"github.com/velibor7/XML/connection_service/infrastructure/api"
+	"github.com/velibor7/XML/connection_service/infrastructure/persistence"
+	"github.com/velibor7/XML/connection_service/startup/config"
 	"google.golang.org/grpc"
 )
 
@@ -42,6 +42,8 @@ func (server *Server) Start() {
 }
 
 func (server *Server) initNeo4J() *neo4j.Driver {
+
+	//uri := "bolt:\\" + server.config.ConnectionDBHost + ":" + server.config.ConnectionDBPort
 	dbUri := "bolt://localhost:7687"
 
 	client, err := persistence.GetClient(dbUri, server.config.Neo4jUsername, server.config.Neo4jPassword)
@@ -53,6 +55,15 @@ func (server *Server) initNeo4J() *neo4j.Driver {
 
 func (server *Server) initConnectionStore(client *neo4j.Driver) domain.ConnectionStore {
 	store := persistence.NewConnectionDBStore(client)
+	/*
+		store.DeleteAll()
+		for _, product := range products {
+			err := store.Insert(product)
+			if err != nil {
+				log.Fatal(err)
+			}
+		}
+	*/
 	return store
 }
 

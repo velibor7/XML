@@ -1,15 +1,15 @@
 package api
 
 import (
-	pb "github.com/velibor7/XML/tree/main/backend/common/proto/connection_service"
-	"github.com/velibor7/XML/tree/main/backend/connection_service/domain"
+	pb "github.com/velibor7/XML/common/proto/connection_service"
+	"github.com/velibor7/XML/connection_service/domain"
 )
 
-func mapUserConnection(UserConnection *domain.UserConnection) *pb.User {
-	UserConnectionPb := &pb.User{
-		UserID:   UserConnection.UserID,
-		IsPublic: UserConnection.IsPublic,
+func mapUserConn(userConn *domain.UserConn) *pb.User {
+	userConnPb := &pb.User{
+		UserID:   userConn.UserID,
+		IsPublic: userConn.IsPublic,
 	}
 
-	return UserConnectionPb
+	return userConnPb
 }
