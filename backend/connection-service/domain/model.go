@@ -1,6 +1,6 @@
 package domain
 
-type UserConnection struct {
+type UserConn struct {
 	UserID   string
 	IsPublic bool
 }

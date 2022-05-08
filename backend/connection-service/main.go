@@ -3,8 +3,8 @@ package main
 import (
 	"fmt"
 
-	startup "github.com/velibor7/XML/tree/main/backend/connection_service/startup"
-	cfg "github.com/velibor7/XML/tree/main/backend/connection_service/startup/config"
+	startup "github.com/velibor7/XML/connection_service/startup"
+	cfg "github.com/velibor7/XML/connection_service/startup/config"
 )
 
 func main() {
