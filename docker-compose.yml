@@ -6,7 +6,7 @@ services:
     container_name: api_gateway
     build:
       context: .
-      dockerfile: ./api_gateway/Dockerfile
+      dockerfile: ./backend/api_gateway/Dockerfile
     restart: on-failure
     ports:
       - ${GATEWAY_PORT}:${GATEWAY_PORT}
@@ -26,7 +26,7 @@ services:
     container_name: authentication_service
     build:
       context: .
-      dockerfile: ./auth_service/Dockerfile
+      dockerfile: ./backend/auth_service/Dockerfile
     restart: on-failure
     environment:
       AUTHENTICATION_DB_PORT: ${AUTHENTICATION_DB_PORT}
@@ -48,7 +48,7 @@ services:
     container_name: profile_service
     build:
       context: .
-      dockerfile: ./profile_service/Dockerfile
+      dockerfile: ./backend/profile_service/Dockerfile
     restart: on-failure
     environment:
       PROFILE_DB_PORT: ${PROFILE_DB_PORT}
@@ -65,34 +65,34 @@ services:
     networks:
       - network
 
-  connection_service:
-    image: connection_service
-    container_name: connection_service
-    build:
-      context: .
-      dockerfile: ./connection-service/Dockerfile
-    restart: on-failure
-    environment:
-      CONNECTION_DB_PORT: ${CONNECTION_DB_PORT}
-      CONNECTION_DB_HOST: ${CONNECTION_DB_HOST}
-      CONNECTION_SERVICE_PORT: ${CONNECTION_SERVICE_PORT}
-      NATS_HOST: ${NATS_HOST}
-      NATS_PORT: ${NATS_PORT}
-      NATS_USER: ${NATS_USER}
-      NATS_PASS: ${NATS_PASS}
-      CREATE_ORDER_COMMAND_SUBJECT: ${CREATE_ORDER_COMMAND_SUBJECT}
-      CREATE_ORDER_REPLY_SUBJECT: ${CREATE_ORDER_REPLY_SUBJECT}      
-    depends_on:
-      - connection_db
-    networks:
-      - network
+  # connection_service:
+  #   image: connection_service
+  #   container_name: connection_service
+  #   build:
+  #     context: .
+  #     dockerfile: ./connection-service/Dockerfile
+  #   restart: on-failure
+  #   environment:
+  #     CONNECTION_DB_PORT: ${CONNECTION_DB_PORT}
+  #     CONNECTION_DB_HOST: ${CONNECTION_DB_HOST}
+  #     CONNECTION_SERVICE_PORT: ${CONNECTION_SERVICE_PORT}
+  #     NATS_HOST: ${NATS_HOST}
+  #     NATS_PORT: ${NATS_PORT}
+  #     NATS_USER: ${NATS_USER}
+  #     NATS_PASS: ${NATS_PASS}
+  #     CREATE_ORDER_COMMAND_SUBJECT: ${CREATE_ORDER_COMMAND_SUBJECT}
+  #     CREATE_ORDER_REPLY_SUBJECT: ${CREATE_ORDER_REPLY_SUBJECT}      
+  #   depends_on:
+  #     - connection_db
+  #   networks:
+  #     - network
 
   post_service:
     image: post_service
     container_name: post_service
     build:
       context: .
-      dockerfile: ./post_service/Dockerfile
+      dockerfile: ./backend/post_service/Dockerfile
     restart: on-failure
     environment:
       POST_DB_PORT: ${POST_DB_PORT}
@@ -109,14 +109,14 @@ services:
     networks:
       - network
 
-  connection_db:
-    image: neo4j
-    container_name: connection_db
-    restart: on-failure
-    ports:
-      - 7688:7687
-    networks:
-      - network
+  # connection_db:
+  #   image: neo4j
+  #   container_name: connection_db
+  #   restart: on-failure
+  #   ports:
+  #     - 7688:7687
+  #   networks:
+  #     - network
 
   post_db:
     image: mongo
