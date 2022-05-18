@@ -5,16 +5,16 @@ FROM golang:latest as builder
 WORKDIR /app
 
 # Copy go mod and sum files
-COPY ./connection-service/go.mod ./connection-service/go.sum ./
+COPY ./backend/connection-service/go.mod ./backend/connection-service/go.sum ./
 
 # Copy the local dependency
-COPY /common ../common
+COPY /common ../backend/common
 
 # Download all dependencies. Dependencies will be cached if the go.mod and go.sum files are not changed
 RUN go mod download
 
 # Copy everything from the current directory to the Working Directory inside the container
-COPY ./connection-service/ .
+COPY ./backend/connection-service/ .
 
 # Build the Go app
 RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o main .
