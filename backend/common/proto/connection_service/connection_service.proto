@@ -1,6 +1,6 @@
 syntax="proto3";
 
-package connection_service;
+package connection;
 option go_package = "github.com/velibor7/XML/common/proto/connection";
 
 
@@ -10,88 +10,66 @@ import "google/protobuf/timestamp.proto";
 
 service ConnectionService{
 
-  rpc GetConnections(GetRequest) returns(Users) {
+  rpc Get(GetRequest) returns(GetResponse) {
     option (google.api.http) = {
-      get: "/connection/user/{userID}/friends"
+      get: "/connection/{userId}"
     };
   }
 
-  rpc Register(RegisterRequest) returns (ActionResult) {
-    option (google.api.http) = {
-      post: "/connection/register"
-      body:"user"
-    };
-  }
-
-  rpc AddConnection(AddConnectionRequest) returns (ActionResult) {
+  rpc Create(CreateRequest) returns(CreateResponse) {
     option (google.api.http) = {
       post: "/connection"
-      body:"addConnectionDTO"
+      body: "connection"
     };
   }
 
-  rpc RejectConnection(RejectConnectionRequest) returns (ActionResult) {
+  rpc Delete(DeleteRequest) returns(DeleteResponse) {
     option (google.api.http) = {
-      put: "/connection/reject"
-      body:"rejectConnectionDTO"
+      delete: "/connection/{id}"
     };
   }
 
-  rpc ApproveConnection(ApproveConnectionRequest) returns (ActionResult) {
+  rpc Update(UpdateRequest) returns(UpdateResponse) {
     option (google.api.http) = {
-      put: "/connection/approve"
-      body:"approveConnectionDTO"
+      patch: "/connection/{id}"
     };
   }
-
 }
 
-message RegisterRequest{
-  User user = 1;
+message GetRequest{
+  string userId = 1;
+}
+message GetResponse{
+  repeated Connection connections = 1;
 }
 
-message AddConnectionRequest{
-  UserAction addConnectionDTO = 1;
+message CreateRequest{
+  Connection connection = 1;
 }
 
-message ApproveConnectionRequest{
-  UserAction approveConnectionDTO = 1;
+message CreateResponse{
+  Connection connection = 1;
 }
 
-message RejectConnectionRequest{
-  UserAction rejectConnectionDTO = 1;
+message DeleteRequest {
+  string id = 1;
 }
 
-message AddBlockUserRequest{
-  UserAction addBlockUserDTO = 1;
+message DeleteResponse {
 }
 
-
-
-
-message ActionResult{
-  int64 status = 1;
-  string msg = 2;
+message UpdateRequest {
+  string id = 1;
 }
 
-message GetRequest {
-  string userID = 1;
+message UpdateResponse {
+  Connection connection = 1;
 }
 
-message UserAction{
-  string userIDa = 1;
-  string userIDb = 2;
-}
-
-message User {
-  string userID = 1;
-  bool isPublic = 2;
-}
-
-message Users{
-  repeated User users = 1;
-}
-
-message UsersID{
-  repeated string userID = 1;
+message Connection{
+  string id = 1;
+  string issuerId = 2;
+  string subjectId = 3;
+  google.protobuf.Timestamp date = 4;
+  bool approved = 5;
 }
