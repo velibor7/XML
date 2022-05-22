@@ -7,4 +7,5 @@ type Job struct {
 	Title       string             `bson:"title"`
 	Description string             `bson:"description"`
 	Skills      []string           `bson:"skills"`
+	UserID      primitive.ObjectID `bson:"userId"`
 }
