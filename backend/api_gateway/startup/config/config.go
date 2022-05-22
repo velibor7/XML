@@ -1,8 +1,6 @@
 package config
 
-import (
-	"os"
-)
+import "os"
 
 type Config struct {
 	Port               string
@@ -14,6 +12,8 @@ type Config struct {
 	ConnectionHost     string
 	PostHost           string
 	PostPort           string
+	JobHost            string
+	JobPort            string
 }
 
 func NewConfig() *Config {
@@ -25,6 +25,8 @@ func NewConfig() *Config {
 		ProfilePort:        os.Getenv("PROFILE_SERVICE_PORT"),
 		PostHost:           os.Getenv("POST_SERVICE_HOST"),
 		PostPort:           os.Getenv("POST_SERVICE_PORT"),
+		JobHost:            os.Getenv("JOB_SERVICE_HOST"),
+		JobPort:            os.Getenv("JOB_SERVICE_PORT"),
 		ConnectionHost:     os.Getenv("CONNECTION_SERVICE_HOST"),
 		ConnectionPort:     os.Getenv("CONNECTION_SERVICE_PORT"),
 	}

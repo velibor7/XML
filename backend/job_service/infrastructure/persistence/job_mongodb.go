@@ -10,15 +10,16 @@ import (
 )
 
 const (
-	DATABASE    = "jobs_db"
-	CONNECTIONS = "job"
+	DATABASE   = "jobs_db"
+	COLLECTION = "job"
 )
 
 type JobMongoDB struct {
 	job *mongo.Collection
 }
 
-func NewJobMongoDB(job *mongo.Collection) *JobMongoDB {
+func NewJobMongoDB(client *mongo.Client) *JobMongoDB {
+	job := client.Database(DATABASE).Collection(COLLECTION)
 	return &JobMongoDB{
 		job: job,
 	}
@@ -38,13 +39,12 @@ func (db JobMongoDB) GetAll(search string) ([]*domain.Job, error) {
 	return db.filter(filter)
 }
 
-func (db JobMongoDB) Create(job *domain.Job) (*domain.Job, error) {
-	insert, err := db.job.InsertOne(context.TODO(), job)
+func (db JobMongoDB) Create(job *domain.Job) error {
+	_, err := db.job.InsertOne(context.TODO(), job)
 	if err != nil {
-		return nil, err
+		return err
 	}
-	job.Id = insert.InsertedID.(primitive.ObjectID)
-	return job, nil
+	return nil
 }
 
 func (db JobMongoDB) DeleteAll() error {
