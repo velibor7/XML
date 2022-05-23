@@ -2,7 +2,6 @@ package api
 
 import (
 	"context"
-	"fmt"
 
 	pb "github.com/velibor7/XML/common/proto/profile_service"
 	"github.com/velibor7/XML/profile_service/application"
@@ -60,12 +59,8 @@ func (handler ProfileHandler) Create(ctx context.Context, request *pb.CreateRequ
 }
 
 func (handler ProfileHandler) Update(ctx context.Context, request *pb.UpdateRequest) (*pb.UpdateResponse, error) {
-	profileId := request.Id
-	fmt.Printf("profile id = %s", profileId)
-	Profile, _ := handler.service.Get(profileId)
-	fmt.Printf("profile name = %s", Profile.FirstName)
 	profile := mapPbToProfile(request.Profile)
-	err := handler.service.Update(Profile.Id, profile)
+	err := handler.service.Update(request.Id, profile)
 	if err != nil {
 		return nil, err
 	}

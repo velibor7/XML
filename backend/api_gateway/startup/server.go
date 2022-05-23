@@ -10,9 +10,9 @@ import (
 	cfg "github.com/velibor7/XML/api_gateway/startup/config"
 	authenticationGw "github.com/velibor7/XML/common/proto/authentication_service"
 	connectionGw "github.com/velibor7/XML/common/proto/connection_service"
+	jobGw "github.com/velibor7/XML/common/proto/job_service"
 	postGw "github.com/velibor7/XML/common/proto/post_service"
 	profileGw "github.com/velibor7/XML/common/proto/profile_service"
-
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )
@@ -54,6 +54,12 @@ func (server *Server) initHandlers() {
 
 	postEndpoint := fmt.Sprintf("%s:%s", server.config.PostHost, server.config.PostPort)
 	err = postGw.RegisterPostServiceHandlerFromEndpoint(context.TODO(), server.mux, postEndpoint, opts)
+	if err != nil {
+		panic(err)
+	}
+
+	jobEndpoint := fmt.Sprintf("%s:%s", server.config.JobHost, server.config.JobPort)
+	err = jobGw.RegisterJobServiceHandlerFromEndpoint(context.TODO(), server.mux, jobEndpoint, opts)
 	if err != nil {
 		panic(err)
 	}

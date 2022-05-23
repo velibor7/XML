@@ -8,8 +8,8 @@ import (
 )
 
 func main() {
-	fmt.Println("Server started.")
 	config := cfg.NewConfig()
 	server := startup.NewServer(config)
 	server.Start()
+	fmt.Println("Server started.")
 }
