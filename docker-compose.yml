@@ -20,6 +20,8 @@ services:
       CONNECTION_SERVICE_HOST: ${CONNECTION_SERVICE_HOST}
       POST_SERVICE_PORT: ${POST_SERVICE_PORT}
       POST_SERVICE_HOST: ${POST_SERVICE_HOST}
+      JOB_SERVICE_PORT: ${JOB_SERVICE_PORT}
+      JOB_SERVICE_HOST: ${JOB_SERVICE_HOST}
     networks:
       - network
 
@@ -75,15 +77,13 @@ services:
       dockerfile: ./backend/job_service/Dockerfile
     restart: on-failure
     environment:
-      PROFILE_DB_PORT: ${JOB_DB_PORT}
-      PROFILE_DB_HOST: ${JOB_DB_HOST}
-      PROFILE_SERVICE_PORT: ${JOB_SERVICE_PORT}
+      JOB_DB_PORT: ${JOB_DB_PORT}
+      JOB_DB_HOST: ${JOB_DB_HOST}
+      JOB_SERVICE_PORT: ${JOB_SERVICE_PORT}
       NATS_HOST: ${NATS_HOST}
       NATS_PORT: ${NATS_PORT}
       NATS_USER: ${NATS_USER}
       NATS_PASS: ${NATS_PASS}
-      CREATE_ORDER_COMMAND_SUBJECT: ${CREATE_ORDER_COMMAND_SUBJECT}
-      CREATE_ORDER_REPLY_SUBJECT: ${CREATE_ORDER_REPLY_SUBJECT}      
     depends_on:
       - job_db
     networks:
