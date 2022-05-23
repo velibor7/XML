@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/velibor7/XML/auth_service/startup"
-	"github.com/velibor7/XML/auth_service/startup/config"
+	"github.com/velibor7/XML/authentication_service/startup"
+	"github.com/velibor7/XML/authentication_service/startup/config"
 )
 
 func main() {

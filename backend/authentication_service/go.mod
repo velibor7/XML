@@ -1,16 +1,15 @@
-module github.com/velibor7/XML/auth_service
-
-go 1.18
+module github.com/velibor7/XML/authentication_service
 
 replace github.com/velibor7/XML/common => ../common
 
 require (
 	github.com/velibor7/XML/common v1.0.0
-	go.mongodb.org/mongo-driver v1.9.0
+	go.mongodb.org/mongo-driver v1.9.1
 	google.golang.org/grpc v1.46.2
 )
 
 require (
+	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/go-stack/stack v1.8.0 // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/golang/snappy v0.0.1 // indirect
@@ -29,3 +28,5 @@ require (
 	google.golang.org/genproto v0.0.0-20220519153652-3a47de7e79bd // indirect
 	google.golang.org/protobuf v1.28.0 // indirect
 )
+
+go 1.18

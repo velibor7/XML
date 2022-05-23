@@ -5,7 +5,7 @@ FROM golang:latest as builder
 WORKDIR /app
 
 # Copy go mod and sum files
-COPY ./backend/auth_service/go.mod ./backend/auth_service/go.sum ./
+COPY ./backend/authentication_service/go.mod ./backend/authentication_service/go.sum ./
 
 # Copy the local dependency
 COPY /backend/common ../common
@@ -14,7 +14,7 @@ COPY /backend/common ../common
 RUN go mod download
 
 # Copy everything from the current directory to the Working Directory inside the container
-COPY ./backend/auth_service/ .
+COPY ./backend/authentication_service/ .
 
 # Build the Go app
 RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o main .
