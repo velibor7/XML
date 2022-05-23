@@ -2,7 +2,6 @@ package persistence
 
 import (
 	"context"
-	"errors"
 
 	"github.com/velibor7/XML/profile_service/domain"
 	"go.mongodb.org/mongo-driver/bson"
@@ -48,18 +47,15 @@ func (store *ProfileMongoDB) Create(profile *domain.Profile) error {
 	return nil
 }
 
-func (store *ProfileMongoDB) Update(profileId primitive.ObjectID, profile *domain.Profile) error {
-
-	result, err := store.profiles.ReplaceOne(
+func (store *ProfileMongoDB) Update(profileId string, profile *domain.Profile) error {
+	id, err := primitive.ObjectIDFromHex(profileId)
+	_, err = store.profiles.ReplaceOne(
 		context.TODO(),
-		bson.M{"_id": profileId},
+		bson.M{"_id": id},
 		profile,
 	)
 	if err != nil {
 		return err
-	}
-	if result.MatchedCount == 0 {
-		return errors.New(profile.Id.String())
 	}
 	return nil
 }

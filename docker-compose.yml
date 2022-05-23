@@ -85,7 +85,7 @@ services:
       CREATE_ORDER_COMMAND_SUBJECT: ${CREATE_ORDER_COMMAND_SUBJECT}
       CREATE_ORDER_REPLY_SUBJECT: ${CREATE_ORDER_REPLY_SUBJECT}      
     depends_on:
-      - profile_db
+      - job_db
     networks:
       - network
 

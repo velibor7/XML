@@ -2,6 +2,7 @@ package persistence
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/velibor7/XML/job_service/domain"
 	"go.mongodb.org/mongo-driver/bson"
@@ -10,22 +11,22 @@ import (
 )
 
 const (
-	DATABASE   = "jobs_db"
+	DATABASE   = "job_db"
 	COLLECTION = "job"
 )
 
 type JobMongoDB struct {
-	job *mongo.Collection
+	jobs *mongo.Collection
 }
 
 func NewJobMongoDB(client *mongo.Client) *JobMongoDB {
 	job := client.Database(DATABASE).Collection(COLLECTION)
 	return &JobMongoDB{
-		job: job,
+		jobs: job,
 	}
 }
 
-func (db JobMongoDB) Get(id string) (*domain.Job, error) {
+func (db *JobMongoDB) Get(id string) (*domain.Job, error) {
 	Id, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
 		return nil, err
@@ -34,26 +35,30 @@ func (db JobMongoDB) Get(id string) (*domain.Job, error) {
 
 }
 
-func (db JobMongoDB) GetAll(search string) ([]*domain.Job, error) {
+func (db *JobMongoDB) GetAll(search string) ([]*domain.Job, error) {
 	filter := bson.D{{"title", bson.M{"$regex": "^.*" + search + ".*$"}}, {"description", bson.M{"$regex": "^.*" + search + ".*$"}}}
 	return db.filter(filter)
 }
 
-func (db JobMongoDB) Create(job *domain.Job) error {
-	_, err := db.job.InsertOne(context.TODO(), job)
+func (db *JobMongoDB) Create(job *domain.Job) error {
+	_, err := db.jobs.InsertOne(context.TODO(), job)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (db JobMongoDB) DeleteAll() error {
-	_, err := db.job.DeleteMany(context.TODO(), bson.D{})
-	return err
+func (db *JobMongoDB) DeleteAll() error {
+	fmt.Print("pre deletemany")
+	_, err := db.jobs.DeleteMany(context.TODO(), bson.D{{}})
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func (db *JobMongoDB) filter(filter interface{}) ([]*domain.Job, error) {
-	cursor, err := db.job.Find(context.TODO(), filter)
+	cursor, err := db.jobs.Find(context.TODO(), filter)
 	defer cursor.Close(context.TODO())
 
 	if err != nil {
@@ -63,7 +68,7 @@ func (db *JobMongoDB) filter(filter interface{}) ([]*domain.Job, error) {
 }
 
 func (db *JobMongoDB) filterOne(filter interface{}) (Job *domain.Job, err error) {
-	result := db.job.FindOne(context.TODO(), filter)
+	result := db.jobs.FindOne(context.TODO(), filter)
 	err = result.Decode(&Job)
 	return
 }
