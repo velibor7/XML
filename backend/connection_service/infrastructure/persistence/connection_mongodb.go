@@ -10,7 +10,7 @@ import (
 )
 
 const (
-	DATABASE    = "connection_service"
+	DATABASE    = "connection_db"
 	CONNECTIONS = "connection"
 	PRIVACY     = "profilePrivacy"
 )
