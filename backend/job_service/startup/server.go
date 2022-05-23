@@ -29,6 +29,7 @@ func NewServer(config *config.Config) *Server {
 func (server *Server) Start() {
 	mongoClient := server.initMongoClient()
 	jobInterface := server.initJobInterface(mongoClient)
+
 	jobService := server.initJobService(jobInterface)
 	jobHandler := server.initJobHandler(jobService)
 
@@ -45,19 +46,15 @@ func (server *Server) initMongoClient() *mongo.Client {
 
 func (server *Server) initJobInterface(client *mongo.Client) domain.JobInterface {
 	jobInterface := persistence.NewJobMongoDB(client)
-	fmt.Print("creating intre\n")
 	err := jobInterface.DeleteAll()
-	fmt.Print("deleted all\n")
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Print("looping data\n")
 	for _, Job := range jobs {
 		err := jobInterface.Create(Job)
 		if err != nil {
 			panic(err)
 		}
-
 	}
 	return jobInterface
 }

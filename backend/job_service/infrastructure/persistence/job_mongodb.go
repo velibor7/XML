@@ -11,7 +11,7 @@ import (
 )
 
 const (
-	DATABASE   = "job_db"
+	DATABASE   = "job"
 	COLLECTION = "job"
 )
 
@@ -19,7 +19,7 @@ type JobMongoDB struct {
 	jobs *mongo.Collection
 }
 
-func NewJobMongoDB(client *mongo.Client) *JobMongoDB {
+func NewJobMongoDB(client *mongo.Client) domain.JobInterface {
 	job := client.Database(DATABASE).Collection(COLLECTION)
 	return &JobMongoDB{
 		jobs: job,
@@ -35,16 +35,25 @@ func (db *JobMongoDB) Get(id string) (*domain.Job, error) {
 
 }
 
-func (db *JobMongoDB) GetAll(search string) ([]*domain.Job, error) {
-	filter := bson.D{{"title", bson.M{"$regex": "^.*" + search + ".*$"}}, {"description", bson.M{"$regex": "^.*" + search + ".*$"}}}
+func (db *JobMongoDB) GetAll() ([]*domain.Job, error) {
+	filter := bson.D{{}}
+	return db.filter(filter)
+}
+
+func (db *JobMongoDB) GetByTitle(title string) ([]*domain.Job, error) {
+	filter := bson.D{{Key: "title", Value: bson.M{"$regex": "^.*" + title + ".*$"}}}
 	return db.filter(filter)
 }
 
 func (db *JobMongoDB) Create(job *domain.Job) error {
-	_, err := db.jobs.InsertOne(context.TODO(), job)
+	fmt.Print("usao u create za bazu")
+	insert, err := db.jobs.InsertOne(context.TODO(), job)
+	fmt.Print("insertovao")
 	if err != nil {
 		return err
 	}
+	job.Id = insert.InsertedID.(primitive.ObjectID)
+	fmt.Print("vraca vrednost")
 	return nil
 }
 

@@ -31,7 +31,7 @@ func (handler *JobHandler) Get(ctx context.Context, request *pb.GetRequest) (*pb
 }
 
 func (handler *JobHandler) GetAll(ctx context.Context, request *pb.GetAllRequest) (*pb.GetAllResponse, error) {
-	Jobs, err := handler.service.GetAll(request.Search)
+	Jobs, err := handler.service.GetAll()
 	if err != nil {
 		return nil, err
 	}
@@ -56,4 +56,20 @@ func (hanlder *JobHandler) Create(ctx context.Context, request *pb.CreateRequest
 	return &pb.CreateResponse{
 		Job: mapJob(job),
 	}, nil
+}
+
+func (handler *JobHandler) GetByTitle(ctx context.Context, request *pb.GetByTitleRequest) (*pb.GetByTitleResponse, error) {
+	Jobs, err := handler.service.GetByTitle(request.Title)
+	if err != nil {
+		return nil, err
+	}
+	response := &pb.GetByTitleResponse{
+		Job: []*pb.Job{},
+	}
+
+	for _, Job := range Jobs {
+		temp := mapJob(Job)
+		response.Job = append(response.Job, temp)
+	}
+	return response, nil
 }

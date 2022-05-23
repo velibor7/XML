@@ -25,6 +25,7 @@ type JobServiceClient interface {
 	Get(ctx context.Context, in *GetRequest, opts ...grpc.CallOption) (*GetResponse, error)
 	GetAll(ctx context.Context, in *GetAllRequest, opts ...grpc.CallOption) (*GetAllResponse, error)
 	Create(ctx context.Context, in *CreateRequest, opts ...grpc.CallOption) (*CreateResponse, error)
+	GetByTitle(ctx context.Context, in *GetByTitleRequest, opts ...grpc.CallOption) (*GetByTitleResponse, error)
 }
 
 type jobServiceClient struct {
@@ -62,6 +63,15 @@ func (c *jobServiceClient) Create(ctx context.Context, in *CreateRequest, opts .
 	return out, nil
 }
 
+func (c *jobServiceClient) GetByTitle(ctx context.Context, in *GetByTitleRequest, opts ...grpc.CallOption) (*GetByTitleResponse, error) {
+	out := new(GetByTitleResponse)
+	err := c.cc.Invoke(ctx, "/job.JobService/GetByTitle", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // JobServiceServer is the server API for JobService service.
 // All implementations must embed UnimplementedJobServiceServer
 // for forward compatibility
@@ -69,6 +79,7 @@ type JobServiceServer interface {
 	Get(context.Context, *GetRequest) (*GetResponse, error)
 	GetAll(context.Context, *GetAllRequest) (*GetAllResponse, error)
 	Create(context.Context, *CreateRequest) (*CreateResponse, error)
+	GetByTitle(context.Context, *GetByTitleRequest) (*GetByTitleResponse, error)
 	mustEmbedUnimplementedJobServiceServer()
 }
 
@@ -84,6 +95,9 @@ func (UnimplementedJobServiceServer) GetAll(context.Context, *GetAllRequest) (*G
 }
 func (UnimplementedJobServiceServer) Create(context.Context, *CreateRequest) (*CreateResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Create not implemented")
+}
+func (UnimplementedJobServiceServer) GetByTitle(context.Context, *GetByTitleRequest) (*GetByTitleResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetByTitle not implemented")
 }
 func (UnimplementedJobServiceServer) mustEmbedUnimplementedJobServiceServer() {}
 
@@ -152,6 +166,24 @@ func _JobService_Create_Handler(srv interface{}, ctx context.Context, dec func(i
 	return interceptor(ctx, in, info, handler)
 }
 
+func _JobService_GetByTitle_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetByTitleRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(JobServiceServer).GetByTitle(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/job.JobService/GetByTitle",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(JobServiceServer).GetByTitle(ctx, req.(*GetByTitleRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // JobService_ServiceDesc is the grpc.ServiceDesc for JobService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -170,6 +202,10 @@ var JobService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Create",
 			Handler:    _JobService_Create_Handler,
+		},
+		{
+			MethodName: "GetByTitle",
+			Handler:    _JobService_GetByTitle_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

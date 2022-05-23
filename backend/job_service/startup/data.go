@@ -9,7 +9,7 @@ var jobs = []*domain.Job{
 	{
 		Id:          getObjectId("12306b12654b3pa649s63l13"),
 		Title:       "developer",
-		Description: "description",
+		Description: "neki description",
 		Skills:      nil,
 		UserId:      getObjectId("12306b1b644b3pa649s63l13"),
 	},

@@ -11,7 +11,6 @@ COPY ./backend/job_service/go.mod ./backend/job_service/go.sum ./
 COPY /backend/common ../common
 
 # Download all dependencies. Dependencies will be cached if the go.mod and go.sum files are not changed
-RUN go mod tidy
 RUN go mod download
 
 # Copy everything from the current directory to the Working Directory inside the container
@@ -19,8 +18,6 @@ COPY ./backend/job_service/ .
 
 # Build the Go app
 RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o main .
-
-
 
 ######## Start a new stage from scratch #######
 FROM alpine:latest
