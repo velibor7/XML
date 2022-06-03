@@ -1,4 +1,5 @@
 import React, { useState, useContext } from "react";
+import { useNavigate } from 'react-router-dom'
 
 import Card from "../../shared/components/UIElements/Card";
 import Input from "../../shared/components/FormElements/Input";
@@ -18,8 +19,10 @@ import "./Auth.css";
 
 const Auth = (props) => {
   const auth = useContext(AuthContext);
-  const [isLoginMode, setIsLoginMode] = useState(true);
+  const [ isLoginMode, setIsLoginMode ] = useState(true);
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
+
+  const navigate = useNavigate()
 
   const [formState, inputHandler, setFormData] = useForm(
     {
@@ -65,10 +68,10 @@ const Auth = (props) => {
     if (isLoginMode) {
       try {
         const responseData = await sendRequest(
-          "http://localhost:5000/api/users/login",
+          "http://localhost:8001/api/authToken",
           "POST",
           JSON.stringify({
-            email: formState.inputs.email.value,
+            username: formState.inputs.email.value,
             password: formState.inputs.password.value,
           }),
           {
@@ -76,27 +79,36 @@ const Auth = (props) => {
           }
         );
         console.log(responseData);
-        auth.login(responseData.userId, responseData.token);
+        auth.login(responseData.user_id, responseData.type, responseData.token);
+
+        navigate.push('/')
+        
       } catch (err) {}
     } else {
       try {
         const formData = new FormData();
+        formData.append("first_name", formState.inputs.firstName.value);
+        formData.append("last_name", formState.inputs.lastName.value);
+        formData.append("phone_number", formState.inputs.phoneNumber.value);
+        formData.append("type", formState.inputs.userType.value);
+        formData.append("country", formState.inputs.country.value);
+        formData.append("city", formState.inputs.city.value);
+        formData.append("street", formState.inputs.street.value);
         formData.append("email", formState.inputs.email.value);
-        formData.append("name", formState.inputs.name.value);
         formData.append("password", formState.inputs.password.value);
         const responseData = await sendRequest(
-          "http://localhost:5000/api/users/signup",
+          "http://localhost:8001/api/authenticatedUser",
           "POST",
           formData
         );
 
-        auth.login(responseData.userId, responseData.token);
+        // auth.login(responseData.userId, responseData.token);
       } catch (err) {}
     }
   };
 
   return (
-    <React.Fragment>
+    <>
       <ErrorModal error={error} onClear={clearError} />
       <Card className="auth">
         <h2>Login Required</h2>
@@ -104,15 +116,71 @@ const Auth = (props) => {
         <form onSubmit={authSubmitHandler}>
           {isLoading && <Spinner asOverlay />}
           {!isLoginMode && (
+            <>
             <Input
               element="input"
-              id="name"
+              id="firstName"
               type="text"
-              label="Your Name"
+              label="First Name"
               validators={[VALIDATOR_REQUIRE()]}
-              errorText="Please enter a name."
+              errorText="Please enter a first name."
               onInput={inputHandler}
             />
+            <Input
+              element="input"
+              id="lastName"
+              type="text"
+              label="Last Name"
+              validators={[VALIDATOR_REQUIRE()]}
+              errorText="Please enter a last name."
+              onInput={inputHandler}
+            />
+            <Input
+              element="input"
+              id="phoneNumber"
+              type="text"
+              label="Phone number"
+              validators={[VALIDATOR_REQUIRE()]}
+              errorText="Please enter a phone number."
+              onInput={inputHandler}
+            />
+            <Input
+              element="input"
+              id="country"
+              type="text"
+              label="Country"
+              validators={[VALIDATOR_REQUIRE()]}
+              errorText="Please enter a country."
+              onInput={inputHandler}
+            />
+            <Input
+              element="input"
+              id="city"
+              type="text"
+              label="City"
+              validators={[VALIDATOR_REQUIRE()]}
+              errorText="Please enter a city."
+              onInput={inputHandler}
+            />
+            <Input
+              element="input"
+              id="street"
+              type="text"
+              label="Street"
+              validators={[VALIDATOR_REQUIRE()]}
+              errorText="Please enter a street."
+              onInput={inputHandler}
+            />
+            <Input
+              element="input"
+              id="userType"
+              type="text"
+              label="Type: CLIENT/BOAT_OWNER/COTTAGE_OWNER/INSTRUCTOR"
+              validators={[VALIDATOR_REQUIRE()]}
+              errorText="Please enter a user type."
+              onInput={inputHandler}
+            />
+          </>
           )}
           <Input
             element="input"
@@ -132,9 +200,20 @@ const Auth = (props) => {
             errorText="Please enter a valid password, at least 6 characters."
             onInput={inputHandler}
           />
+          {!isLoginMode && (
+            <Input
+              element="input"
+              id="password"
+              type="password"
+              label="Password, again"
+              validators={[VALIDATOR_MINLENGTH(6)]}
+              errorText="Please enter a valid password, at least 6 characters."
+              onInput={inputHandler}
+            />
+          )}
           <Button
             type="submit"
-            disabled={!formState.isValid}
+            // disabled={!formState.isValid}
             className="center-btn"
           >
             {isLoginMode ? "LOGIN" : "SIGNUP"}
@@ -144,7 +223,7 @@ const Auth = (props) => {
           SWITCH TO {isLoginMode ? "SIGNUP" : "LOGIN"}
         </Button>
       </Card>
-    </React.Fragment>
+    </>
   );
 };
 

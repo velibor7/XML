@@ -5,57 +5,48 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
-
-import NewCocktail from "./cocktails/pages/NewCocktail";
-import UserCocktails from "./cocktails/pages/UserCocktails";
-import UpdateCocktail from "./cocktails/pages/UpdateCocktail";
 import MainNavigation from "./shared/components/Navigation/MainNavigation";
-import Home from "./cocktails/pages/Home";
-import Auth from './users/pages/Auth'
 import { AuthContext } from "./shared/context/auth-context";
 import { useAuth } from "./shared/hooks/auth-hook";
 
 import "./App.css";
+import HomeUnauth from "./home/pages/HomeUnauth";
+import Jobs from "./jobs/pages/Jobs";
+import Profiles from "./profiles/pages/Profiles";
+import Auth from "./users/pages/Auth";
 
 const App = () => {
   const { token, login, logout, userId } = useAuth();
 
   let routes;
 
-  if (token) {
-    routes = (
-      <Routes>
-        <Route path="/" exact>
-          <Home />
-        </Route>
-        <Route path="/:userId/cocktails" exact>
-          <UserCocktails />
-        </Route>
-        <Route path="/cocktails/new" exact>
-          <NewCocktail />
-        </Route>
-        <Route path="/cocktails/:cocktailId">
-          <UpdateCocktail />
-        </Route>
-        <Navigate to="/" />
-      </Routes>
-    );
-  } else {
-    routes = (
-      <Routes>
-        <Route path="/" exact>
-          <Home />
-        </Route>
-        <Route path="/:userId/cocktails" exact>
-          <UserCocktails />
-        </Route>
-        <Route path="/auth">
-          <Auth />
-        </Route>
-        <Navigate to="/auth" />
-      </Routes>
-    );
-  }
+  // if (token) {
+  //   routes = (
+  //     <Routes>
+  //       <Route path="/" exact>
+  //         {/* <Home /> */}
+  //         <div>home</div>
+  //       </Route>
+  //       {/*
+  //       <Route path="/:userId/cocktails" exact>
+  //         <UserCocktails />
+  //       </Route>
+  //       <Route path="/cocktails/new" exact>
+  //         <NewCocktail />
+  //       </Route>
+  //       <Route path="/cocktails/:cocktailId">
+  //         <UpdateCocktail />
+  //       </Route> */}
+  //       <Navigate to="/" />
+  //     </Routes>
+  //   );
+  // } else {
+  //   routes = (
+  //     <Routes>
+  //       <Route path="/auth" component={ Auth } />
+  //       {/* <Navigate to="/auth" /> */}
+  //   );
+  // }
 
   return (
     <AuthContext.Provider
@@ -69,7 +60,12 @@ const App = () => {
     >
       <Router>
         <MainNavigation />
-        <main>{routes}</main>
+        <Routes>
+          <Route path="/" exact="true" element={<HomeUnauth />} />
+          <Route path="/auth" exact="true" element={<Auth />} />
+          <Route path="/jobs" exact="true" element={<Jobs />} />
+          <Route path="/profiles" exact="true" element={<Profiles />} />
+        </Routes>
       </Router>
     </AuthContext.Provider>
   );
