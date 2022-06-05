@@ -11,7 +11,7 @@ import { useAuth } from "./shared/hooks/auth-hook";
 
 import "./App.css";
 import HomeUnauth from "./home/pages/HomeUnauth";
-import Jobs from "./jobs/pages/Jobs";
+import Jobs from "./jobs/pages/AllJobs";
 import Profiles from "./profiles/pages/Profiles";
 import Auth from "./users/pages/Auth";
 
