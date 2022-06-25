@@ -46,14 +46,11 @@ func (db *JobMongoDB) GetByTitle(title string) ([]*domain.Job, error) {
 }
 
 func (db *JobMongoDB) Create(job *domain.Job) error {
-	fmt.Print("usao u create za bazu")
 	insert, err := db.jobs.InsertOne(context.TODO(), job)
-	fmt.Print("insertovao")
 	if err != nil {
 		return err
 	}
 	job.Id = insert.InsertedID.(primitive.ObjectID)
-	fmt.Print("vraca vrednost")
 	return nil
 }
 
