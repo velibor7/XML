@@ -29,3 +29,8 @@ func (service *ProfileService) Create(profile *domain.Profile) error {
 func (service *ProfileService) Update(id string, profile *domain.Profile) error {
 	return service.profiles.Update(id, profile)
 }
+
+///Rollback
+func (service *ProfileService) RollbackUpdate(profile domain.Profile) error {
+	return service.profiles.Update(profile.Id.Hex(), &profile)
+}
