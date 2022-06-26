@@ -5,7 +5,7 @@ go 1.18
 replace github.com/velibor7/XML/common => ../common
 
 require (
-	github.com/grpc-ecosystem/grpc-gateway/v2 v2.10.1
+	github.com/grpc-ecosystem/grpc-gateway/v2 v2.10.3
 	github.com/velibor7/XML/common v1.0.0
 	google.golang.org/grpc v1.46.2
 )

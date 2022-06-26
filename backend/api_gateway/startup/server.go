@@ -34,7 +34,6 @@ func NewServer(config *cfg.Config) *Server {
 func (server *Server) initHandlers() {
 	opts := []grpc.DialOption{grpc.WithTransportCredentials(insecure.NewCredentials())}
 	authenticationEndpoint := fmt.Sprintf("%s:%s", server.config.AuthenticationHost, server.config.AuthenticationPort)
-	// err := authenticationGw.RegisterAuthenticationServiceHandlerFromEndpoint(context.TODO(), server.mux, authenticationEndpoint, opts)
 	err := authenticationGw.RegisterAuthServiceHandlerFromEndpoint(context.TODO(), server.mux, authenticationEndpoint, opts)
 	if err != nil {
 		panic(err)
