@@ -78,6 +78,7 @@ message Profile {
     repeated WorkExperience workExperience = 11;
     repeated string skills = 12;
     repeated string interests = 13;
+    bool isPrivate = 14;
 }
 
 message Education{
