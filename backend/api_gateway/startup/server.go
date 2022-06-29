@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/gorilla/handlers"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	cfg "github.com/velibor7/XML/api_gateway/startup/config"
 	authenticationGw "github.com/velibor7/XML/common/proto/authentication_service"
@@ -64,6 +65,12 @@ func (server *Server) initHandlers() {
 	}
 }
 
-func (server *Server) Start() {
-	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", server.config.Port), server.mux))
+func (server Server) Start() {
+	cors := handlers.CORS(
+		handlers.AllowedOrigins([]string{"http://localhost:8080/**", "http://localhost:3000/**", "http://localhost:3000"}),
+		handlers.AllowedMethods([]string{"GET", "POST", "PUT", "DELETE", "OPTIONS"}),
+		handlers.AllowedHeaders([]string{"Accept", "Accept-Language", "Content-Type", "Content-Language", "Origin", "Authorization", "Access-Control-Allow-Origin", ""}),
+		handlers.AllowCredentials(),
+	)
+	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", server.config.Port), cors(server.mux)))
 }
