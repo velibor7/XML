@@ -7,7 +7,6 @@ import ErrorModal from "../../shared/components/UIElements/ErrorModal";
 import Spinner from "../../shared/components/UIElements/Spinner";
 
 import {
-  VALIDATOR_EMAIL,
   VALIDATOR_MINLENGTH,
   VALIDATOR_REQUIRE,
 } from "../../shared/util/validators";
@@ -23,7 +22,7 @@ const Auth = (props) => {
 
   const [formState, inputHandler, setFormData] = useForm(
     {
-      email: {
+      username: {
         value: "",
         isValid: false,
       },
@@ -42,7 +41,7 @@ const Auth = (props) => {
           ...formState.inputs,
           name: undefined,
         },
-        formState.inputs.email.isValid && formState.inputs.password.isValid
+        formState.inputs.password.isValid
       );
     } else {
       setFormData(
@@ -68,7 +67,7 @@ const Auth = (props) => {
           "http://localhost:8000/auth/login",
           "POST",
           JSON.stringify({
-            email: formState.inputs.email.value,
+            username: formState.inputs.username.value,
             password: formState.inputs.password.value,
           }),
           {
@@ -81,8 +80,7 @@ const Auth = (props) => {
     } else {
       try {
         const formData = new FormData();
-        formData.append("email", formState.inputs.email.value);
-        formData.append("name", formState.inputs.name.value);
+        formData.append("username", formState.inputs.username.value);
         formData.append("password", formState.inputs.password.value);
         const responseData = await sendRequest(
           "http://localhost:8000/auth/register",
@@ -116,11 +114,11 @@ const Auth = (props) => {
           )}
           <Input
             element="input"
-            id="email"
-            type="email"
-            label="E-Mail"
-            validators={[VALIDATOR_EMAIL()]}
-            errorText="Please enter a valid email address."
+            id="username"
+            type="username"
+            label="Username"
+            validators={[]}
+            errorText="Please enter a username"
             onInput={inputHandler}
           />
           <Input
