@@ -34,6 +34,7 @@ const App = () => {
         <Routes>
           <Route path="/profiles/:userId/" element={<UserProfile/>}/>
           <Route path="/profiles" element={<UserProfiles/>}/>
+          <Route path="/auth" element={<Auth/>}/>
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Router>

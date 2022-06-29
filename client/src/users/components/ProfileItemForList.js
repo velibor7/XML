@@ -4,25 +4,26 @@ import "./ProfileItem.css";
 import React, { useContext } from "react";
 
 
-const ProfileItem = (props) => {
+const ProfileItemForList = (props) => {
 
   return (
     <>
-      <h1>Profile</h1>
       <div className="profile__item">
-        <h4 className="profile__item__firstName">{props.item.profile?.firstName}</h4>
+        <Link to={`/profiles/${props.item.id}`}>
+          <h4 className="profile__item__firstName">{props.item.firstName}</h4>
+        </Link>
         <div className="profile__item__info">
           <p className="profile__item__firstName">
-            First name: {props.item.profile?.firstName}
+            First name: {props.item.firstName}
           </p>
           <p className="profile__item__lastName">
-            Last name: {props.item.profile?.lastName}
+            Last name: {props.item.lastName}
           </p>
           <p className="profile__item__gender">
-            Gender: {props.item.profile?.gender}
+            Gender: {props.item.gender}
           </p>
           <p className="profile__item__biography">
-            Biography: {props.item.profile?.biography}
+            Biography: {props.item.biography}
           </p>
         </div>
       </div>
@@ -30,4 +31,4 @@ const ProfileItem = (props) => {
   );
 };
 
-export default ProfileItem;
+export default ProfileItemForList;

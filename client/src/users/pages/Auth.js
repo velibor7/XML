@@ -65,7 +65,7 @@ const Auth = (props) => {
     if (isLoginMode) {
       try {
         const responseData = await sendRequest(
-          "http://localhost:5000/api/users/login",
+          "http://localhost:8000/auth/login",
           "POST",
           JSON.stringify({
             email: formState.inputs.email.value,
@@ -85,7 +85,7 @@ const Auth = (props) => {
         formData.append("name", formState.inputs.name.value);
         formData.append("password", formState.inputs.password.value);
         const responseData = await sendRequest(
-          "http://localhost:5000/api/users/signup",
+          "http://localhost:8000/auth/register",
           "POST",
           formData
         );
