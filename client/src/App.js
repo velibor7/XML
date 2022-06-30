@@ -36,6 +36,12 @@ const App = () => {
           <Route path="/profiles" element={<UserProfiles/>}/>
           <Route path="/auth" element={<Auth/>}/>
           <Route path="*" element={<NotFound />} />
+          {(token === true) && (
+            <>
+              <Route path="*" element={<NotFound />} />
+            </>
+          )
+          }
         </Routes>
       </Router>
     </AuthContext.Provider>

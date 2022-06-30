@@ -1,4 +1,5 @@
 import React, { useState, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 
 import Card from "../../shared/components/UIElements/Card";
 import Input from "../../shared/components/FormElements/Input";
@@ -19,7 +20,9 @@ const Auth = (props) => {
   const auth = useContext(AuthContext);
   const [isLoginMode, setIsLoginMode] = useState(true);
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
-
+  
+  const navigate = useNavigate();
+  
   const [formState, inputHandler, setFormData] = useForm(
     {
       username: {
@@ -76,6 +79,9 @@ const Auth = (props) => {
         );
         console.log(responseData);
         auth.login(responseData.userId, responseData.token);
+        if (auth.isLoggedIn){
+          navigate("/");
+        }
       } catch (err) {}
     } else {
       try {
@@ -88,13 +94,13 @@ const Auth = (props) => {
           formData
         );
 
-        auth.login(responseData.userId, responseData.token);
+        //auth.login(responseData.userId, responseData.token);
       } catch (err) {}
     }
   };
 
   return (
-    <React.Fragment>
+    <>
       <ErrorModal error={error} onClear={clearError} />
       <Card className="auth">
         <h2>Login Required</h2>
@@ -117,7 +123,7 @@ const Auth = (props) => {
             id="username"
             type="username"
             label="Username"
-            validators={[]}
+            validators={[VALIDATOR_REQUIRE()]}
             errorText="Please enter a username"
             onInput={inputHandler}
           />
@@ -142,7 +148,7 @@ const Auth = (props) => {
           SWITCH TO {isLoginMode ? "SIGNUP" : "LOGIN"}
         </Button>
       </Card>
-    </React.Fragment>
+    </>
   );
 };
 
