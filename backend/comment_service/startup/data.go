@@ -1,15 +1,16 @@
 package startup
 
 import (
-	"github.com/velibor7/XML/authentication_service/domain"
+	"github.com/velibor7/XML/comment_service/domain"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-var user_credentials = []*domain.UserCredential{
+var comments = []*domain.Comment{
 	{
-		Id:       getObjectId("48123asdv12j124bc834123asgh"),
+		Id:       getObjectId("63426daa12322d1748f63fe2"),
+		Content:  "Svaka cast druze",
 		Username: "velibor",
-		Password: "test123",
+		PostId:   getObjectId("5789o4236423k5vjbhrwetkjbhbf980d"),
 	},
 }
 

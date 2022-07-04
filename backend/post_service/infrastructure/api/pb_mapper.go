@@ -15,7 +15,7 @@ func mapPost(post *domain.Post) *pb.Post {
 		Id:      post.Id.Hex(),
 		Text:    post.Text,
 		Created: timestamppb.New(post.Created),
-		UserId:  post.UserId,
+		UserId:  post.UserId.Hex(),
 		Images:  post.Images,
 		Links:   post.Links,
 	}
@@ -34,24 +34,16 @@ func mapPost(post *domain.Post) *pb.Post {
 		})
 	}
 
-	for _, comment := range post.Comments {
-		postPb.Comments = append(postPb.Comments, &pb.Comment{
-			Id:     comment.Id.Hex(),
-			UserId: comment.UserId,
-			Text:   comment.Text,
-		})
-	}
-
 	return postPb
 }
 
 func mapCreatePost(post *pb.Post) *domain.Post {
 	id, _ := primitive.ObjectIDFromHex(post.Id)
-
+	userId, _ := primitive.ObjectIDFromHex(post.UserId)
 	postPb := &domain.Post{
 		Id:      id,
 		Text:    post.Text,
-		UserId:  post.UserId,
+		UserId:  userId,
 		Images:  post.Images,
 		Links:   post.Links,
 		Created: time.Now(),
@@ -62,13 +54,13 @@ func mapCreatePost(post *pb.Post) *domain.Post {
 
 func mapUpdatePost(oldData *pb.Post, newData *pb.Post) *domain.Post {
 	id, _ := primitive.ObjectIDFromHex(oldData.Id)
-
+	userId, _ := primitive.ObjectIDFromHex(oldData.UserId)
 	fmt.Println(id)
 
 	postPb := &domain.Post{
 		Id:      id,
 		Text:    newData.Text,
-		UserId:  oldData.UserId,
+		UserId:  userId,
 		Images:  newData.Images,
 		Links:   newData.Links,
 		Created: oldData.Created.AsTime(),
@@ -106,24 +98,6 @@ func mapUpdatePost(oldData *pb.Post, newData *pb.Post) *domain.Post {
 			postPb.Dislikes = append(postPb.Dislikes, domain.Dislike{
 				Id:     dislike_id,
 				UserId: dislike.UserId,
-			})
-		}
-	}
-
-	for _, comment := range newData.Comments {
-		if comment.Id == "" {
-			comment_id := primitive.NewObjectID()
-			postPb.Comments = append(postPb.Comments, domain.Comment{
-				Id:     comment_id,
-				UserId: comment.UserId,
-				Text:   comment.Text,
-			})
-		} else {
-			comment_id, _ := primitive.ObjectIDFromHex(comment.Id)
-			postPb.Comments = append(postPb.Comments, domain.Comment{
-				Id:     comment_id,
-				UserId: comment.UserId,
-				Text:   comment.Text,
 			})
 		}
 	}

@@ -22,7 +22,7 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type CommentServiceClient interface {
-	Get(ctx context.Context, in *GetForPostRequest, opts ...grpc.CallOption) (*GetForPostResponse, error)
+	GetForPost(ctx context.Context, in *GetForPostRequest, opts ...grpc.CallOption) (*GetForPostResponse, error)
 	Create(ctx context.Context, in *CreateRequest, opts ...grpc.CallOption) (*CreateResponse, error)
 }
 
@@ -34,9 +34,9 @@ func NewCommentServiceClient(cc grpc.ClientConnInterface) CommentServiceClient {
 	return &commentServiceClient{cc}
 }
 
-func (c *commentServiceClient) Get(ctx context.Context, in *GetForPostRequest, opts ...grpc.CallOption) (*GetForPostResponse, error) {
+func (c *commentServiceClient) GetForPost(ctx context.Context, in *GetForPostRequest, opts ...grpc.CallOption) (*GetForPostResponse, error) {
 	out := new(GetForPostResponse)
-	err := c.cc.Invoke(ctx, "/comment.CommentService/Get", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/comment.CommentService/GetForPost", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -56,7 +56,7 @@ func (c *commentServiceClient) Create(ctx context.Context, in *CreateRequest, op
 // All implementations must embed UnimplementedCommentServiceServer
 // for forward compatibility
 type CommentServiceServer interface {
-	Get(context.Context, *GetForPostRequest) (*GetForPostResponse, error)
+	GetForPost(context.Context, *GetForPostRequest) (*GetForPostResponse, error)
 	Create(context.Context, *CreateRequest) (*CreateResponse, error)
 	mustEmbedUnimplementedCommentServiceServer()
 }
@@ -65,8 +65,8 @@ type CommentServiceServer interface {
 type UnimplementedCommentServiceServer struct {
 }
 
-func (UnimplementedCommentServiceServer) Get(context.Context, *GetForPostRequest) (*GetForPostResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Get not implemented")
+func (UnimplementedCommentServiceServer) GetForPost(context.Context, *GetForPostRequest) (*GetForPostResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetForPost not implemented")
 }
 func (UnimplementedCommentServiceServer) Create(context.Context, *CreateRequest) (*CreateResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Create not implemented")
@@ -84,20 +84,20 @@ func RegisterCommentServiceServer(s grpc.ServiceRegistrar, srv CommentServiceSer
 	s.RegisterService(&CommentService_ServiceDesc, srv)
 }
 
-func _CommentService_Get_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _CommentService_GetForPost_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetForPostRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(CommentServiceServer).Get(ctx, in)
+		return srv.(CommentServiceServer).GetForPost(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/comment.CommentService/Get",
+		FullMethod: "/comment.CommentService/GetForPost",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(CommentServiceServer).Get(ctx, req.(*GetForPostRequest))
+		return srv.(CommentServiceServer).GetForPost(ctx, req.(*GetForPostRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -128,8 +128,8 @@ var CommentService_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*CommentServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "Get",
-			Handler:    _CommentService_Get_Handler,
+			MethodName: "GetForPost",
+			Handler:    _CommentService_GetForPost_Handler,
 		},
 		{
 			MethodName: "Create",

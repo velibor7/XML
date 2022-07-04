@@ -7,7 +7,7 @@ package comment;
 import "google/api/annotations.proto";
 
 service CommentService {
-    rpc Get (GetForPostRequest) returns (GetForPostResponse) {
+    rpc GetForPost (GetForPostRequest) returns (GetForPostResponse) {
         option (google.api.http) = {
             get: "/post/{id}/details"
         };

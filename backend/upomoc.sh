@@ -21,3 +21,11 @@ cd ..
 cd connection_service
 go mod tidy
 cd ..
+
+cd job_service
+go mod tidy
+cd ..
+
+cd comment_service
+go mod tidy
+cd ..

@@ -1,6 +1,6 @@
 package update_profile
 
-import "github.com/velibor7/XML/profile_service/domain"
+import "github.com/velibor7/XML/common/domain"
 
 type UpdateProfileCommandType int8
 
