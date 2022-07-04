@@ -22,6 +22,8 @@ services:
       POST_SERVICE_HOST: ${POST_SERVICE_HOST}
       JOB_SERVICE_PORT: ${JOB_SERVICE_PORT}
       JOB_SERVICE_HOST: ${JOB_SERVICE_HOST}
+      COMMENT_SERVICE_HOST: ${COMMENT_SERVICE_HOST}
+      COMMENT_SERVICE_PORT: ${COMMENT_SERVICE_PORT}
     networks:
       - network
 
@@ -51,12 +53,16 @@ services:
       PROFILE_DB_PORT: ${PROFILE_DB_PORT}
       PROFILE_DB_HOST: ${PROFILE_DB_HOST}
       PROFILE_SERVICE_PORT: ${PROFILE_SERVICE_PORT}
+      COMMENT_SERVICE_HOST: ${COMMENT_SERVICE_HOST}
+      COMMENT_SERVICE_PORT: ${COMMENT_SERVICE_PORT}
       NATS_HOST: ${NATS_HOST}
       NATS_PORT: ${NATS_PORT}
       NATS_USER: ${NATS_USER}
       NATS_PASS: ${NATS_PASS}
-      CREATE_ORDER_COMMAND_SUBJECT: ${CREATE_ORDER_COMMAND_SUBJECT}
-      CREATE_ORDER_REPLY_SUBJECT: ${CREATE_ORDER_REPLY_SUBJECT}      
+      CREATE_PROFILE_COMMAND_SUBJECT: ${CREATE_PROFILE_COMMAND_SUBJECT}
+      CREATE_PROFILE_REPLY_SUBJECT: ${CREATE_PROFILE_REPLY_SUBJECT}
+      UPDATE_PROFILE_COMMAND_SUBJECT: ${UPDATE_PROFILE_COMMAND_SUBJECT}
+      UPDATE_PROFILE_REPLY_SUBJECT: ${UPDATE_PROFILE_REPLY_SUBJECT}         
     depends_on:
       - profile_db
     networks:
@@ -96,11 +102,31 @@ services:
       NATS_HOST: ${NATS_HOST}
       NATS_PORT: ${NATS_PORT}
       NATS_USER: ${NATS_USER}
-      NATS_PASS: ${NATS_PASS}
-      CREATE_ORDER_COMMAND_SUBJECT: ${CREATE_ORDER_COMMAND_SUBJECT}
-      CREATE_ORDER_REPLY_SUBJECT: ${CREATE_ORDER_REPLY_SUBJECT}      
+      NATS_PASS: ${NATS_PASS}     
     depends_on:
       - connection_db
+    networks:
+      - network
+
+  comment_service:
+    image: comment_service
+    container_name: comment_service
+    build:
+      context: .
+      dockerfile: ./backend/comment_service/Dockerfile
+    restart: on-failure
+    environment:
+      COMMENT_DB_HOST: ${COMMENT_DB_HOST}
+      COMMENT_DB_PORT: ${COMMENT_DB_PORT}
+      COMMENT_SERVICE_PORT: ${COMMENT_SERVICE_PORT}
+      NATS_HOST: ${NATS_HOST}
+      NATS_PORT: ${NATS_PORT}
+      NATS_USER: ${NATS_USER}
+      NATS_PASS: ${NATS_PASS}
+      UPDATE_PROFILE_COMMAND_SUBJECT: ${UPDATE_PROFILE_COMMAND_SUBJECT}
+      UPDATE_PROFILE_REPLY_SUBJECT: ${UPDATE_PROFILE_REPLY_SUBJECT}
+    depends_on:
+      - comment_db
     networks:
       - network
 
@@ -115,12 +141,14 @@ services:
       POST_DB_PORT: ${POST_DB_PORT}
       POST_DB_HOST: ${POST_DB_HOST}
       POST_SERVICE_PORT: ${POST_SERVICE_PORT}
+      COMMENT_SERVICE_HOST: ${COMMENT_SERVICE_HOST}
+      COMMENT_SERVICE_PORT: ${COMMENT_SERVICE_PORT}
       NATS_HOST: ${NATS_HOST}
       NATS_PORT: ${NATS_PORT}
       NATS_USER: ${NATS_USER}
       NATS_PASS: ${NATS_PASS}
-      CREATE_ORDER_COMMAND_SUBJECT: ${CREATE_ORDER_COMMAND_SUBJECT}
-      CREATE_ORDER_REPLY_SUBJECT: ${CREATE_ORDER_REPLY_SUBJECT}      
+      UPDATE_PROFILE_COMMAND_SUBJECT: ${UPDATE_PROFILE_COMMAND_SUBJECT}
+      UPDATE_PROFILE_REPLY_SUBJECT: ${UPDATE_PROFILE_REPLY_SUBJECT}    
     depends_on:
       - post_db
     networks:
@@ -142,6 +170,13 @@ services:
   connection_db:
     image: mongo
     container_name: connection_db
+    restart: on-failure
+    networks:
+      - network
+
+  comment_db:
+    image: mongo
+    container_name: comment_db
     restart: on-failure
     networks:
       - network

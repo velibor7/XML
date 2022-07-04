@@ -10,14 +10,13 @@ import (
 var posts = []*domain.Post{
 	{
 		Id:       getObjectId("5789o4236423k5vjbhrwetkjbhbf980d"),
-		Text:     "Neki post blablabla",
+		Text:     "Uspeli smo da napravimo i ovaj servis",
 		Images:   "",
 		Links:    "",
 		Created:  time.Time{},
 		Likes:    nil,
 		Dislikes: nil,
-		Comments: nil,
-		UserId:   "1",
+		UserId:   getObjectId("48123asdv12j124bc834123asgh"),
 	},
 }
 

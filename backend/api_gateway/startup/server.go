@@ -10,6 +10,7 @@ import (
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	cfg "github.com/velibor7/XML/api_gateway/startup/config"
 	authenticationGw "github.com/velibor7/XML/common/proto/authentication_service"
+	commentGw "github.com/velibor7/XML/common/proto/comment_service"
 	connectionGw "github.com/velibor7/XML/common/proto/connection_service"
 	jobGw "github.com/velibor7/XML/common/proto/job_service"
 	postGw "github.com/velibor7/XML/common/proto/post_service"
@@ -60,6 +61,12 @@ func (server *Server) initHandlers() {
 
 	jobEndpoint := fmt.Sprintf("%s:%s", server.config.JobHost, server.config.JobPort)
 	err = jobGw.RegisterJobServiceHandlerFromEndpoint(context.TODO(), server.mux, jobEndpoint, opts)
+	if err != nil {
+		panic(err)
+	}
+
+	commentEndpoint := fmt.Sprintf("%s:%s", server.config.CommentHost, server.config.CommentPort)
+	err = commentGw.RegisterCommentServiceHandlerFromEndpoint(context.TODO(), server.mux, commentEndpoint, opts)
 	if err != nil {
 		panic(err)
 	}

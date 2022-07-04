@@ -37,8 +37,8 @@ type WorkExperience struct {
 	EmploymentType string `bson:"employmentType"`
 }
 
-type User struct {
-	Id       primitive.ObjectID `bson:"_id"`
-	Username string             `bson:"username"`
-	Password string             `bson:"password"`
-}
+// type User struct {
+// 	Id       primitive.ObjectID `bson:"_id"`
+// 	Username string             `bson:"username"`
+// 	Password string             `bson:"password"`
+// }

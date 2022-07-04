@@ -1,9 +1,9 @@
 package application
 
 import (
+	"github.com/velibor7/XML/common/domain"
 	saga "github.com/velibor7/XML/common/saga/messaging"
 	events "github.com/velibor7/XML/common/saga/update_profile"
-	"github.com/velibor7/XML/profile_service/domain"
 )
 
 type UpdateProfileOrchestrator struct {
