@@ -42,7 +42,7 @@ func (handler *UpdateProfileCommandHandler) handle(command *events.UpdateProfile
 		oldProfile.LastName = command.OldLastName
 		oldProfile.IsPrivate = command.OldIsPrivate
 		oldProfile.FullName = command.OldFirstName + " " + command.OldLastName
-		err := handler.profileService.RollbackUpdate(oldProfile)
+		err := handler.profileService.RollbackUpdate(mapAuthProfileToProfile(&oldProfile))
 		if err != nil {
 			return
 		}

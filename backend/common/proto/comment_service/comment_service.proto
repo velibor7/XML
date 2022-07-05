@@ -1,0 +1,46 @@
+syntax = "proto3";
+
+option go_package = "github.com/velibor7/XML/common/comment";
+
+package comment;
+
+import "google/api/annotations.proto";
+
+service CommentService {
+    rpc GetForPost (GetForPostRequest) returns (GetForPostResponse) {
+        option (google.api.http) = {
+            get: "/post/{id}/details"
+        };
+    }
+    rpc Create (CreateRequest) returns (CreateResponse){
+        option (google.api.http) = {
+            post: "/post/{id}/comment"
+            body: "comment"
+        };
+    }
+}
+
+message GetForPostRequest {
+    string id = 1;
+}
+
+message GetForPostResponse {
+    repeated Comment comments = 1;
+}
+
+message CreateRequest {
+    string id = 1;
+    Comment comment = 2;
+}
+
+message CreateResponse {
+    string message = 1;
+}
+
+
+message Comment {
+    string id = 1;
+    string postId = 2;
+    string username = 3;
+    string content = 4;
+}

@@ -3,18 +3,21 @@ package api
 import (
 	"context"
 
+	pbComment "github.com/velibor7/XML/common/proto/comment_service"
 	pb "github.com/velibor7/XML/common/proto/profile_service"
 	"github.com/velibor7/XML/profile_service/application"
 )
 
 type ProfileHandler struct {
 	pb.UnimplementedProfileServiceServer
-	service *application.ProfileService
+	service       *application.ProfileService
+	commentClient pbComment.CommentServiceClient
 }
 
-func NewProfileHandler(service *application.ProfileService) *ProfileHandler {
+func NewProfileHandler(service *application.ProfileService, commentClient pbComment.CommentServiceClient) *ProfileHandler {
 	return &ProfileHandler{
-		service: service,
+		service:       service,
+		commentClient: commentClient,
 	}
 }
 
