@@ -40,6 +40,8 @@ func (db *JobNeo4j) Get(id int) (*domain.Job, error) {
 			var lista []string
 
 			id, _ := result.Record().Get("id")
+			convId := id.(int64)
+			Id := strconv.Itoa(int(convId))
 			title, _ := result.Record().Get("title")
 			description, _ := result.Record().Get("description")
 			userId, _ := result.Record().Get("userId")
@@ -48,7 +50,7 @@ func (db *JobNeo4j) Get(id int) (*domain.Job, error) {
 				lista = append(lista, skill.(string))
 			}
 			job = &domain.Job{
-				Id:          id.(string),
+				Id:          Id,
 				Title:       title.(string),
 				Description: description.(string),
 				Skills:      lista,
