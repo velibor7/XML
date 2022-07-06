@@ -1,6 +1,8 @@
 package application
 
 import (
+	"strconv"
+
 	"github.com/velibor7/XML/job_service/domain"
 )
 
@@ -15,16 +17,17 @@ func NewJobService(jobs domain.JobInterface) *JobService {
 }
 
 func (service *JobService) Get(id string) (*domain.Job, error) {
-	return service.jobs.Get(id)
+	Id, _ := strconv.Atoi(id)
+	return service.jobs.Get(Id)
 }
 
 func (service *JobService) GetAll() ([]*domain.Job, error) {
 	return service.jobs.GetAll()
 }
 
-func (service *JobService) GetByTitle(title string) ([]*domain.Job, error) {
-	return service.jobs.GetByTitle(title)
-}
+// func (service *JobService) GetByTitle(title string) ([]*domain.Job, error) {
+// 	return service.jobs.GetByTitle(title)
+// }
 
 func (service *JobService) Create(job *domain.Job) error {
 	return service.jobs.Create(job)
