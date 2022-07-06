@@ -1,15 +1,18 @@
 package persistence
 
 import (
-	"context"
-	"fmt"
+	"log"
 
-	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
+	"github.com/neo4j/neo4j-go-driver/v4/neo4j"
 )
 
-func GetClient(host, port string) (*mongo.Client, error) {
-	uri := fmt.Sprintf("mongodb://%s:%s/", host, port)
-	options := options.Client().ApplyURI(uri)
-	return mongo.Connect(context.TODO(), options)
+func GetClient(uri, username, password string) (*neo4j.Driver, error) {
+	driver, err := neo4j.NewDriver(uri, neo4j.BasicAuth("neo4j", "password", ""))
+	if err != nil {
+		log.Fatal(err)
+		return nil, err
+	}
+	// mozda ne treba close da se uradi
+	//defer driver.Close()
+	return &driver, nil
 }
