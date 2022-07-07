@@ -8,6 +8,8 @@ import {
 import UserProfile from "./users/pages/Profile"
 import UserProfiles from "./users/pages/AllProfiles"
 
+import AllJobs from "./jobs/pages/AllJobs"
+
 import MainNavigation from "./shared/components/Navigation/MainNavigation";
 import NotFound from './shared/components/UIElements/NotFound'
 import Auth from './users/pages/Auth'
@@ -34,6 +36,7 @@ const App = () => {
         <Routes>
           <Route path="/profiles/:userId/" element={<UserProfile/>}/>
           <Route path="/profiles" element={<UserProfiles/>}/>
+          <Route path="/jobs" element={<AllJobs/>}/>
           <Route path="/auth" element={<Auth/>}/>
           <Route path="*" element={<NotFound />} />
           {(token === true) && (
