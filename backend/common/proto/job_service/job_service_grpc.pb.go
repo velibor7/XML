@@ -26,6 +26,7 @@ type JobServiceClient interface {
 	GetAll(ctx context.Context, in *GetAllRequest, opts ...grpc.CallOption) (*GetAllResponse, error)
 	Create(ctx context.Context, in *CreateRequest, opts ...grpc.CallOption) (*CreateResponse, error)
 	GetByTitle(ctx context.Context, in *GetByTitleRequest, opts ...grpc.CallOption) (*GetByTitleResponse, error)
+	GetRecommendedJobs(ctx context.Context, in *GetRecommendedJobsRequest, opts ...grpc.CallOption) (*GetRecommendedJobsResponse, error)
 }
 
 type jobServiceClient struct {
@@ -72,6 +73,15 @@ func (c *jobServiceClient) GetByTitle(ctx context.Context, in *GetByTitleRequest
 	return out, nil
 }
 
+func (c *jobServiceClient) GetRecommendedJobs(ctx context.Context, in *GetRecommendedJobsRequest, opts ...grpc.CallOption) (*GetRecommendedJobsResponse, error) {
+	out := new(GetRecommendedJobsResponse)
+	err := c.cc.Invoke(ctx, "/job.JobService/GetRecommendedJobs", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // JobServiceServer is the server API for JobService service.
 // All implementations must embed UnimplementedJobServiceServer
 // for forward compatibility
@@ -80,6 +90,7 @@ type JobServiceServer interface {
 	GetAll(context.Context, *GetAllRequest) (*GetAllResponse, error)
 	Create(context.Context, *CreateRequest) (*CreateResponse, error)
 	GetByTitle(context.Context, *GetByTitleRequest) (*GetByTitleResponse, error)
+	GetRecommendedJobs(context.Context, *GetRecommendedJobsRequest) (*GetRecommendedJobsResponse, error)
 	mustEmbedUnimplementedJobServiceServer()
 }
 
@@ -98,6 +109,9 @@ func (UnimplementedJobServiceServer) Create(context.Context, *CreateRequest) (*C
 }
 func (UnimplementedJobServiceServer) GetByTitle(context.Context, *GetByTitleRequest) (*GetByTitleResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetByTitle not implemented")
+}
+func (UnimplementedJobServiceServer) GetRecommendedJobs(context.Context, *GetRecommendedJobsRequest) (*GetRecommendedJobsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetRecommendedJobs not implemented")
 }
 func (UnimplementedJobServiceServer) mustEmbedUnimplementedJobServiceServer() {}
 
@@ -184,6 +198,24 @@ func _JobService_GetByTitle_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
+func _JobService_GetRecommendedJobs_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetRecommendedJobsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(JobServiceServer).GetRecommendedJobs(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/job.JobService/GetRecommendedJobs",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(JobServiceServer).GetRecommendedJobs(ctx, req.(*GetRecommendedJobsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // JobService_ServiceDesc is the grpc.ServiceDesc for JobService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -206,6 +238,10 @@ var JobService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetByTitle",
 			Handler:    _JobService_GetByTitle_Handler,
+		},
+		{
+			MethodName: "GetRecommendedJobs",
+			Handler:    _JobService_GetRecommendedJobs_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

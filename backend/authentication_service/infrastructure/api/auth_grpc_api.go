@@ -5,16 +5,19 @@ import (
 
 	"github.com/velibor7/XML/authentication_service/application"
 	pb "github.com/velibor7/XML/common/proto/authentication_service"
+	pbProfile "github.com/velibor7/XML/common/proto/profile_service"
 )
 
 type AuthHandler struct {
 	pb.UnimplementedAuthServiceServer
-	service *application.AuthService
+	service       *application.AuthService
+	profileClient pbProfile.ProfileServiceClient
 }
 
-func NewAuthHandler(service *application.AuthService) *AuthHandler {
+func NewAuthHandler(service *application.AuthService, profileClient pbProfile.ProfileServiceClient) *AuthHandler {
 	return &AuthHandler{
-		service: service,
+		service:       service,
+		profileClient: profileClient,
 	}
 }
 

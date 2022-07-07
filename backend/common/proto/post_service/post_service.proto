@@ -73,15 +73,10 @@ message Post {
   google.protobuf.Timestamp created = 5;
   repeated Like likes = 6;
   repeated Dislike dislikes = 7;
-  repeated Comment comments = 8;
   string user_id = 9;
 }
 
-message Comment {
-  string id = 1;
-  string text = 2;
-  string user_id = 3;
-}
+
 
 message Like {
   string id = 1;

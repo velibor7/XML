@@ -86,6 +86,10 @@ func (service *ProfileService) Update(id string, profile *domain.Profile) error 
 	return nil
 }
 
+func (service *ProfileService) Delete(id string) error {
+	return service.profiles.Delete(id)
+}
+
 func (service *ProfileService) RollbackUpdate(profile *domain.Profile) error {
 	return service.profiles.Update(profile.Id.Hex(), profile)
 }

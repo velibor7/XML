@@ -34,19 +34,15 @@ const (
 
 func (server *Server) Start() {
 	mongoClient := server.initMongoClient()
-	fmt.Println("klijent je pokrenut")
 	commentInterface := server.initCommentInterface(mongoClient)
-	fmt.Println("interface je pokrenut")
+
 	commentService := server.initCommentService(commentInterface)
-	fmt.Println("service je pokrenut")
+
 	commandSubscriber := server.initSubscriber(server.config.UpdateProfileCommandSubject, QueueGroup)
-	fmt.Println("sub je pokrenut")
 	replyPublisher := server.initPublisher(server.config.UpdateProfileReplySubject)
-	fmt.Println("pub je pokrenut")
 	server.initUpdateProfileHandler(commentService, replyPublisher, commandSubscriber)
-	fmt.Println("update je pokrenut")
+
 	commentHandler := server.initCommentHandler(commentService)
-	fmt.Println("handler je pokrenut")
 	server.startGrpcServer(commentHandler)
 }
 

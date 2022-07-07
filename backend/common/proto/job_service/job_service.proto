@@ -28,6 +28,11 @@ service JobService{
             get:"/jobs/search/{title}"
         };
     }
+    rpc GetRecommendedJobs(GetRecommendedJobsRequest) returns (GetRecommendedJobsResponse){
+        option (google.api.http) = {
+            get:"/jobs/{id}/recommended"
+        };
+    }
 }
 
 message GetRequest {
@@ -62,6 +67,13 @@ message GetByTitleResponse {
     repeated Job job = 1;
 }
 
+message GetRecommendedJobsRequest {
+    string id = 1;
+}
+
+message GetRecommendedJobsResponse {
+    repeated Job job = 1;
+}
 message Job {
     string id = 1;
     string title = 2;

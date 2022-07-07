@@ -1,9 +1,10 @@
 package domain
 
 type JobInterface interface {
-	Get(id string) (*Job, error)
+	Get(id int) (*Job, error)
 	GetAll() ([]*Job, error)
-	GetByTitle(title string) ([]*Job, error)
+	//GetByTitle(title string) ([]*Job, error)
 	Create(job *Job) error
-	DeleteAll() error
+	GetRecommendedJobs(job *Job) ([]*Job, error)
+	//DeleteAll() error
 }

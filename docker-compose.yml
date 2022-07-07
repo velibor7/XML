@@ -37,6 +37,16 @@ services:
       AUTH_DB_HOST: ${AUTHENTICATION_DB_HOST}
       AUTH_DB_PORT: ${AUTHENTICATION_DB_PORT}
       AUTH_SERVICE_PORT: ${AUTHENTICATION_SERVICE_PORT}
+      NATS_HOST: ${NATS_HOST}
+      NATS_PORT: ${NATS_PORT}
+      NATS_USER: ${NATS_USER}
+      NATS_PASS: ${NATS_PASS}
+      PROFILE_SERVICE_PORT : ${PROFILE_SERVICE_PORT}
+      PROFILE_SERVICE_HOST : ${PROFILE_SERVICE_HOST}
+      CREATE_PROFILE_COMMAND_SUBJECT: ${CREATE_PROFILE_COMMAND_SUBJECT}
+      CREATE_PROFILE_REPLY_SUBJECT: ${CREATE_PROFILE_REPLY_SUBJECT}
+      UPDATE_PROFILE_COMMAND_SUBJECT: ${UPDATE_PROFILE_COMMAND_SUBJECT}
+      UPDATE_PROFILE_REPLY_SUBJECT: ${UPDATE_PROFILE_REPLY_SUBJECT}
     depends_on:
       - authentication_db
     networks:
@@ -76,8 +86,9 @@ services:
       dockerfile: ./backend/job_service/Dockerfile
     restart: on-failure
     environment:
-      JOB_DB_PORT: ${JOB_DB_PORT}
-      JOB_DB_HOST: ${JOB_DB_HOST}
+      NEO4J_URI: ${NEO4J_URI}
+      NEO4J_USERNAME: ${NEO4J_USERNAME}
+      NEO4J_PASSWORD : ${NEO4J_PASSWORD}
       JOB_SERVICE_PORT: ${JOB_SERVICE_PORT}
       NATS_HOST: ${NATS_HOST}
       NATS_PORT: ${NATS_PORT}
@@ -189,11 +200,16 @@ services:
       - network
 
   job_db:
-    image: mongo
-    container_name: job_db
-    restart: on-failure
+    image: neo4j:4.3.3-community #4.3.3-community  latest
+    container_name: neo4j
+    ports:
+      - "7474:7474"
+      - "7687:7687"
     networks:
       - network
+    environment:
+      - NEO4J_AUTH=neo4j/password
+      - NEO4J_dbms_memory_pagecache_size=512M
 
   authentication_db:
     image: mongo
