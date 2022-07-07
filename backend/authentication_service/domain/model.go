@@ -11,3 +11,8 @@ type UserCredential struct {
 type JWTToken struct {
 	Token string `json:"token"`
 }
+type JWTTokenFullResponse struct {
+	Token    string             `json:"token"`
+	Id       primitive.ObjectID `bson:"_id"`
+	Username string             `bson:"username"`
+}
