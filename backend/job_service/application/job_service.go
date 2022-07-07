@@ -32,3 +32,9 @@ func (service *JobService) GetAll() ([]*domain.Job, error) {
 func (service *JobService) Create(job *domain.Job) error {
 	return service.jobs.Create(job)
 }
+
+func (service *JobService) GetRecommendedJobs(id string) ([]*domain.Job, error) {
+
+	job, _ := service.Get(id)
+	return service.jobs.GetRecommendedJobs(job)
+}
