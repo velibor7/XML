@@ -58,6 +58,22 @@ func (hanlder *JobHandler) Create(ctx context.Context, request *pb.CreateRequest
 	}, nil
 }
 
+func (handler *JobHandler) GetRecommendedJobs(ctx context.Context, request *pb.GetRecommendedJobsRequest) (*pb.GetRecommendedJobsResponse, error) {
+	Jobs, err := handler.service.GetRecommendedJobs(request.Id)
+	if err != nil {
+		return nil, err
+	}
+	response := &pb.GetRecommendedJobsResponse{
+		Job: []*pb.Job{},
+	}
+
+	for _, Job := range Jobs {
+		temp := mapJob(Job)
+		response.Job = append(response.Job, temp)
+	}
+	return response, nil
+}
+
 // func (handler *JobHandler) GetByTitle(ctx context.Context, request *pb.GetByTitleRequest) (*pb.GetByTitleResponse, error) {
 // 	Jobs, err := handler.service.GetByTitle(request.Title)
 // 	if err != nil {

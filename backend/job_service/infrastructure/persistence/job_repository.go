@@ -30,7 +30,8 @@ func (db *JobNeo4j) Get(id int) (*domain.Job, error) {
 	job, err := session.ReadTransaction(func(tx neo4j.Transaction) (interface{}, error) {
 		result, err := tx.Run(
 			"MATCH (job:Job) WHERE id(job)=$id "+
-				"RETURN id(job) AS id, job.title AS title, job.description AS description, job.skills AS skills, job.userId AS userId",
+				"RETURN id(job) AS id, job.title AS title, job.description AS description,"+
+				" job.skills AS skills, job.userId AS userId",
 			map[string]interface{}{"id": id})
 		if err != nil {
 			return nil, err
@@ -77,7 +78,9 @@ func (db *JobNeo4j) GetAll() ([]*domain.Job, error) {
 	jobs, err := session.ReadTransaction(func(tx neo4j.Transaction) (interface{}, error) {
 		result, err := tx.Run(
 			"MATCH (job:Job)"+
-				"RETURN id(job) AS id, job.title AS title, job.description AS description, job.skills AS skills, job.userId AS userId", nil)
+				"RETURN id(job) AS id, job.title AS title, job.description AS description, "+
+				"job.skills AS skills, job.userId AS userId",
+			nil)
 		if err != nil {
 			return nil, err
 		}
@@ -111,6 +114,7 @@ func (db *JobNeo4j) GetAll() ([]*domain.Job, error) {
 	}
 	return jobs.([]*domain.Job), nil
 }
+
 func (db *JobNeo4j) Create(job *domain.Job) error {
 	session := (*db.Driver).NewSession(neo4j.SessionConfig{AccessMode: neo4j.AccessModeWrite})
 
@@ -120,22 +124,66 @@ func (db *JobNeo4j) Create(job *domain.Job) error {
 
 		}
 	}(session)
-	_, err := session.WriteTransaction(func(tx neo4j.Transaction) (interface{}, error) {
+	err := CreateNode(job, &session)
 
-		result, err := tx.Run(
-			"CREATE (job:Job {title:$title, description:$desc, skills:$skills, userId:$userId})",
-			map[string]interface{}{
-				"title": job.Title, "desc": job.Description, "skills": job.Skills, "userId": job.UserId,
-			})
+	err = CreateRelationShips(&session)
 
-		if err != nil {
-			return nil, err
-		}
-		return result.Consume()
-	})
+	err = DeleteRelationShip(&session)
+
 	if err != nil {
 		return err
 	}
 
 	return nil
+}
+
+func (db *JobNeo4j) GetRecommendedJobs(job *domain.Job) ([]*domain.Job, error) {
+
+	session := (*db.Driver).NewSession(neo4j.SessionConfig{})
+
+	defer func(session neo4j.Session) {
+		err := session.Close()
+		if err != nil {
+
+		}
+	}(session)
+
+	jobs, err := session.ReadTransaction(func(tx neo4j.Transaction) (interface{}, error) {
+		result, err := tx.Run(
+			"MATCH (job1:Job {title:$title})-[:SAME]->(job2:Job) "+
+				"RETURN id(job2) AS id, job2.title AS title, job2.description AS description, "+
+				"job2.skills AS skills, job2.userId AS userId",
+			map[string]interface{}{"title": job.Title})
+		if err != nil {
+			return nil, err
+		}
+		var jobs []*domain.Job
+		for result.Next() {
+			var lista []string
+
+			id, _ := result.Record().Get("id")
+			convId := id.(int64)
+			Id := strconv.Itoa(int(convId))
+			title, _ := result.Record().Get("title")
+			description, _ := result.Record().Get("description")
+			userId, _ := result.Record().Get("userId")
+			skills, _ := result.Record().Get("skills")
+			for _, skill := range skills.([]interface{}) {
+				lista = append(lista, skill.(string))
+			}
+
+			jobs = append(jobs, &domain.Job{
+				Id:          Id,
+				Title:       title.(string),
+				Description: description.(string),
+				Skills:      lista,
+				UserId:      userId.(string),
+			})
+		}
+		return jobs, err
+	})
+	if err != nil {
+		return nil, err
+	}
+	return jobs.([]*domain.Job), nil
 }
