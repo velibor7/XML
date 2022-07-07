@@ -7,9 +7,9 @@ import (
 
 var user_credentials = []*domain.UserCredential{
 	{
-		Id:       getObjectId("48123asdv12j124bc834123asgh"),
+		Id:       getObjectId("12306b1b644b3pa649s63l13"),
 		Username: "velibor",
-		Password: "test123",
+		Password: "velibor",
 	},
 }
 

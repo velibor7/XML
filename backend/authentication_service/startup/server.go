@@ -10,7 +10,11 @@ import (
 	"github.com/velibor7/XML/authentication_service/infrastructure/api"
 	"github.com/velibor7/XML/authentication_service/infrastructure/persistence"
 	"github.com/velibor7/XML/authentication_service/startup/config"
+	client "github.com/velibor7/XML/common/client"
 	auth "github.com/velibor7/XML/common/proto/authentication_service"
+	profile "github.com/velibor7/XML/common/proto/profile_service"
+	saga "github.com/velibor7/XML/common/saga/messaging"
+	"github.com/velibor7/XML/common/saga/messaging/nats"
 
 	"go.mongodb.org/mongo-driver/mongo"
 	"google.golang.org/grpc"
@@ -19,6 +23,10 @@ import (
 type Server struct {
 	config *config.Config
 }
+
+const (
+	QueueGroup = "auth_service"
+)
 
 func NewServer(config *config.Config) *Server {
 	return &Server{
@@ -30,8 +38,27 @@ func (server *Server) Start() {
 
 	mongoClient := server.initMongoClient()
 	authStore := server.initAuthStore(mongoClient)
-	authService := server.initAuthService(authStore)
-	authHandler := server.initAuthHandler(authService)
+
+	commandPublisher := server.initPublisher(server.config.CreateProfileCommandSubject)
+	replySubscriber := server.initSubscriber(server.config.CreateProfileReplySubject, QueueGroup)
+	createProfileOrchestrator := server.initCreateProfileOrchestrator(commandPublisher, replySubscriber)
+
+	authService := server.initAuthService(authStore, createProfileOrchestrator)
+
+	commandSubscriber := server.initSubscriber(server.config.CreateProfileCommandSubject, QueueGroup)
+	replyPublisher := server.initPublisher(server.config.CreateProfileReplySubject)
+	server.initCreateProfileHandler(authService, replyPublisher, commandSubscriber)
+
+	commandSubscriber = server.initSubscriber(server.config.UpdateProfileCommandSubject, QueueGroup)
+	replyPublisher = server.initPublisher(server.config.UpdateProfileReplySubject)
+	server.initUpdateProfileHandler(authService, replyPublisher, commandSubscriber)
+
+	profileClient, err := client.NewProfileClient(fmt.Sprintf("%s:%s", server.config.ProfileHost, server.config.ProfilePort))
+	if err != nil {
+		log.Fatalf("PCF: %v", err)
+	}
+
+	authHandler := server.initAuthHandler(authService, profileClient)
 	server.startGrpcServer(authHandler)
 }
 
@@ -56,12 +83,53 @@ func (server *Server) initAuthStore(client *mongo.Client) domain.AuthStore {
 	return store
 }
 
-func (server *Server) initAuthService(store domain.AuthStore) *application.AuthService {
-	return application.NewAuthService(store)
+func (server *Server) initPublisher(subject string) saga.Publisher {
+	publisher, err := nats.NewNATSPublisher(
+		server.config.NatsHost, server.config.NatsPort,
+		server.config.NatsUser, server.config.NatsPass, subject)
+	if err != nil {
+		log.Fatal(err)
+	}
+	return publisher
 }
 
-func (server *Server) initAuthHandler(service *application.AuthService) *api.AuthHandler {
-	return api.NewAuthHandler(service)
+func (server *Server) initSubscriber(subject, queueGroup string) saga.Subscriber {
+	subscriber, err := nats.NewNATSSubscriber(
+		server.config.NatsHost, server.config.NatsPort,
+		server.config.NatsUser, server.config.NatsPass, subject, queueGroup)
+	if err != nil {
+		log.Fatal(err)
+	}
+	return subscriber
+}
+
+func (server *Server) initCreateProfileOrchestrator(publisher saga.Publisher, subscriber saga.Subscriber) *application.CreateProfileOrchestrator {
+	orchestrator, err := application.NewCreateProfileOrchestrator(publisher, subscriber)
+	if err != nil {
+		log.Fatal(err)
+	}
+	return orchestrator
+}
+func (server *Server) initAuthService(store domain.AuthStore, createProfileOrchestrator *application.CreateProfileOrchestrator) *application.AuthService {
+	return application.NewAuthService(store, createProfileOrchestrator)
+}
+
+func (server *Server) initCreateProfileHandler(service *application.AuthService, publisher saga.Publisher, subscriber saga.Subscriber) {
+	_, err := api.NewCreateProfileCommandHandler(service, publisher, subscriber)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
+func (server *Server) initUpdateProfileHandler(service *application.AuthService, publisher saga.Publisher, subscriber saga.Subscriber) {
+	_, err := api.NewUpdateProfileCommandHandler(service, publisher, subscriber)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
+func (server *Server) initAuthHandler(service *application.AuthService, profileClient profile.ProfileServiceClient) *api.AuthHandler {
+	return api.NewAuthHandler(service, profileClient)
 }
 
 func (server *Server) startGrpcServer(authHandler *api.AuthHandler) {
