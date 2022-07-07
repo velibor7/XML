@@ -3,7 +3,6 @@ module github.com/velibor7/XML/common
 go 1.18
 
 require (
-	github.com/golang/protobuf v1.5.2
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.10.3
 	github.com/nats-io/nats.go v1.16.0
 	go.mongodb.org/mongo-driver v1.9.1
@@ -13,6 +12,7 @@ require (
 )
 
 require (
+	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/nats-io/nats-server/v2 v2.8.4 // indirect
 	github.com/nats-io/nkeys v0.3.0 // indirect
 	github.com/nats-io/nuid v1.0.1 // indirect

@@ -38,6 +38,7 @@ message JWTResponse {
 }
             
 message UserCredential {
-  string username = 1;
-  string password = 2;
+  string id = 1;
+  string username = 2;
+  string password = 3;
 }

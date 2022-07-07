@@ -7,17 +7,21 @@ import (
 
 	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/velibor7/XML/authentication_service/domain"
+	auth "github.com/velibor7/XML/common/domain"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
 
 type AuthService struct {
-	store domain.AuthStore
+	store        domain.AuthStore
+	orchestrator *CreateProfileOrchestrator
 }
 
-func NewAuthService(store domain.AuthStore) *AuthService {
+func NewAuthService(store domain.AuthStore, orchestrator *CreateProfileOrchestrator) *AuthService {
 	return &AuthService{
-		store: store,
+		store:        store,
+		orchestrator: orchestrator,
 	}
 }
 
@@ -29,7 +33,7 @@ func (service *AuthService) Login(user *domain.UserCredential) (*domain.JWTToken
 	if user == nil {
 		return nil, status.Error(codes.NotFound, "User was not found")
 	}
-	token, err := service.GenerateJWT(user.Username)
+	token, err := service.GenerateJWT(user.Username, user.Id.Hex())
 	if err != nil {
 		return nil, err
 	}
@@ -37,21 +41,47 @@ func (service *AuthService) Login(user *domain.UserCredential) (*domain.JWTToken
 }
 
 func (service *AuthService) Register(user *domain.UserCredential) (*domain.UserCredential, error) {
-	user, err := service.store.Register(user)
+	regUser, err := service.store.Register(user)
 	if err != nil {
 		return nil, err
 	}
+	fmt.Print("----regUser----\n")
+	fmt.Print(regUser)
+	profile := &auth.Profile{
+		Id:             regUser.Id,
+		Username:       regUser.Username,
+		FirstName:      "",
+		LastName:       "",
+		FullName:       "",
+		DateOfBirth:    time.Time{},
+		PhoneNumber:    "",
+		Email:          "",
+		Gender:         "",
+		IsPrivate:      false,
+		Biography:      "",
+		Education:      nil,
+		WorkExperience: nil,
+		Skills:         nil,
+		Interests:      nil,
+	}
+	err = service.orchestrator.Start(profile)
+	if err != nil {
+		service.store.Delete(user.Id)
+		return nil, err
+	}
 	return user, nil
+
 }
 
-func (service *AuthService) GenerateJWT(username string) (*domain.JWTToken, error) {
+func (service *AuthService) GenerateJWT(username, id string) (*domain.JWTToken, error) {
 	var mySigningKey = []byte(os.Getenv("JWT_SECRET_KEY"))
 	token := jwt.New(jwt.SigningMethodHS256)
 	claims := token.Claims.(jwt.MapClaims)
 
 	claims["authorized"] = true
 	claims["username"] = username
-	claims["exp"] = time.Now().Add(time.Minute * 30).Unix()
+	claims["id"] = id
+	claims["exp"] = time.Now().Add(time.Minute * 60).Unix()
 
 	tokenString, err := token.SignedString(mySigningKey)
 
@@ -60,4 +90,12 @@ func (service *AuthService) GenerateJWT(username string) (*domain.JWTToken, erro
 		return nil, err
 	}
 	return &domain.JWTToken{Token: tokenString}, nil
+}
+
+func (service *AuthService) Delete(id primitive.ObjectID) error {
+	return service.store.Delete(id)
+}
+
+func (service *AuthService) Update(id primitive.ObjectID, username string) (string, error) {
+	return service.store.Update(id, username)
 }

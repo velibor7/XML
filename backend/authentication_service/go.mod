@@ -3,9 +3,16 @@ module github.com/velibor7/XML/authentication_service
 replace github.com/velibor7/XML/common => ../common
 
 require (
+	github.com/sirupsen/logrus v1.8.1
 	github.com/velibor7/XML/common v1.0.0
 	go.mongodb.org/mongo-driver v1.9.1
 	google.golang.org/grpc v1.46.2
+)
+
+require (
+	github.com/nats-io/nats.go v1.16.0 // indirect
+	github.com/nats-io/nkeys v0.3.0 // indirect
+	github.com/nats-io/nuid v1.0.1 // indirect
 )
 
 require (

@@ -42,9 +42,10 @@ func (store *AuthMongoDBStore) Register(userCredential *domain.UserCredential) (
 	userCredenitalExsist, err := store.filterOne(filter)
 
 	if userCredenitalExsist != nil {
-		return nil, status.Error(codes.AlreadyExists, "User already exists with same credentials")
+		return nil, status.Error(codes.AlreadyExists, "User already exists with same username")
 	}
 	userCredential.Id = primitive.NewObjectID()
+
 	result, err := store.userCredentials.InsertOne(context.TODO(), userCredential)
 	if err != nil {
 		return nil, err
@@ -58,8 +59,27 @@ func (store *AuthMongoDBStore) GetByUsername(username string) (*domain.UserCrede
 	return store.filterOne(filter)
 }
 
+func (store *AuthMongoDBStore) Update(id primitive.ObjectID, username string) (string, error) {
+	filter := bson.M{"_id": id}
+	update := bson.M{"$set": bson.M{"username": username}}
+	_, err := store.userCredentials.UpdateOne(context.TODO(), filter, update)
+	if err != nil {
+		return "", err
+	}
+	return username, nil
+}
+
 func (store *AuthMongoDBStore) DeleteAll() {
 	store.userCredentials.DeleteMany(context.TODO(), bson.D{})
+}
+
+func (store *AuthMongoDBStore) Delete(id primitive.ObjectID) error {
+	filter := bson.M{"_id": id}
+	_, err := store.userCredentials.DeleteOne(context.TODO(), filter)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func (store *AuthMongoDBStore) filterOne(filter interface{}) (userCredential *domain.UserCredential, err error) {
