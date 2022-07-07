@@ -2,11 +2,13 @@ import { Link } from "react-router-dom";
 import "./ProfileItem.css";
 import WorkExperienceItem from "./WorkExperienceItem"
 import EducationItem from "./EducationItem"
+import Button from "../../shared/components/FormElements/Button";
 
 import React, { useContext } from "react";
 
 
 const ProfileItem = (props) => {
+  
 
   return (
     <>
@@ -83,6 +85,14 @@ const ProfileItem = (props) => {
               </div>
             </div>
           </div>
+        </div>
+        <div className="cocktail-item__actions">
+          <Link to={`/profiles/${props.item.id}`}>
+            <Button>
+              UPDATE
+            </Button>
+          </Link>
+
         </div>
       </div>
     </>
