@@ -1,14 +1,27 @@
+import React, { useContext } from "react";
+import { useHttpClient } from "../../shared/hooks/http-hook";
+import { AuthContext } from "../../shared/context/auth-context";
 import { Link } from "react-router-dom";
 import "./ProfileItem.css";
 import WorkExperienceItem from "./WorkExperienceItem"
 import EducationItem from "./EducationItem"
 import Button from "../../shared/components/FormElements/Button";
-
-import React, { useContext } from "react";
-
+import { useNavigate } from "react-router-dom";
 
 const ProfileItem = (props) => {
+  const { sendRequest } = useHttpClient();
+  const navigate = useNavigate();
+  const auth = useContext(AuthContext);
+  console.log(auth)
   
+  const UpdateProfile = async () => {
+    try {
+      navigate(`/profiles/${auth.id}/update`);
+    } catch (err) {
+      navigate(`/profiles/${auth.id}/update`);
+      console.log(err);
+    }
+  };
 
   return (
     <>
@@ -87,12 +100,9 @@ const ProfileItem = (props) => {
           </div>
         </div>
         <div className="cocktail-item__actions">
-          <Link to={`/profiles/${props.item.id}`}>
-            <Button>
+            <Button info onClick={UpdateProfile}>
               UPDATE
             </Button>
-          </Link>
-
         </div>
       </div>
     </>

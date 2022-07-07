@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { useParams } from 'react-router-dom'  
+import { useNavigate } from "react-router-dom";
 import { useHttpClient } from "../../shared/hooks/http-hook";
 import User from '../components/ProfileItem';
 import { useForm } from "../../shared/hooks/form-hook";
@@ -21,12 +22,12 @@ const UpdateProfile = () => {
   const auth = useContext(AuthContext);
   const { isLoading, error, sendRequest} = useHttpClient();
   const navigate = useNavigate();
-  const userId =  auth.userId;
+  const userId =  auth.id;
   const [formState, inputHandler, setFormData] = useForm({});
 
   const [loadedUser, setLoadedUser] = useState({});
 
-
+  //console.log(auth)
   
   useEffect(() => {
     const fetchProfile = async () => {
@@ -204,4 +205,4 @@ const UpdateProfile = () => {
   );
 }
 
-export default UserProfile;
+export default UpdateProfile;

@@ -80,7 +80,7 @@ func (service *AuthService) GenerateJWT(username, id string) (*domain.JWTTokenFu
 
 	claims["authorized"] = true
 	claims["username"] = username
-	claims["id"] = id
+	claims["userId"] = id
 	claims["exp"] = time.Now().Add(time.Minute * 60).Unix()
 
 	tokenString, err := token.SignedString(mySigningKey)
@@ -93,7 +93,7 @@ func (service *AuthService) GenerateJWT(username, id string) (*domain.JWTTokenFu
 	return &domain.JWTTokenFullResponse{
 		Token:    tokenString,
 		Username: username,
-		Id:       Id,
+		UserId:   Id,
 	}, nil
 }
 

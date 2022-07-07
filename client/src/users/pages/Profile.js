@@ -3,8 +3,8 @@ import { useParams } from 'react-router-dom'
 import { useHttpClient } from "../../shared/hooks/http-hook";
 import User from '../components/ProfileItem';
 
-const UserProfile = () => {
 
+const UserProfile = () => {
   const {userId} = useParams();
   const [loadedUser, setLoadedUser] = useState({});
 

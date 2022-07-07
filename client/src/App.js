@@ -15,6 +15,7 @@ import { AuthContext } from "./shared/context/auth-context";
 import { useAuth } from "./shared/hooks/auth-hook";
 
 import "./App.css";
+import UpdateProfile from "./users/pages/UpdateProfile";
 
 const App = () => {
   const { token, login, logout, userId } = useAuth();
@@ -33,6 +34,7 @@ const App = () => {
         <MainNavigation />
         <Routes>
           <Route path="/profiles/:userId/" element={<UserProfile/>}/>
+          <Route path="/profiles/:userId/update" element={<UpdateProfile/>}/>
           <Route path="/profiles" element={<UserProfiles/>}/>
           <Route path="/auth" element={<Auth/>}/>
           <Route path="*" element={<NotFound />} />

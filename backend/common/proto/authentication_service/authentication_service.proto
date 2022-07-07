@@ -35,7 +35,7 @@ message RegisterResponse {
               
 message JWTResponse {
   string token = 1;
-  string id = 2;
+  string userId = 2;
   string username =3;
 }
             
