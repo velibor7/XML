@@ -25,7 +25,7 @@ func NewAuthService(store domain.AuthStore, orchestrator *CreateProfileOrchestra
 	}
 }
 
-func (service *AuthService) Login(user *domain.UserCredential) (*domain.JWTToken, error) {
+func (service *AuthService) Login(user *domain.UserCredential) (*domain.JWTTokenFullResponse, error) {
 	user, err := service.store.Login(user)
 	if err != nil {
 		return nil, err
@@ -73,7 +73,7 @@ func (service *AuthService) Register(user *domain.UserCredential) (*domain.UserC
 
 }
 
-func (service *AuthService) GenerateJWT(username, id string) (*domain.JWTToken, error) {
+func (service *AuthService) GenerateJWT(username, id string) (*domain.JWTTokenFullResponse, error) {
 	var mySigningKey = []byte(os.Getenv("JWT_SECRET_KEY"))
 	token := jwt.New(jwt.SigningMethodHS256)
 	claims := token.Claims.(jwt.MapClaims)
@@ -89,7 +89,12 @@ func (service *AuthService) GenerateJWT(username, id string) (*domain.JWTToken, 
 		err = fmt.Errorf("Something Went Wrong: %s", err.Error())
 		return nil, err
 	}
-	return &domain.JWTToken{Token: tokenString}, nil
+	Id, _ := primitive.ObjectIDFromHex(id)
+	return &domain.JWTTokenFullResponse{
+		Token:    tokenString,
+		Username: username,
+		Id:       Id,
+	}, nil
 }
 
 func (service *AuthService) Delete(id primitive.ObjectID) error {
