@@ -19,6 +19,11 @@ service PostService{
       get: "/posts"
     };
   }
+  rpc GetAllForUser(GetRequest) returns (GetAllResponse){
+    option (google.api.http) = {
+      get: "/posts/profile/{id}"
+    };
+  }
   rpc Create(CreateRequest) returns(CreateResponse) {
     option (google.api.http) = {
       post: "/posts"
@@ -75,8 +80,6 @@ message Post {
   repeated Dislike dislikes = 7;
   string user_id = 9;
 }
-
-
 
 message Like {
   string id = 1;
