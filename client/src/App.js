@@ -7,6 +7,7 @@ import {
 
 import UserProfile from "./users/pages/Profile"
 import UserProfiles from "./users/pages/AllProfiles"
+import UserPosts from "./posts/pages/AllPosts"
 
 import MainNavigation from "./shared/components/Navigation/MainNavigation";
 import NotFound from './shared/components/UIElements/NotFound'
@@ -18,7 +19,7 @@ import "./App.css";
 import UpdateProfile from "./users/pages/UpdateProfile";
 
 const App = () => {
-  const { token, login, logout, userId } = useAuth();
+  const { token, username, login, logout, userId } = useAuth();
 
   return(
     <AuthContext.Provider
@@ -26,6 +27,7 @@ const App = () => {
         isLoggedIn: !!token,
         token: token,
         userId: userId,
+        username: username,
         login: login,
         logout: logout,
       }}
@@ -36,6 +38,7 @@ const App = () => {
           <Route path="/profiles/:userId/" element={<UserProfile/>}/>
           <Route path="/profiles/:userId/update" element={<UpdateProfile/>}/>
           <Route path="/profiles" element={<UserProfiles/>}/>
+          <Route path="posts/:id/" element={<UserPosts/>}/>
           <Route path="/auth" element={<Auth/>}/>
           <Route path="*" element={<NotFound />} />
           {(token === true) && (

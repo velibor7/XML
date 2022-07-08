@@ -3,6 +3,7 @@ import { useHttpClient } from "../../shared/hooks/http-hook";
 import { AuthContext } from "../../shared/context/auth-context";
 import { Link } from "react-router-dom";
 import "./ProfileItem.css";
+import PostList from "../../posts/components/PostList";
 import WorkExperienceItem from "./WorkExperienceItem"
 import EducationItem from "./EducationItem"
 import Button from "../../shared/components/FormElements/Button";
@@ -12,13 +13,21 @@ const ProfileItem = (props) => {
   const { sendRequest } = useHttpClient();
   const navigate = useNavigate();
   const auth = useContext(AuthContext);
-  console.log(auth)
   
   const UpdateProfile = async () => {
     try {
-      navigate(`/profiles/${auth.id}/update`);
+      navigate(`/profiles/${auth.userId}/update`);
     } catch (err) {
-      navigate(`/profiles/${auth.id}/update`);
+      navigate(`/profiles/${auth.userId}/update`);
+      console.log(err);
+    }
+  };
+
+  const ViewPosts = async () => {
+    try {
+      navigate(`/posts/${auth.userId}`);
+    } catch (err) {
+      navigate(`/posts/${auth.userId}`);
       console.log(err);
     }
   };
@@ -103,7 +112,13 @@ const ProfileItem = (props) => {
             <Button info onClick={UpdateProfile}>
               UPDATE
             </Button>
+            <Button info onClick={ViewPosts}>
+              POSTS
+            </Button>
         </div>
+      </div>
+      <div className="posts">
+        <PostList></PostList>
       </div>
     </>
   );
