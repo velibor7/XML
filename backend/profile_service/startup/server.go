@@ -2,10 +2,10 @@ package startup
 
 import (
 	"fmt"
-	"log"
 	"net"
 
 	"github.com/velibor7/XML/common/client"
+	"github.com/velibor7/XML/common/loggers"
 	pbComment "github.com/velibor7/XML/common/proto/comment_service"
 	profile "github.com/velibor7/XML/common/proto/profile_service"
 	saga "github.com/velibor7/XML/common/saga/messaging"
@@ -19,6 +19,8 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 )
+
+var log = loggers.NewProfileLogger()
 
 const (
 	QueueGroup = "profile_service"
@@ -79,7 +81,7 @@ func (server *Server) initProfileInterface(client *mongo.Client) domain.ProfileI
 	for _, Profile := range profiles {
 		err := inf.Create(Profile)
 		if err != nil {
-			panic(err)
+			log.Fatal(err)
 		}
 
 	}

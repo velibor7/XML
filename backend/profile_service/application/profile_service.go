@@ -2,8 +2,11 @@ package application
 
 import (
 	common "github.com/velibor7/XML/common/domain"
+	"github.com/velibor7/XML/common/loggers"
 	"github.com/velibor7/XML/profile_service/domain"
 )
+
+var log = loggers.NewProfileLogger()
 
 type ProfileService struct {
 	profiles     domain.ProfileInterface
@@ -81,6 +84,7 @@ func (service *ProfileService) Update(id string, profile *domain.Profile) error 
 	}
 	err = service.orchestrator.Start(newProfile, oldProfile.Username, oldProfile.FirstName, oldProfile.LastName, oldProfile.IsPrivate)
 	if err != nil {
+		log.Errorf("Can't start saga updating profile: %v", err)
 		return err
 	}
 	return nil
