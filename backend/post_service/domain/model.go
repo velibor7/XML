@@ -16,12 +16,6 @@ type Dislike struct {
 	UserId string             `bson:"user_id"`
 }
 
-type Comment struct {
-	Id     primitive.ObjectID `bson:"_id"`
-	UserId string             `bson:"user_id"`
-	Text   string             `bson:"text"`
-}
-
 type Post struct {
 	Id       primitive.ObjectID `bson:"_id"`
 	Text     string             `bson:"text"`
@@ -30,6 +24,5 @@ type Post struct {
 	Created  time.Time          `bson:"created"`
 	Likes    []Like             `bson:"likes"`
 	Dislikes []Dislike          `bson:"dislikes"`
-	Comments []Comment          `bson:"comments"`
-	UserId   string             `bson:"user_id"`
+	UserId   primitive.ObjectID `bson:"user_id"`
 }

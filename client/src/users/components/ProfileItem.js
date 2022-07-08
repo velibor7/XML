@@ -1,12 +1,36 @@
+import React, { useContext } from "react";
+import { useHttpClient } from "../../shared/hooks/http-hook";
+import { AuthContext } from "../../shared/context/auth-context";
 import { Link } from "react-router-dom";
 import "./ProfileItem.css";
+import PostList from "../../posts/components/PostList";
 import WorkExperienceItem from "./WorkExperienceItem"
 import EducationItem from "./EducationItem"
-
-import React, { useContext } from "react";
-
+import Button from "../../shared/components/FormElements/Button";
+import { useNavigate } from "react-router-dom";
 
 const ProfileItem = (props) => {
+  const { sendRequest } = useHttpClient();
+  const navigate = useNavigate();
+  const auth = useContext(AuthContext);
+  
+  const UpdateProfile = async () => {
+    try {
+      navigate(`/profiles/${auth.userId}/update`);
+    } catch (err) {
+      navigate(`/profiles/${auth.userId}/update`);
+      console.log(err);
+    }
+  };
+
+  const ViewPosts = async () => {
+    try {
+      navigate(`/posts/${auth.userId}`);
+    } catch (err) {
+      navigate(`/posts/${auth.userId}`);
+      console.log(err);
+    }
+  };
 
   return (
     <>
@@ -84,6 +108,17 @@ const ProfileItem = (props) => {
             </div>
           </div>
         </div>
+        <div className="cocktail-item__actions">
+            <Button info onClick={UpdateProfile}>
+              UPDATE
+            </Button>
+            <Button info onClick={ViewPosts}>
+              POSTS
+            </Button>
+        </div>
+      </div>
+      <div className="posts">
+        <PostList></PostList>
       </div>
     </>
   );

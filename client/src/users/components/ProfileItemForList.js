@@ -10,7 +10,7 @@ const ProfileItemForList = (props) => {
     <>
       <div className="profile__item">
         <Link to={`/profiles/${props.item.id}`}>
-          <h4 className="profile__item__firstName">{props.item.firstName}</h4>
+          <h4 className="profile__item__firstName">{props.item.username}</h4>
         </Link>
         <div className="profile__item__info">
           <p className="profile__item__firstName">

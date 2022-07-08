@@ -2,9 +2,9 @@ package startup
 
 import (
 	"fmt"
-	"log"
 	"net"
 
+	"github.com/velibor7/XML/common/loggers"
 	connection "github.com/velibor7/XML/common/proto/connection_service"
 	"github.com/velibor7/XML/connection_service/application"
 	"github.com/velibor7/XML/connection_service/domain"
@@ -15,6 +15,8 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 )
+
+var log = loggers.NewConnectionLogger()
 
 type Server struct {
 	config *config.Config

@@ -19,6 +19,11 @@ service PostService{
       get: "/posts"
     };
   }
+  rpc GetAllForUser(GetRequest) returns (GetAllResponse){
+    option (google.api.http) = {
+      get: "/posts/profile/{id}"
+    };
+  }
   rpc Create(CreateRequest) returns(CreateResponse) {
     option (google.api.http) = {
       post: "/posts"
@@ -73,14 +78,7 @@ message Post {
   google.protobuf.Timestamp created = 5;
   repeated Like likes = 6;
   repeated Dislike dislikes = 7;
-  repeated Comment comments = 8;
   string user_id = 9;
-}
-
-message Comment {
-  string id = 1;
-  string text = 2;
-  string user_id = 3;
 }
 
 message Like {

@@ -9,5 +9,5 @@ type PostInterface interface {
 	Update(post *Post) (string, error)
 	// Delete(id primitive.ObjectID)
 	DeleteAll()
-	GetAllByUser(id string) ([]*Post, error)
+	GetAllForUser(id primitive.ObjectID) ([]*Post, error)
 }

@@ -6,4 +6,5 @@ type ProfileInterface interface {
 	Create(profile *Profile) error
 	Update(id string, profile *Profile) error
 	DeleteAll() error
+	Delete(id string) error
 }

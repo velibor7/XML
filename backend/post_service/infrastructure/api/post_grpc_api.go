@@ -4,10 +4,13 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/velibor7/XML/common/loggers"
 	pb "github.com/velibor7/XML/common/proto/post_service"
 	"github.com/velibor7/XML/post_service/application"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
+
+var log = loggers.NewPostLogger()
 
 type PostHandler struct {
 	pb.UnimplementedPostServiceServer
@@ -28,9 +31,10 @@ func (handler *PostHandler) Get(ctx context.Context, request *pb.GetRequest) (*p
 	}
 	post, err := handler.service.Get(objectId)
 	if err != nil {
+		log.WithField("postId", request.Id).Errorf("Can't get post: %v", err)
 		return nil, err
 	}
-	postPb := mapPost(post) // prepakujemo iz domenskog modela u protobuf oblik
+	postPb := mapPost(post)
 	response := &pb.GetResponse{
 		Post: postPb,
 	}
@@ -40,6 +44,7 @@ func (handler *PostHandler) Get(ctx context.Context, request *pb.GetRequest) (*p
 func (handler *PostHandler) GetAll(ctx context.Context, request *pb.GetAllRequest) (*pb.GetAllResponse, error) {
 	posts, err := handler.service.GetAll()
 	if err != nil {
+		log.Errorf("Can't get profile posts: %v", err)
 		return nil, err
 	}
 	response := &pb.GetAllResponse{
@@ -52,13 +57,14 @@ func (handler *PostHandler) GetAll(ctx context.Context, request *pb.GetAllReques
 	return response, nil
 }
 
-func (handler *PostHandler) GetAllByUser(ctx context.Context, request *pb.GetRequest) (*pb.GetAllResponse, error) {
-	id := request.Id
-
-	posts, err := handler.service.GetAllByUser(id)
+func (handler *PostHandler) GetAllForUser(ctx context.Context, request *pb.GetRequest) (*pb.GetAllResponse, error) {
+	id, err := primitive.ObjectIDFromHex(request.Id)
+	posts, err := handler.service.GetAllForUser(id)
 	if err != nil {
+		log.WithField("profileId", request.Id).Errorf("Can't get profile posts: %v", err)
 		return nil, err
 	}
+	fmt.Print(posts)
 	response := &pb.GetAllResponse{
 		Posts: []*pb.Post{},
 	}
@@ -75,34 +81,29 @@ func (handler *PostHandler) Create(ctx context.Context, request *pb.CreateReques
 	// 	return nil, error(nil)
 	// }
 
-	fmt.Println(request.Post.Text)
-	fmt.Println(request.Post.Id)
 	post := mapCreatePost(request.Post)
 
-	fmt.Println(post.Text)
 	// userId := ctx.Value(interceptor.LoggedInUserKey{}).(string)
 	// post.UserId = userId
 	success, err := handler.service.Create(post)
 
 	if err != nil {
+		log.Errorf("Can't create post: %v", err)
 		return nil, err
 	}
-
+	log.Info("Post created")
 	response := &pb.CreateResponse{
 		Success: success,
 	}
 
-	return response, err
+	return response, nil
 }
 
 func (handler *PostHandler) Update(ctx context.Context, request *pb.UpdateRequest) (*pb.UpdateResponse, error) {
 	id, _ := primitive.ObjectIDFromHex(request.Post.Id)
-	fmt.Println("id: ")
-	fmt.Println(id)
 	oldPost, err := handler.service.Get(id)
-	fmt.Println("oldPost: ")
-	fmt.Println(oldPost)
 	if err != nil {
+		log.WithField("postId", id).Errorf("Can't get post: %v", err)
 		return &pb.UpdateResponse{
 			Success: "error",
 		}, err
@@ -110,8 +111,15 @@ func (handler *PostHandler) Update(ctx context.Context, request *pb.UpdateReques
 
 	post := mapUpdatePost(mapPost(oldPost), request.Post)
 	success, err := handler.service.Update(post)
+	if err != nil {
+		log.WithField("postId", id).Errorf("Can't update post: %v", err)
+		return &pb.UpdateResponse{
+			Success: "error",
+		}, err
+	}
+	log.WithField("postId", id).Infof("Post updated")
 	response := &pb.UpdateResponse{
 		Success: success,
 	}
-	return response, err
+	return response, nil
 }
