@@ -28,7 +28,7 @@ func (handler *ProfileHandler) Get(ctx context.Context, request *pb.GetRequest) 
 	profileId := request.Id
 	Profile, err := handler.service.Get(profileId)
 	if err != nil {
-		log.WithField("profileId", profileId).Errorf("Cannot get profile: %v", err)
+		log.WithField("profileId", profileId).Errorf("Cannot get profile: ", err)
 		return nil, err
 	}
 	ProfilePb := mapProfileToPb(Profile)
@@ -42,7 +42,7 @@ func (handler *ProfileHandler) Get(ctx context.Context, request *pb.GetRequest) 
 func (handler *ProfileHandler) GetAll(ctx context.Context, request *pb.GetAllRequest) (*pb.GetAllResponse, error) {
 	Profiles, err := handler.service.GetAll()
 	if err != nil {
-		log.Errorf("Can't get all profiles: %v", err)
+		log.Errorf("Can't get all profiles: ", err)
 		return nil, err
 	}
 	response := &pb.GetAllResponse{
@@ -59,10 +59,10 @@ func (handler ProfileHandler) Create(ctx context.Context, request *pb.CreateRequ
 	profile := mapPbToProfile(request.Profile)
 	err := handler.service.Create(profile)
 	if err != nil {
-		log.Errorf("Can't create profile: %v", err)
+		log.Errorf("Can't create profile: ", err)
 		return nil, err
 	}
-	log.Info("Profile created: %v", profile.Username)
+	log.Info("Profile created: ", profile.Username)
 	return &pb.CreateResponse{
 		Profile: mapProfileToPb(profile),
 	}, nil
@@ -72,10 +72,10 @@ func (handler ProfileHandler) Update(ctx context.Context, request *pb.UpdateRequ
 	profile := mapPbToProfile(request.Profile)
 	err := handler.service.Update(request.Id, profile)
 	if err != nil {
-		log.Errorf("Can't update profile: %v", err)
+		log.Errorf("Can't update profile: ", err)
 		return nil, err
 	}
-	log.Info("Profile updated: %v", profile.Username)
+	log.Info("Profile updated: ", profile.Username)
 	return &pb.UpdateResponse{
 		Profile: mapProfileToPb(profile),
 	}, nil
