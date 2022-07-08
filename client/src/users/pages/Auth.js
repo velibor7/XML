@@ -85,13 +85,14 @@ const Auth = (props) => {
       } catch (err) {}
     } else {
       try {
-        const formData = new FormData();
-        formData.append("username", formState.inputs.username.value);
-        formData.append("password", formState.inputs.password.value);
         const responseData = await sendRequest(
           "http://localhost:8000/auth/register",
           "POST",
-          formData
+          JSON.stringify({
+            firstName: formState.inputs.name.value,
+            username: formState.inputs.username.value,
+            password: formState.inputs.password.value,
+          })
         );
 
         //auth.login(responseData.userId, responseData.token);
