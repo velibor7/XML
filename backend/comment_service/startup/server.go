@@ -2,7 +2,6 @@ package startup
 
 import (
 	"fmt"
-	"log"
 	"net"
 
 	"github.com/velibor7/XML/comment_service/application"
@@ -10,6 +9,7 @@ import (
 	"github.com/velibor7/XML/comment_service/infrastructure/api"
 	"github.com/velibor7/XML/comment_service/infrastructure/persistence"
 	"github.com/velibor7/XML/comment_service/startup/config"
+	"github.com/velibor7/XML/common/loggers"
 	comment "github.com/velibor7/XML/common/proto/comment_service"
 	saga "github.com/velibor7/XML/common/saga/messaging"
 	"github.com/velibor7/XML/common/saga/messaging/nats"
@@ -17,6 +17,8 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 )
+
+var log = loggers.NewCommentLogger()
 
 type Server struct {
 	config *config.Config
@@ -58,6 +60,7 @@ func (server *Server) initCommentInterface(client *mongo.Client) domain.CommentI
 	inf := persistence.NewCommentMongoDB(client)
 	err := inf.DeleteAll()
 	if err != nil {
+		log.Fatal(err)
 		return nil
 	}
 	for _, comment := range comments {

@@ -2,7 +2,6 @@ package startup
 
 import (
 	"fmt"
-	"log"
 	"net"
 
 	"github.com/velibor7/XML/authentication_service/application"
@@ -11,6 +10,7 @@ import (
 	"github.com/velibor7/XML/authentication_service/infrastructure/persistence"
 	"github.com/velibor7/XML/authentication_service/startup/config"
 	client "github.com/velibor7/XML/common/client"
+	"github.com/velibor7/XML/common/loggers"
 	auth "github.com/velibor7/XML/common/proto/authentication_service"
 	profile "github.com/velibor7/XML/common/proto/profile_service"
 	saga "github.com/velibor7/XML/common/saga/messaging"
@@ -19,6 +19,8 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 	"google.golang.org/grpc"
 )
+
+var log = loggers.NewAuthenticationLogger()
 
 type Server struct {
 	config *config.Config
@@ -55,7 +57,7 @@ func (server *Server) Start() {
 
 	profileClient, err := client.NewProfileClient(fmt.Sprintf("%s:%s", server.config.ProfileHost, server.config.ProfilePort))
 	if err != nil {
-		log.Fatalf("PCF: %v", err)
+		log.Fatalf("Profile client: %v", err)
 	}
 
 	authHandler := server.initAuthHandler(authService, profileClient)
@@ -74,9 +76,10 @@ func (server *Server) initAuthStore(client *mongo.Client) domain.AuthStore {
 	store := persistence.NewAuthMongoDBStore(client)
 	store.DeleteAll()
 	for _, UserCredential := range user_credentials {
+
 		_, err := store.Register(UserCredential)
 		if err != nil {
-			panic(err)
+			log.Fatalf("Registering: %v", err)
 		}
 
 	}

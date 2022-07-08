@@ -3,10 +3,13 @@ package api
 import (
 	"context"
 
+	"github.com/velibor7/XML/common/loggers"
 	pbComment "github.com/velibor7/XML/common/proto/comment_service"
 	pb "github.com/velibor7/XML/common/proto/profile_service"
 	"github.com/velibor7/XML/profile_service/application"
 )
+
+var log = loggers.NewProfileLogger()
 
 type ProfileHandler struct {
 	pb.UnimplementedProfileServiceServer
@@ -25,6 +28,7 @@ func (handler *ProfileHandler) Get(ctx context.Context, request *pb.GetRequest) 
 	profileId := request.Id
 	Profile, err := handler.service.Get(profileId)
 	if err != nil {
+		log.WithField("profileId", profileId).Errorf("Cannot get profile: ", err)
 		return nil, err
 	}
 	ProfilePb := mapProfileToPb(Profile)
@@ -38,6 +42,7 @@ func (handler *ProfileHandler) Get(ctx context.Context, request *pb.GetRequest) 
 func (handler *ProfileHandler) GetAll(ctx context.Context, request *pb.GetAllRequest) (*pb.GetAllResponse, error) {
 	Profiles, err := handler.service.GetAll()
 	if err != nil {
+		log.Errorf("Can't get all profiles: ", err)
 		return nil, err
 	}
 	response := &pb.GetAllResponse{
@@ -54,8 +59,10 @@ func (handler ProfileHandler) Create(ctx context.Context, request *pb.CreateRequ
 	profile := mapPbToProfile(request.Profile)
 	err := handler.service.Create(profile)
 	if err != nil {
+		log.Errorf("Can't create profile: ", err)
 		return nil, err
 	}
+	log.Info("Profile created: ", profile.Username)
 	return &pb.CreateResponse{
 		Profile: mapProfileToPb(profile),
 	}, nil
@@ -65,8 +72,10 @@ func (handler ProfileHandler) Update(ctx context.Context, request *pb.UpdateRequ
 	profile := mapPbToProfile(request.Profile)
 	err := handler.service.Update(request.Id, profile)
 	if err != nil {
+		log.Errorf("Can't update profile: ", err)
 		return nil, err
 	}
+	log.Info("Profile updated: ", profile.Username)
 	return &pb.UpdateResponse{
 		Profile: mapProfileToPb(profile),
 	}, nil
