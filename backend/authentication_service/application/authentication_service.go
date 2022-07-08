@@ -8,10 +8,13 @@ import (
 	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/velibor7/XML/authentication_service/domain"
 	auth "github.com/velibor7/XML/common/domain"
+	"github.com/velibor7/XML/common/loggers"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
+
+var log = loggers.NewAuthenticationLogger()
 
 type AuthService struct {
 	store        domain.AuthStore
@@ -66,6 +69,7 @@ func (service *AuthService) Register(user *domain.UserCredential) (*domain.UserC
 	}
 	err = service.orchestrator.Start(profile)
 	if err != nil {
+		log.Errorf("Saga failed: %v", err)
 		service.store.Delete(user.Id)
 		return nil, err
 	}
