@@ -1,4 +1,3 @@
-import { Link } from "react-router-dom";
 import "./PostItem.css";
 
 import React, { useContext } from "react";

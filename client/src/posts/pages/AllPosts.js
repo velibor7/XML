@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom'
 
 const AllPosts = () => {
   const [loadedPosts, setLoadedPosts] = useState();
-  var id = useParams("id")
+  var id = useParams()['id']
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -15,14 +15,8 @@ const AllPosts = () => {
         )
           .then((response) => response.json())
           .then((data) => {
-            console.log(data)
-            var posts = [];
-            data = data['post']
-            for (var i = 0; i < data.length; i++) {
-              var post = data[i];
-              posts.push(post);
-            }
-            setLoadedPosts(posts);
+            console.log(data["posts"])
+            setLoadedPosts(data["posts"]);
           });
       } catch (err) {
         console.log("error happend")
@@ -34,6 +28,7 @@ const AllPosts = () => {
 
   return (
     <>
+        <h1>Posts</h1>
         <PostList items={loadedPosts}></PostList>
     </>
   );
