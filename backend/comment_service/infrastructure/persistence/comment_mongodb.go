@@ -42,13 +42,13 @@ func (db *CommentMongoDB) DeleteAll() error {
 	return nil
 }
 
-func (db *CommentMongoDB) GetForPost(id string) []*domain.Comment {
+func (db *CommentMongoDB) GetForPost(id string) ([]*domain.Comment, error) {
 	Id, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
-		return nil
+		return nil, err
 	}
 	response, _ := db.filter(bson.M{"post_id": Id})
-	return response
+	return response, nil
 }
 
 func (db *CommentMongoDB) UpdateUsername(oldUsername string, newUsername string) error {

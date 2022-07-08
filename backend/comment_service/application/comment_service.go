@@ -12,7 +12,7 @@ func NewCommentService(comments domain.CommentInterface) *CommentService {
 	}
 }
 
-func (service *CommentService) GetForPost(id string) []*domain.Comment {
+func (service *CommentService) GetForPost(id string) ([]*domain.Comment, error) {
 	return service.comments.GetForPost(id)
 }
 

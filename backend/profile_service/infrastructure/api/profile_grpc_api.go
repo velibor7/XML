@@ -62,6 +62,7 @@ func (handler ProfileHandler) Create(ctx context.Context, request *pb.CreateRequ
 		log.Errorf("Can't create profile: %v", err)
 		return nil, err
 	}
+	log.Info("Profile created: %v", profile.Username)
 	return &pb.CreateResponse{
 		Profile: mapProfileToPb(profile),
 	}, nil
@@ -74,6 +75,7 @@ func (handler ProfileHandler) Update(ctx context.Context, request *pb.UpdateRequ
 		log.Errorf("Can't update profile: %v", err)
 		return nil, err
 	}
+	log.Info("Profile updated: %v", profile.Username)
 	return &pb.UpdateResponse{
 		Profile: mapProfileToPb(profile),
 	}, nil
