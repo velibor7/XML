@@ -34,7 +34,7 @@ func (handler *AuthHandler) Login(ctx context.Context, request *pb.LoginRequest)
 	log.Info("Login!")
 	return &pb.JWTResponse{
 		Token:    jwt.Token,
-		Id:       jwt.Id.Hex(),
+		UserId:   jwt.UserId.Hex(),
 		Username: jwt.Username,
 	}, nil
 }

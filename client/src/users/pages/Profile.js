@@ -3,8 +3,8 @@ import { useParams } from 'react-router-dom'
 import { useHttpClient } from "../../shared/hooks/http-hook";
 import User from '../components/ProfileItem';
 
-const UserProfile = () => {
 
+const UserProfile = () => {
   const {userId} = useParams();
   const [loadedUser, setLoadedUser] = useState({});
 
@@ -12,20 +12,20 @@ const UserProfile = () => {
 
   
   useEffect(() => {
-    const fetchCottage = async () => {
+    const fetchProfile = async () => {
         const resData = await sendRequest(
-          `http://localhost:8000/profiles/${userId}`
+          `http://localhost:8000/profiles/${userId}`,"GET",
         )
-        console.log(resData)
+      console.log(resData)
 
       setLoadedUser(resData)
     };
-    fetchCottage();
+    fetchProfile();
   }, [userId, sendRequest]);
 
   return (
     <>
-      <User item={loadedUser}></User>
+      <User item={loadedUser}  key={userId}></User>
     </>
   );
 }

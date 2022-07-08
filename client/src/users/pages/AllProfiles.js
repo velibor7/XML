@@ -6,7 +6,8 @@ const AllProfiles = () => {
 
 
   useEffect(() => {
-    const fetchProfiles = () => {
+    const fetchProfiles = async () => {
+
       try {
         fetch(
           `http://localhost:8000/profiles`,
@@ -14,22 +15,21 @@ const AllProfiles = () => {
         )
           .then((response) => response.json())
           .then((data) => {
+            console.log(data)
             var profiles = [];
+            data = data['profile']
             for (var i = 0; i < data.length; i++) {
               var profile = data[i];
-              console.log(profile);
               profiles.push(profile);
             }
             setLoadedProfiles(profiles);
           });
       } catch (err) {
+        console.log("error happend")
         console.log(err);
       };
     };
-    console.log('aaaaaaaaaaa')
     fetchProfiles();
-    console.log('bbbbbbbbbbbbbb')
-    return
   }, []);
 
   return (

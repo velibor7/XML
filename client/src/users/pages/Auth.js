@@ -1,4 +1,5 @@
 import React, { useState, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 
 import Card from "../../shared/components/UIElements/Card";
 import Input from "../../shared/components/FormElements/Input";
@@ -7,7 +8,6 @@ import ErrorModal from "../../shared/components/UIElements/ErrorModal";
 import Spinner from "../../shared/components/UIElements/Spinner";
 
 import {
-  VALIDATOR_EMAIL,
   VALIDATOR_MINLENGTH,
   VALIDATOR_REQUIRE,
 } from "../../shared/util/validators";
@@ -20,10 +20,12 @@ const Auth = (props) => {
   const auth = useContext(AuthContext);
   const [isLoginMode, setIsLoginMode] = useState(true);
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
-
+  
+  const navigate = useNavigate();
+  
   const [formState, inputHandler, setFormData] = useForm(
     {
-      email: {
+      username: {
         value: "",
         isValid: false,
       },
@@ -42,7 +44,7 @@ const Auth = (props) => {
           ...formState.inputs,
           name: undefined,
         },
-        formState.inputs.email.isValid && formState.inputs.password.isValid
+        formState.inputs.password.isValid
       );
     } else {
       setFormData(
@@ -65,10 +67,10 @@ const Auth = (props) => {
     if (isLoginMode) {
       try {
         const responseData = await sendRequest(
-          "http://localhost:5000/api/users/login",
+          "http://localhost:8000/auth/login",
           "POST",
           JSON.stringify({
-            email: formState.inputs.email.value,
+            username: formState.inputs.username.value,
             password: formState.inputs.password.value,
           }),
           {
@@ -77,26 +79,28 @@ const Auth = (props) => {
         );
         console.log(responseData);
         auth.login(responseData.userId, responseData.token);
+        if (auth.isLoggedIn){
+          navigate("/");
+        }
       } catch (err) {}
     } else {
       try {
         const formData = new FormData();
-        formData.append("email", formState.inputs.email.value);
-        formData.append("name", formState.inputs.name.value);
+        formData.append("username", formState.inputs.username.value);
         formData.append("password", formState.inputs.password.value);
         const responseData = await sendRequest(
-          "http://localhost:5000/api/users/signup",
+          "http://localhost:8000/auth/register",
           "POST",
           formData
         );
 
-        auth.login(responseData.userId, responseData.token);
+        //auth.login(responseData.userId, responseData.token);
       } catch (err) {}
     }
   };
 
   return (
-    <React.Fragment>
+    <>
       <ErrorModal error={error} onClear={clearError} />
       <Card className="auth">
         <h2>Login Required</h2>
@@ -116,11 +120,11 @@ const Auth = (props) => {
           )}
           <Input
             element="input"
-            id="email"
-            type="email"
-            label="E-Mail"
-            validators={[VALIDATOR_EMAIL()]}
-            errorText="Please enter a valid email address."
+            id="username"
+            type="username"
+            label="Username"
+            validators={[VALIDATOR_REQUIRE()]}
+            errorText="Please enter a username"
             onInput={inputHandler}
           />
           <Input
@@ -144,7 +148,7 @@ const Auth = (props) => {
           SWITCH TO {isLoginMode ? "SIGNUP" : "LOGIN"}
         </Button>
       </Card>
-    </React.Fragment>
+    </>
   );
 };
 

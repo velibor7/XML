@@ -1,4 +1,4 @@
-import ProfileItem from "./ProfileItem";
+import ProfileItem from "./ProfileItemForList";
 import React from "react";
 
 const ProfileList = (props) => {

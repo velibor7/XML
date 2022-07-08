@@ -13,6 +13,6 @@ type JWTToken struct {
 }
 type JWTTokenFullResponse struct {
 	Token    string             `json:"token"`
-	Id       primitive.ObjectID `bson:"_id"`
+	UserId   primitive.ObjectID `bson:"userId"`
 	Username string             `bson:"username"`
 }

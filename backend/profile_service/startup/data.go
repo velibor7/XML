@@ -21,8 +21,8 @@ var profiles = []*domain.Profile{
 		Biography:      "Data Scientist",
 		Education:      nil,
 		WorkExperience: nil,
-		Skills:         nil,
-		Interests:      nil,
+		Skills:         []string{"cooking", "labeling data"},
+		Interests:      []string{"singing", "working out"},
 	},
 }
 
