@@ -52,13 +52,14 @@ func (handler *PostHandler) GetAll(ctx context.Context, request *pb.GetAllReques
 	return response, nil
 }
 
-func (handler *PostHandler) GetAllByUser(ctx context.Context, request *pb.GetRequest) (*pb.GetAllResponse, error) {
-	id := request.Id
-
-	posts, err := handler.service.GetAllByUser(id)
+func (handler *PostHandler) GetAllForUser(ctx context.Context, request *pb.GetRequest) (*pb.GetAllResponse, error) {
+	id, err := primitive.ObjectIDFromHex(request.Id)
+	fmt.Print(id)
+	posts, err := handler.service.GetAllForUser(id)
 	if err != nil {
 		return nil, err
 	}
+	fmt.Print(posts)
 	response := &pb.GetAllResponse{
 		Posts: []*pb.Post{},
 	}
