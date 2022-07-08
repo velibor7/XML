@@ -3,9 +3,12 @@ package api
 import (
 	"context"
 
+	"github.com/velibor7/XML/common/loggers"
 	pb "github.com/velibor7/XML/common/proto/job_service"
 	"github.com/velibor7/XML/job_service/application"
 )
+
+var log = loggers.NewJobLogger()
 
 type JobHandler struct {
 	pb.UnimplementedJobServiceServer
@@ -21,6 +24,7 @@ func NewJobHandler(service *application.JobService) *JobHandler {
 func (handler *JobHandler) Get(ctx context.Context, request *pb.GetRequest) (*pb.GetResponse, error) {
 	Job, err := handler.service.Get(request.Id)
 	if err != nil {
+		log.WithField("jobId", request.Id).Errorf("Cannot get profile: %v", err)
 		return nil, err
 	}
 	JobPb := mapJob(Job)
@@ -33,6 +37,7 @@ func (handler *JobHandler) Get(ctx context.Context, request *pb.GetRequest) (*pb
 func (handler *JobHandler) GetAll(ctx context.Context, request *pb.GetAllRequest) (*pb.GetAllResponse, error) {
 	Jobs, err := handler.service.GetAll()
 	if err != nil {
+		log.Errorf("Cannot get all jobs: %v", err)
 		return nil, err
 	}
 	response := &pb.GetAllResponse{
@@ -50,9 +55,10 @@ func (hanlder *JobHandler) Create(ctx context.Context, request *pb.CreateRequest
 	job := mapPb(request.Job)
 	err := hanlder.service.Create(job)
 	if err != nil {
+		log.Errorf("Cannot create job: %v", err)
 		return nil, err
 	}
-
+	log.Info("Job Created")
 	return &pb.CreateResponse{
 		Job: mapJob(job),
 	}, nil
@@ -61,6 +67,7 @@ func (hanlder *JobHandler) Create(ctx context.Context, request *pb.CreateRequest
 func (handler *JobHandler) GetRecommendedJobs(ctx context.Context, request *pb.GetRecommendedJobsRequest) (*pb.GetRecommendedJobsResponse, error) {
 	Jobs, err := handler.service.GetRecommendedJobs(request.Id)
 	if err != nil {
+		log.Errorf("Cannot get recommended jobs: %v", err)
 		return nil, err
 	}
 	response := &pb.GetRecommendedJobsResponse{

@@ -2,10 +2,10 @@ package startup
 
 import (
 	"fmt"
-	"log"
 	"net"
 
 	"github.com/neo4j/neo4j-go-driver/v4/neo4j"
+	"github.com/velibor7/XML/common/loggers"
 	job "github.com/velibor7/XML/common/proto/job_service"
 	"github.com/velibor7/XML/job_service/application"
 	"github.com/velibor7/XML/job_service/domain"
@@ -15,6 +15,8 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 )
+
+var log = loggers.NewJobLogger()
 
 type Server struct {
 	config *config.Config

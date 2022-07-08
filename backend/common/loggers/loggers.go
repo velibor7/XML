@@ -14,6 +14,7 @@ var profileLogger = logrus.New()
 var postLogger = logrus.New()
 var commentLogger = logrus.New()
 var connectionLogger = logrus.New()
+var jobLogger = logrus.New()
 
 func NewConnectionLogger() *logrus.Logger {
 	connectionLogger.SetLevel(logrus.InfoLevel)
@@ -115,4 +116,21 @@ func NewGatewayLogger() *logrus.Logger {
 	})
 	gatewayLogger.SetOutput(multiWriter)
 	return gatewayLogger
+}
+
+func NewJobLogger() *logrus.Logger {
+	jobLogger.SetLevel(logrus.InfoLevel)
+	jobLogger.SetReportCaller(true)
+	jobLogger.SetFormatter(&logrus.TextFormatter{
+		TimestampFormat: "2006-01-02T15:04:05.000Z",
+	})
+	multiWriter := io.MultiWriter(os.Stdout, &lumberjack.Logger{
+		Filename:   "../../logs/job_service/job.log",
+		MaxSize:    1,
+		MaxBackups: 3,
+		MaxAge:     28,
+		Compress:   true,
+	})
+	jobLogger.SetOutput(multiWriter)
+	return jobLogger
 }
