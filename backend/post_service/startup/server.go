@@ -2,9 +2,9 @@ package startup
 
 import (
 	"fmt"
-	"log"
 	"net"
 
+	"github.com/velibor7/XML/common/loggers"
 	post "github.com/velibor7/XML/common/proto/post_service"
 	"github.com/velibor7/XML/post_service/application"
 	"github.com/velibor7/XML/post_service/domain"
@@ -15,6 +15,8 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 )
+
+var log = loggers.NewPostLogger()
 
 type Server struct {
 	config *config.Config
@@ -49,7 +51,7 @@ func (server *Server) initPostInterface(client *mongo.Client) domain.PostInterfa
 	for _, Post := range posts {
 		_, err := inf.Create(Post)
 		if err != nil {
-			panic(err)
+			log.Fatal(err)
 		}
 
 	}
