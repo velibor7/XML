@@ -40,39 +40,34 @@ const NewJob = () => {
     false
   );
 
-  const history = useNavigate();
-
-  const NavigateToJobs = async () => {
-    try {
-      navigate(`/jobs`);
-    } catch (err) {
-      navigate(`/jobs`);
-      console.log(err);
-    }
-  }
-
   const jobSubmitHandler = async (event) => {
     event.preventDefault();
     // console.log(auth.token);
 
     try {
-      const formData = new FormData();
-      formData.append("title", formState.inputs.title.value);
-      formData.append("description", formState.inputs.description.value);
-      formData.append("skills", formState.inputs.skills.value);
-
+        var body = {
+          id: auth.userId,
+          title: formState.inputs.title.value,
+          description: formState.inputs.description.value,
+          skills: formState.inputs.skills.value,
+        };
       // console.log(formState.inputs.image.value);
 
       await sendRequest(
         "http://localhost:8000/jobs",
         "POST",
-        formData,
+        JSON.stringify(body),
         {
-          Authorization: "Bearer " + auth.token,
+            "Content-Type": "application/json",
+            Authorization: "token " + auth.token,
         }
       );
-      history.push("/");
-    } catch (err) {}
+      navigate("/jobs");
+      console.log(JSON.stringify(body));
+    } catch (err) {
+      console.log(JSON.stringify(body));
+      console.log(err);
+    }
   };
 
   return (
@@ -106,7 +101,7 @@ const NewJob = () => {
             errorText="Please enter valid skills"
             onInput={inputHandler}
           />
-          <Button type="submit" disabled={!formState.isValid} onClick={NavigateToJobs}>
+          <Button type="submit" disabled={!formState.isValid}>
             SUBMIT
           </Button>
         </form>
