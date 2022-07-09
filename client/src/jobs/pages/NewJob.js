@@ -42,16 +42,14 @@ const NewJob = () => {
 
   const jobSubmitHandler = async (event) => {
     event.preventDefault();
-    // console.log(auth.token);
 
     try {
         var body = {
-          id: auth.userId,
           title: formState.inputs.title.value,
           description: formState.inputs.description.value,
-          skills: formState.inputs.skills.value,
+          skills: formState.inputs.skills.value.split(" "),
+          userId: auth.userId    
         };
-      // console.log(formState.inputs.image.value);
 
       await sendRequest(
         "http://localhost:8000/jobs",
