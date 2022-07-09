@@ -1,12 +1,14 @@
-import React, { useState, useEffect} from "react";
+import React, { useState, useEffect, useContext} from "react";
 import JobList from "../components/JobList";
 import Button from "../../shared/components/FormElements/Button";
 import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../../shared/context/auth-context";
 
 
 const AllJobs = () => {
   const [loadedJobs, setLoadedJobs] = useState();
   const navigate = useNavigate();
+  const auth = useContext(AuthContext);
 
 const CreateNewJob = async () => {
   try {
@@ -47,11 +49,13 @@ const CreateNewJob = async () => {
   return (
     <>
       <JobList items={loadedJobs}></JobList>
+      {auth.isLoggedIn && (
       <div className="job-item__actions">
-        <Button info onClick={CreateNewJob}>
-          CREATE NEW JOB OFFER
-        </Button>
+      <Button info onClick={CreateNewJob}>
+        CREATE NEW JOB OFFER
+      </Button>
       </div>
+      )} 
     </>
   );
 };
