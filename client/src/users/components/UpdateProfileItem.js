@@ -26,6 +26,35 @@ const UpdateProfileItem = (props) => {
   //console.log(auth)
   const UpdateSubmitHandler = async (event) => {
     event.preventDefault()
+
+    let educationsLst = String(formState.inputs.education.value).split(';');
+    let educations = [];
+    
+    for(var i=0; i<educationsLst.length;i++){
+      var educationLst = educationsLst[i].split(",");
+      var education = {
+        school : educationLst[0],
+        degree : educationLst[1],
+        fieldOfStudy : educationLst[2],
+        description : educationLst[3],
+      }
+      educations.push(education);
+    }
+
+    let workExperiencesLst = String(formState.inputs.workExperience.value).split(';'); 
+    let workExperiences = [];
+    
+    for(var i=0; i<workExperiencesLst.length;i++){
+      let workExperienceLst = workExperiencesLst[i].split(",");
+      var workExperience = {
+        title : workExperienceLst[0],
+        company : workExperienceLst[1],
+        employmentType : workExperienceLst[2],
+      }
+      workExperiences.push(workExperience);
+    }
+
+    
     
     try {
       var body = {
@@ -38,7 +67,11 @@ const UpdateProfileItem = (props) => {
         dateOfBirth: formState.inputs.dateOfBirth.value + ":00Z",
         gender: formState.inputs.gender.value,
         biography: formState.inputs.biography.value,
-        isPrivate: formState.inputs.biography.value == "true",
+        isPrivate: formState.inputs.isPrivate.value == "true",
+        skills: String(formState.inputs.skills.value).split(";"),
+        interests: String(formState.inputs.interests.value).split(";"),
+        education: educations,
+        workExperience: workExperiences,
       };
       console.log(auth.userId)
       await sendRequest(
@@ -158,6 +191,50 @@ const UpdateProfileItem = (props) => {
               label="Is Private"
               validators={[VALIDATOR_REQUIRE()]}
               errorText="plase enter a valid is private value"
+              onInput={inputHandler}
+              initialValue={loadedUser.isPrivate}
+              initialValid={true}
+            />
+            <Input
+              id="skills"
+              element="input"
+              type="textarea"
+              label="Skills"
+              validators={[VALIDATOR_REQUIRE()]}
+              errorText="plase enter a valid is skill"
+              onInput={inputHandler}
+              initialValue={loadedUser.isPrivate}
+              initialValid={true}
+            />
+            <Input
+              id="interests"
+              element="input"
+              type="textarea"
+              label="Interests"
+              validators={[VALIDATOR_REQUIRE()]}
+              errorText="plase enter a valid is interest"
+              onInput={inputHandler}
+              initialValue={loadedUser.isPrivate}
+              initialValid={true}
+            />
+            <Input
+              id="workExperience"
+              element="input"
+              type="textarea"
+              label="Work Experience"
+              validators={[VALIDATOR_REQUIRE()]}
+              errorText="plase enter a valid is work experience"
+              onInput={inputHandler}
+              initialValue={loadedUser.isPrivate}
+              initialValid={true}
+            />
+            <Input
+              id="education"
+              element="input"
+              type="textarea"
+              label="Education"
+              validators={[VALIDATOR_REQUIRE()]}
+              errorText="plase enter a valid is education"
               onInput={inputHandler}
               initialValue={loadedUser.isPrivate}
               initialValid={true}

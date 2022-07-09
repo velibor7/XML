@@ -98,7 +98,7 @@ const ProfileItem = (props) => {
             <div className="profile__item__work_experience">
               <div className="work_experience__wrapper">
                 <div className="work_experience-list__items">
-                  {props.items?.map((item) => (
+                  {props.item.profile?.workExperience.map((item) => (
                     <WorkExperienceItem item={item} key={item.id} />
                   ))}
                 </div>
@@ -110,7 +110,7 @@ const ProfileItem = (props) => {
             <div className="profile__item__educations">
               <div className="profile__wrapper">
                 <div className="education-list__items">
-                  {props.items?.map((item) => (
+                  {props.item.profile?.education.map((item) => (
                     <EducationItem item={item} key={item.id} />
                   ))}
                 </div>
