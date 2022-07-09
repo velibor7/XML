@@ -1,3 +1,4 @@
+
 import React from "react";
 import {
   Routes,
@@ -8,7 +9,12 @@ import {
 import UserProfile from "./users/pages/Profile"
 import UserProfiles from "./users/pages/AllProfiles"
 import UserPosts from "./posts/pages/AllPosts"
+
+import AllJobs from "./jobs/pages/AllJobs"
+import RecommendedJobs from "./jobs/pages/RecommendedJobs"
+import NewJob from "./jobs/pages/NewJob"
 import NewPost from "./posts/pages/NewPost"
+
 
 import MainNavigation from "./shared/components/Navigation/MainNavigation";
 import NotFound from './shared/components/UIElements/NotFound'
@@ -38,6 +44,9 @@ const App = () => {
         <Routes>
           <Route path="/profiles/:userId/" element={<UserProfile/>}/>
           <Route path="/profiles/:userId/update" element={<UpdateProfile/>}/>
+          <Route path="/jobs" element={<AllJobs/>}/>
+          <Route path="/newjob" element={<NewJob/>}/>
+          <Route path="/jobs/:id/recommended" element={<RecommendedJobs/>}/>
           <Route path="/profiles" element={<UserProfiles/>}/>
           <Route path="posts/:id/" element={<UserPosts/>}/>
           <Route path="posts/:id/new" element={<NewPost/>}/>

@@ -1,0 +1,18 @@
+.job__item {
+    width: 25em;
+}
+
+.job-list__container {
+    display: flex;
+    margin: auto;
+    width: 80%;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+.job-list__items {
+    display: flex;
+    width: 100%;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
