@@ -1,9 +1,21 @@
-import React, { useState, useEffect, _ } from "react";
+import React, { useState, useEffect} from "react";
 import JobList from "../components/JobList";
+import Button from "../../shared/components/FormElements/Button";
+import { useNavigate } from "react-router-dom";
+
 
 const AllJobs = () => {
   const [loadedJobs, setLoadedJobs] = useState();
+  const navigate = useNavigate();
 
+const CreateNewJob = async () => {
+  try {
+    navigate(`/newjob`);
+  } catch (err) {
+    navigate(`/newjob`);
+    console.log(err);
+  }
+}
 
   useEffect(() => {
     const fetchJobs = async () => {
@@ -34,7 +46,12 @@ const AllJobs = () => {
 
   return (
     <>
-        <JobList items={loadedJobs}></JobList>
+      <JobList items={loadedJobs}></JobList>
+      <div className="job-item__actions">
+        <Button info onClick={CreateNewJob}>
+          CREATE NEW JOB OFFER
+        </Button>
+      </div>
     </>
   );
 };
