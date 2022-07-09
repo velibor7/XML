@@ -12,7 +12,7 @@ const RecommendedJobs = () => {
 
       try {
         fetch(
-          `http://localhost:8000//jobs/${id}/recommended`,
+          `http://localhost:8000/jobs/${id}/recommended`,
           { method: "get", dataType: "json"}
         )
           .then((response) => response.json())
