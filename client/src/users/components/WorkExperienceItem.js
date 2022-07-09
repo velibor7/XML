@@ -20,6 +20,7 @@ const WorkExperienceItem = (props) => {
           </p>
         </div>
       </div>
+      <hr></hr>
     </>
   );
 };

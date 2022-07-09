@@ -23,6 +23,7 @@ const EducationItem = (props) => {
           </p>
         </div>
       </div>
+      <hr></hr>
     </>
   );
 };
