@@ -1,15 +1,16 @@
 import React, { useContext } from "react";
 import { useHttpClient } from "../../shared/hooks/http-hook";
 import { AuthContext } from "../../shared/context/auth-context";
-import { Link } from "react-router-dom";
+import { useParams } from 'react-router-dom' 
 import "./ProfileItem.css";
 import PostList from "../../posts/components/PostList";
-import WorkExperienceItem from "./WorkExperienceItem"
-import EducationItem from "./EducationItem"
+import WorkExperienceItem from "./WorkExperienceItem";
+import EducationItem from "./EducationItem";
 import Button from "../../shared/components/FormElements/Button";
 import { useNavigate } from "react-router-dom";
 
 const ProfileItem = (props) => {
+  const id = useParams()['userId']
   const { sendRequest } = useHttpClient();
   const navigate = useNavigate();
   const auth = useContext(AuthContext);
@@ -19,6 +20,15 @@ const ProfileItem = (props) => {
       navigate(`/profiles/${auth.userId}/update`);
     } catch (err) {
       navigate(`/profiles/${auth.userId}/update`);
+      console.log(err);
+    }
+  };
+
+  const AddPost = async () => {
+    try {
+      navigate(`/posts/${auth.userId}/new`);
+    } catch (err) {
+      navigate(`/posts/${auth.userId}/new`);
       console.log(err);
     }
   };
@@ -36,7 +46,7 @@ const ProfileItem = (props) => {
     <>
       <h1>Profile</h1>
       <div className="profile__item">
-        <h4 className="profile__item__firstName">{props.item.profile?.firstName}</h4>
+        <h4 className="profile__item__firstName">{props.item.profile?.username}</h4>
         <div className="profile__item__info">
           <p className="profile__item__firstName">
             First name: {props.item.profile?.firstName}
@@ -109,16 +119,24 @@ const ProfileItem = (props) => {
           </div>
         </div>
         <div className="cocktail-item__actions">
-            <Button info onClick={UpdateProfile}>
+          {
+            (auth.userId == id) &&
+            (<Button info onClick={UpdateProfile}>
               UPDATE
+            </Button>)
+          }
+          {
+            (auth.userId == id) &&
+            (<Button info onClick={AddPost}>
+              NEW POST
             </Button>
+            )
+          }
+          <p></p>
             <Button info onClick={ViewPosts}>
               POSTS
             </Button>
         </div>
-      </div>
-      <div className="posts">
-        <PostList></PostList>
       </div>
     </>
   );
