@@ -1,37 +1,24 @@
-import React, { useState, useEffect, useContext} from "react";
-import { useNavigate, useParams } from 'react-router-dom';
-
+import React, { useState, useEffect, _, useContext } from "react";
 import ConnectionList from "../components/ConnectionList";
-import Button from "../../shared/components/FormElements/Button";
-import { AuthContext } from "../../shared/context/auth-context";
-
+import { useParams } from 'react-router-dom'
+import { AuthContext } from "../../shared/context/auth-context"; 
 
 const AllConnections = () => {
   const [loadedConnections, setLoadedConnections] = useState();
-  const navigate = useNavigate();
+  var id = useParams()['id']
   const auth = useContext(AuthContext);
-  const {userId} =  useParams();
 
   useEffect(() => {
     const fetchConnections = async () => {
-
       try {
         fetch(
-          `http://localhost:8000/connections/${userId}`,
+          `http://localhost:8000/connection/${auth.userId}`,
           { method: "get", dataType: "json"}
         )
           .then((response) => response.json())
           .then((data) => {
-            console.log(data)
-            var connections = [];
-            data = data['connection']
-            for (var i = 0; i < data.length; i++) {
-              var connection = data[i];
-              if (connection.approved == true) {
-                connections.push(connection);
-              }
-            }
-            setLoadedConnections(connections);
+            console.log(data["connections"])
+            setLoadedConnections(data["connections"]);
           });
       } catch (err) {
         console.log("error happend")
@@ -43,14 +30,8 @@ const AllConnections = () => {
 
   return (
     <>
-      <ConnectionList items={loadedConnections}></ConnectionList>
-      {auth.isLoggedIn && (
-      <div className="connection-item__actions">
-      <Button info /*onClick={CreateNewJob}*/>
-        DELETE
-      </Button>
-      </div>
-      )} 
+        <h1>Connections</h1>
+        <ConnectionList items={loadedConnections}></ConnectionList>
     </>
   );
 };

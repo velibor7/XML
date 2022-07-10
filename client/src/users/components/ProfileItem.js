@@ -10,7 +10,6 @@ import { useNavigate } from "react-router-dom";
 
 const ProfileItem = (props) => {
   const id = useParams()['userId']
-  const privacy = props.item.profile?.isPrivate
   const { sendRequest } = useHttpClient();
   const navigate = useNavigate();
   const auth = useContext(AuthContext);
@@ -27,12 +26,11 @@ const ProfileItem = (props) => {
   const SendConnectionRequest = async () => {
     try {
         var body = {
-          IssuerId: auth.userId,
+          issuerId: auth.userId,
           subjectId: id,
-          approved: !props.item.profile?.isPrivate,
-          date: new Date(),  
+          date: new Date(), 
+          approved: !props.item.profile?.isPrivate, 
         };
-  console.log(String(new Date()));
 
     await sendRequest(
       "http://localhost:8000/connection",
@@ -43,12 +41,13 @@ const ProfileItem = (props) => {
           Authorization: "token " + auth.token,
       }
     );
+
     console.log(JSON.stringify(body));
   } catch (err) {
-    console.log(JSON.stringify(body));
     console.log(err);
   }
 };
+
 
   const AddPost = async () => {
     try {
@@ -160,7 +159,7 @@ const ProfileItem = (props) => {
           }
           {
             (auth.userId != id) && (auth.isLoggedIn) && 
-            (<Button info onClick={SendConnectionRequest}>
+            (<Button info onClick={SendConnectionRequest} >
               CONNECT
             </Button>
             )
