@@ -18,6 +18,7 @@ import PostComments from "./comments/pages/PostComments"
 import NewComment from "./comments/pages/NewComment"
 
 import MyConnections from "./connections/pages/AllConnections"
+import ConnectionRequests from "./connections/pages/ConnectionRequests"
 
 import AllJobs from "./jobs/pages/AllJobs"
 import RecommendedJobs from "./jobs/pages/RecommendedJobs"

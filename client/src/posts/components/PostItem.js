@@ -5,7 +5,7 @@ import { AuthContext } from "../../shared/context/auth-context";
 import { useParams } from 'react-router-dom' 
 import Button from "../../shared/components/FormElements/Button";
 import { useNavigate } from "react-router-dom";
-import CommentItemForList from "../../comments/components/CommentItemForList"
+
 
 const PostItem = (props) => {
   const id = useParams()['userId']
