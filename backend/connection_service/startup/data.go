@@ -17,6 +17,7 @@ var connections = []*domain.Connection{
 	},
 }
 
+
 var profilesPrivacy = []*domain.ProfilePrivacy{
 	{
 		Id:      primitive.NewObjectID(),

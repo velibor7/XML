@@ -42,7 +42,7 @@ const NavLinks = (props) => {
           <NavLink to={"/connections/" + auth.userId}>MY CONNECTIONS</NavLink>
         </li>
       )}
-      {(auth.isLoggedIn) && (auth.isPrivate == true) && (
+      {auth.isLoggedIn  && (
         <li>
           <NavLink to={"/requests/" + auth.userId}>CONNECTION REQUESTS</NavLink>
         </li>

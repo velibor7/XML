@@ -39,7 +39,6 @@ func (db *ConnectionMongoDB) Get(userId string) ([]*domain.Connection, error) {
 }
 
 func (db *ConnectionMongoDB) Create(conn *domain.Connection) (*domain.Connection, error) {
-	conn.Approved = true
 	insert, err := db.connections.InsertOne(context.TODO(), conn)
 	if err != nil {
 		return nil, err

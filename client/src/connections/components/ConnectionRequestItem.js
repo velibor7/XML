@@ -30,17 +30,29 @@ const ConnectionRequestItem = (props) => {
   const AcceptConnection = async () => {
     console.log(props);
     try {
-      await sendRequest(
-        `http://localhost:8000/connection/${props.item.id}`,
-        "DELETE",
-        null,
-        { "Content-Type": "application/json",
-        Authorization: "token " + auth.token, }
-      );
-    } catch (err) {
-      console.log(err);
+      var body = {
+        issuerId: props.item.issuerId,
+        subjectId: props.item.subjectId,
+        approved: true, 
+        date: props.item.date, 
+
+      };
+
+    await sendRequest(
+    "http://localhost:8000/connection",
+    "POST",
+    JSON.stringify(body),
+    {
+        "Content-Type": "application/json",
+        Authorization: "token " + auth.token,
     }
-  };
+  );
+
+  console.log(JSON.stringify(body));
+} catch (err) {
+  console.log(err);
+}
+};
 
   return (
     <> { (props.item.approved == false) &&
