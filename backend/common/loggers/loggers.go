@@ -25,7 +25,7 @@ func NewConnectionLogger() *logrus.Logger {
 	multiWriter := io.MultiWriter(os.Stdout, &lumberjack.Logger{
 		Filename:   "../../logs/connection_service/connection.log",
 		MaxSize:    1,
-		MaxBackups: 3,
+		MaxBackups: 0,
 		MaxAge:     28,
 		Compress:   true,
 	})
@@ -42,7 +42,7 @@ func NewCommentLogger() *logrus.Logger {
 	multiWriter := io.MultiWriter(os.Stdout, &lumberjack.Logger{
 		Filename:   "../../logs/comment_service/comment.log",
 		MaxSize:    1,
-		MaxBackups: 3,
+		MaxBackups: 0,
 		MaxAge:     28,
 		Compress:   true,
 	})
@@ -53,14 +53,21 @@ func NewCommentLogger() *logrus.Logger {
 func NewPostLogger() *logrus.Logger {
 	postLogger.SetLevel(logrus.InfoLevel)
 	postLogger.SetReportCaller(true)
-	postLogger.SetFormatter(&logrus.TextFormatter{
-		TimestampFormat: "2006-01-02T15:04:05.000Z",
+	logsFolderName := "../../logs"
+	if _, err := os.Stat(logsFolderName); os.IsNotExist(err) {
+		os.Mkdir(logsFolderName, 0777)
+	}
+	postLogger.SetFormatter(&logrus.JSONFormatter{
+		FieldMap: logrus.FieldMap{
+			logrus.FieldKeyFile: "method",
+		},
 	})
 	multiWriter := io.MultiWriter(os.Stdout, &lumberjack.Logger{
-		Filename:   "../../logs/post_service/post.log",
+		Filename:   logsFolderName + "/post_service/post.log",
 		MaxSize:    1,
-		MaxBackups: 3,
-		MaxAge:     28,
+		MaxBackups: 0,
+		MaxAge:     0,
+		LocalTime:  true,
 		Compress:   true,
 	})
 	postLogger.SetOutput(multiWriter)

@@ -2,14 +2,17 @@ package startup
 
 import (
 	"fmt"
+	"io"
 	"net"
 
+	otgo "github.com/opentracing/opentracing-go"
 	"github.com/velibor7/XML/common/client"
 	"github.com/velibor7/XML/common/loggers"
 	pbComment "github.com/velibor7/XML/common/proto/comment_service"
 	profile "github.com/velibor7/XML/common/proto/profile_service"
 	saga "github.com/velibor7/XML/common/saga/messaging"
 	"github.com/velibor7/XML/common/saga/messaging/nats"
+	"github.com/velibor7/XML/common/tracer"
 	"github.com/velibor7/XML/profile_service/application"
 	"github.com/velibor7/XML/profile_service/domain"
 	"github.com/velibor7/XML/profile_service/infrastructure/api"
@@ -28,11 +31,16 @@ const (
 
 type Server struct {
 	config *config.Config
+	tracer otgo.Tracer
+	closer io.Closer
 }
 
 func NewServer(config *config.Config) *Server {
+	tracer, closer := tracer.Init(QueueGroup)
 	return &Server{
+		tracer: tracer,
 		config: config,
+		closer: closer,
 	}
 }
 

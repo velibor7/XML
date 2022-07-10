@@ -6,7 +6,9 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/gorilla/mux"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/sirupsen/logrus"
 	cfg "github.com/velibor7/XML/api_gateway/startup/config"
 	"github.com/velibor7/XML/common/loggers"
@@ -16,6 +18,7 @@ import (
 	jobGw "github.com/velibor7/XML/common/proto/job_service"
 	postGw "github.com/velibor7/XML/common/proto/post_service"
 	profileGw "github.com/velibor7/XML/common/proto/profile_service"
+	muxprom "gitlab.com/msvechla/mux-prometheus/pkg/middleware"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )
@@ -82,7 +85,13 @@ func (server Server) Start() {
 	// 	handlers.AllowedHeaders([]string{"Accept", "Accept-Language", "Content-Type", "Content-Language", "Origin", "Authorization", "Access-Control-Allow-Origin", ""}),
 	// 	handlers.AllowCredentials(),
 	// )
-	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", server.config.Port), cors(server.mux)))
+
+	r := mux.NewRouter()
+	instrumentation := muxprom.NewDefaultInstrumentation()
+	r.Use(instrumentation.Middleware)
+	r.Path("/metrics").Handler(promhttp.Handler())
+	r.PathPrefix("/").Handler(cors(server.mux))
+	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", server.config.Port), r))
 }
 
 func cors(next http.Handler) http.Handler {
