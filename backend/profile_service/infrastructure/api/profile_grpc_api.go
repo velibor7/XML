@@ -6,6 +6,7 @@ import (
 	"github.com/velibor7/XML/common/loggers"
 	pbComment "github.com/velibor7/XML/common/proto/comment_service"
 	pb "github.com/velibor7/XML/common/proto/profile_service"
+	"github.com/velibor7/XML/common/tracer"
 	"github.com/velibor7/XML/profile_service/application"
 )
 
@@ -25,10 +26,14 @@ func NewProfileHandler(service *application.ProfileService, commentClient pbComm
 }
 
 func (handler *ProfileHandler) Get(ctx context.Context, request *pb.GetRequest) (*pb.GetResponse, error) {
-	profileId := request.Id
-	Profile, err := handler.service.Get(profileId)
+	span := tracer.StartSpanFromContext(ctx, "Get")
+	defer span.Finish()
+
+	ctx = tracer.ContextWithSpan(context.Background(), span)
+
+	Profile, err := handler.service.Get(request.Id)
 	if err != nil {
-		log.WithField("profileId", profileId).Errorf("Cannot get profile: ", err)
+		log.WithField("profileId", request.Id).Errorf("Cannot get profile: ", err)
 		return nil, err
 	}
 	ProfilePb := mapProfileToPb(Profile)
@@ -40,6 +45,10 @@ func (handler *ProfileHandler) Get(ctx context.Context, request *pb.GetRequest) 
 }
 
 func (handler *ProfileHandler) GetAll(ctx context.Context, request *pb.GetAllRequest) (*pb.GetAllResponse, error) {
+	span := tracer.StartSpanFromContext(ctx, "GetAll")
+	defer span.Finish()
+
+	ctx = tracer.ContextWithSpan(context.Background(), span)
 	Profiles, err := handler.service.GetAll()
 	if err != nil {
 		log.Errorf("Can't get all profiles: ", err)
@@ -56,6 +65,10 @@ func (handler *ProfileHandler) GetAll(ctx context.Context, request *pb.GetAllReq
 }
 
 func (handler ProfileHandler) Create(ctx context.Context, request *pb.CreateRequest) (*pb.CreateResponse, error) {
+	span := tracer.StartSpanFromContext(ctx, "Create")
+	defer span.Finish()
+
+	ctx = tracer.ContextWithSpan(context.Background(), span)
 	profile := mapPbToProfile(request.Profile)
 	err := handler.service.Create(profile)
 	if err != nil {
@@ -69,6 +82,10 @@ func (handler ProfileHandler) Create(ctx context.Context, request *pb.CreateRequ
 }
 
 func (handler ProfileHandler) Update(ctx context.Context, request *pb.UpdateRequest) (*pb.UpdateResponse, error) {
+	span := tracer.StartSpanFromContext(ctx, "Update")
+	defer span.Finish()
+
+	ctx = tracer.ContextWithSpan(context.Background(), span)
 	profile := mapPbToProfile(request.Profile)
 	err := handler.service.Update(request.Id, profile)
 	if err != nil {

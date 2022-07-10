@@ -2,10 +2,13 @@ package startup
 
 import (
 	"fmt"
+	"io"
 	"net"
 
+	otgo "github.com/opentracing/opentracing-go"
 	"github.com/velibor7/XML/common/loggers"
 	post "github.com/velibor7/XML/common/proto/post_service"
+	"github.com/velibor7/XML/common/tracer"
 	"github.com/velibor7/XML/post_service/application"
 	"github.com/velibor7/XML/post_service/domain"
 	"github.com/velibor7/XML/post_service/infrastructure/api"
@@ -20,11 +23,16 @@ var log = loggers.NewPostLogger()
 
 type Server struct {
 	config *config.Config
+	tracer otgo.Tracer
+	closer io.Closer
 }
 
 func NewServer(config *config.Config) *Server {
+	tracer, closer := tracer.Init("post_service")
 	return &Server{
+		tracer: tracer,
 		config: config,
+		closer: closer,
 	}
 }
 

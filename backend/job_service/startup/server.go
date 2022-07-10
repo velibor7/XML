@@ -2,11 +2,14 @@ package startup
 
 import (
 	"fmt"
+	"io"
 	"net"
 
 	"github.com/neo4j/neo4j-go-driver/v4/neo4j"
+	otgo "github.com/opentracing/opentracing-go"
 	"github.com/velibor7/XML/common/loggers"
 	job "github.com/velibor7/XML/common/proto/job_service"
+	"github.com/velibor7/XML/common/tracer"
 	"github.com/velibor7/XML/job_service/application"
 	"github.com/velibor7/XML/job_service/domain"
 	"github.com/velibor7/XML/job_service/infrastructure/api"
@@ -20,11 +23,16 @@ var log = loggers.NewJobLogger()
 
 type Server struct {
 	config *config.Config
+	tracer otgo.Tracer
+	closer io.Closer
 }
 
 func NewServer(config *config.Config) *Server {
+	tracer, closer := tracer.Init("job_service")
 	return &Server{
+		tracer: tracer,
 		config: config,
+		closer: closer,
 	}
 }
 
