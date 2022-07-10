@@ -6,6 +6,7 @@ import (
 
 	"github.com/velibor7/XML/common/loggers"
 	pb "github.com/velibor7/XML/common/proto/post_service"
+	"github.com/velibor7/XML/common/tracer"
 	"github.com/velibor7/XML/post_service/application"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
@@ -24,6 +25,10 @@ func NewPostHandler(service *application.PostService) *PostHandler {
 }
 
 func (handler *PostHandler) Get(ctx context.Context, request *pb.GetRequest) (*pb.GetResponse, error) {
+	span := tracer.StartSpanFromContext(ctx, "Get")
+	defer span.Finish()
+
+	ctx = tracer.ContextWithSpan(context.Background(), span)
 	id := request.Id
 	objectId, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
@@ -42,6 +47,10 @@ func (handler *PostHandler) Get(ctx context.Context, request *pb.GetRequest) (*p
 }
 
 func (handler *PostHandler) GetAll(ctx context.Context, request *pb.GetAllRequest) (*pb.GetAllResponse, error) {
+	span := tracer.StartSpanFromContext(ctx, "GetAll")
+	defer span.Finish()
+
+	ctx = tracer.ContextWithSpan(context.Background(), span)
 	posts, err := handler.service.GetAll()
 	if err != nil {
 		log.Errorf("Can't get profile posts: %v", err)
@@ -58,6 +67,10 @@ func (handler *PostHandler) GetAll(ctx context.Context, request *pb.GetAllReques
 }
 
 func (handler *PostHandler) GetAllForUser(ctx context.Context, request *pb.GetRequest) (*pb.GetAllResponse, error) {
+	span := tracer.StartSpanFromContext(ctx, "GetAllForUser")
+	defer span.Finish()
+
+	ctx = tracer.ContextWithSpan(context.Background(), span)
 	id, err := primitive.ObjectIDFromHex(request.Id)
 	posts, err := handler.service.GetAllForUser(id)
 	if err != nil {
@@ -80,6 +93,10 @@ func (handler *PostHandler) Create(ctx context.Context, request *pb.CreateReques
 	// if request.Post.UserId == "" {
 	// 	return nil, error(nil)
 	// }
+	span := tracer.StartSpanFromContext(ctx, "Create")
+	defer span.Finish()
+
+	ctx = tracer.ContextWithSpan(context.Background(), span)
 
 	post := mapCreatePost(request.Post)
 
