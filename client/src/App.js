@@ -58,6 +58,7 @@ const App = () => {
           <Route path="/jobs/:id/recommended" element={<RecommendedJobs/>}/>
           <Route path="/profiles" element={<UserProfiles/>}/>
           <Route path="/connections/:id/" element={<MyConnections/>}/>
+          <Route path="/requests/:id/" element={<ConnectionRequests/>}/>
           <Route path="posts/:id/" element={<UserPosts/>}/>
           <Route path="posts/:userId/:postId" element={<Post/>}/>
           <Route path="posts/:id/new" element={<NewPost/>}/>
