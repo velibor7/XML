@@ -5,26 +5,29 @@ import { AuthContext } from "../../shared/context/auth-context";
 import { useParams } from 'react-router-dom' 
 import Button from "../../shared/components/FormElements/Button";
 import { useNavigate } from "react-router-dom";
-
+import CommentItemForList from "../../comments/components/CommentItemForList"
 
 const PostItem = (props) => {
-
   const id = useParams()['userId']
   const { sendRequest } = useHttpClient();
   const navigate = useNavigate();
   const auth = useContext(AuthContext);
   
   const LikePost = async () => {
+    for(let i=0; i<props.item.post?.likes.length; i++){
+      if(props.item.post?.likes[i].userId == auth.userId){
+        props.item.post?.likes.splice(i,1);
+      }
+    }
+    for(let i=0; i<props.item.post?.dislikes.length; i++){
+      if(props.item.post?.dislikes[i].userId == auth.userId){
+        props.item.post?.dislikes.splice(i,1);
+      }
+    }
+
     try {
-      var body = {
-        id : props.item.post?.id,
-        user_id: props.item.post?.userId,
-        text: "aaaaaaaaaaaa",
-        links: "aaaaaaaaaaaaaaaaaqqqqqq",
-        likes: [{
-          user_id :  auth.userId
-        }]
-      };
+      props.item.post?.likes.push({userId : auth.userId})
+      let body = props.item.post;
       await sendRequest(
         `http://localhost:8000/posts/${props.item.post?.id}`,
         "PUT",
@@ -34,7 +37,7 @@ const PostItem = (props) => {
           Authorization: "token " + auth.token,
         }
       );
-      navigate("/posts/" + props.item.post?.id);
+      navigate("/posts/" + auth.userId +"/" + props.item.post?.id);
     } catch (err) {
       console.log(err);
     }
@@ -42,13 +45,38 @@ const PostItem = (props) => {
   };
 
   const DislikePost = async () => {
+    for(let i=0; i<props.item.post?.likes.length; i++){
+      if(props.item.post?.likes[i].userId == auth.userId){
+        props.item.post?.likes.splice(i,1);
+      }
+    }
+    for(let i=0; i<props.item.post?.dislikes.length; i++){
+      if(props.item.post?.dislikes[i].userId == auth.userId){
+        props.item.post?.dislikes.splice(i,1);
+      }
+    }
+
     try {
-      navigate(`/post/${auth.userId}/update`);
+      props.item.post?.dislikes.push({userId : auth.userId})
+      let body = props.item.post;
+      await sendRequest(
+        `http://localhost:8000/posts/${props.item.post?.id}`,
+        "PUT",
+        JSON.stringify(body),
+        {
+          "Content-Type": "application/json",
+          Authorization: "token " + auth.token,
+        }
+      );
+      navigate("/posts/" + auth.userId +"/" + props.item.post?.id);
     } catch (err) {
-      navigate(`/post/${auth.userId}/update`);
       console.log(err);
     }
   };
+
+  const CommentsNavigate = async () => {
+    navigate("/comments/" + props.item.post?.id);
+  }
 
   return (
     <>
@@ -85,6 +113,10 @@ const PostItem = (props) => {
             </Button>
             )
           }
+          <Button danger onClick={CommentsNavigate}>
+              Comments
+          </Button>
+            
         </div>
       </div>
     </>

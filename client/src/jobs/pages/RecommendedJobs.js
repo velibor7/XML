@@ -1,18 +1,18 @@
-import React, { useState, useEffect, _ } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import JobList from "../components/JobList";
 import { useParams } from 'react-router-dom' 
+import { AuthContext } from "../../shared/context/auth-context";
 
 const RecommendedJobs = () => {
   const [recommendedJobs, setRecommendedJobs] = useState();
-  var id = useParams("id")
-
+  var id = useParams()["id"]
+  const auth = useContext(AuthContext);
 
   useEffect(() => {
     const fetchJobs = async () => {
-
       try {
         fetch(
-          `http://localhost:8000/jobs/${id}/recommended`,
+          `http://localhost:8000/jobs/${auth.userId}/recommended`,
           { method: "get", dataType: "json"}
         )
           .then((response) => response.json())
@@ -25,7 +25,10 @@ const RecommendedJobs = () => {
               jobs.push(job);
             }
             setRecommendedJobs(jobs);
+            console.log("jobs");
+            console.log(jobs);
           });
+          console.log("fetch happend")
       } catch (err) {
         console.log("error happend")
         console.log(err);
