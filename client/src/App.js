@@ -10,6 +10,7 @@ import UserProfile from "./users/pages/Profile"
 import UserProfiles from "./users/pages/AllProfiles"
 import UserPosts from "./posts/pages/AllPosts"
 import Post from "./posts/pages/Post"
+import MyConnections from "./connections/pages/AllConnections"
 
 import AllJobs from "./jobs/pages/AllJobs"
 import RecommendedJobs from "./jobs/pages/RecommendedJobs"
@@ -49,6 +50,7 @@ const App = () => {
           <Route path="/newjob" element={<NewJob/>}/>
           <Route path="/jobs/:id/recommended" element={<RecommendedJobs/>}/>
           <Route path="/profiles" element={<UserProfiles/>}/>
+          <Route path="/connections/:userId/" element={<MyConnections/>}/>
           <Route path="posts/:id/" element={<UserPosts/>}/>
           <Route path="posts/:userId/:postId" element={<Post/>}/>
           <Route path="posts/:id/new" element={<NewPost/>}/>

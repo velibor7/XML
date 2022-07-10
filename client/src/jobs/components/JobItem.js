@@ -20,7 +20,9 @@ const JobItem = (props) => {
             Description: {props.item.description}
           </p>
           <p className="job__item__skills">
-            Skills: {props.item.skills}
+            Skills: {props.item.skills.map((item) => (
+                    <p> {item} </p>
+                  ))}
           </p>
         </div>
       </div>

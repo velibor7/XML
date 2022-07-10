@@ -1,0 +1,18 @@
+.connection__item {
+    width: 25em;
+}
+
+.connection-list__container {
+    display: flex;
+    margin: auto;
+    width: 80%;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+.connection-list__items {
+    display: flex;
+    width: 100%;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
