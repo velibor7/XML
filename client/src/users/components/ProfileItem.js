@@ -28,8 +28,9 @@ const ProfileItem = (props) => {
         var body = {
           issuerId: auth.userId,
           subjectId: id,
-          date: new Date(), 
           approved: !props.item.profile?.isPrivate, 
+          date: new Date(), 
+
         };
 
     await sendRequest(
