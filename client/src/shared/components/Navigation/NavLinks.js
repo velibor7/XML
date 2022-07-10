@@ -17,9 +17,11 @@ const NavLinks = (props) => {
       <li>
           <NavLink to="/profiles">PROFILES</NavLink>
       </li>
+      {auth.isLoggedIn && (
       <li>
           <NavLink to="/jobs">JOBS</NavLink>
       </li>
+      )}
       {auth.isLoggedIn && (
         <li>
           <NavLink to={"/jobs/" + auth.userId + "/recommended"} exact>RECOMMENDED JOBS</NavLink>
@@ -33,6 +35,11 @@ const NavLinks = (props) => {
       {auth.isLoggedIn && (
         <li>
           <NavLink to={"/profiles/" + auth.userId}>My profile</NavLink>
+        </li>
+      )}
+      {auth.isLoggedIn && (
+        <li>
+          <NavLink to={"/connections/" + auth.userId}>MY CONNECTIONS</NavLink>
         </li>
       )}
       {auth.isLoggedIn && (

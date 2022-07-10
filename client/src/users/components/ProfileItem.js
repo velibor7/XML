@@ -3,7 +3,6 @@ import { useHttpClient } from "../../shared/hooks/http-hook";
 import { AuthContext } from "../../shared/context/auth-context";
 import { useParams } from 'react-router-dom' 
 import "./ProfileItem.css";
-import PostList from "../../posts/components/PostList";
 import WorkExperienceItem from "./WorkExperienceItem";
 import EducationItem from "./EducationItem";
 import Button from "../../shared/components/FormElements/Button";
@@ -11,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 
 const ProfileItem = (props) => {
   const id = useParams()['userId']
+  const privacy = props.item.profile?.isPrivate
   const { sendRequest } = useHttpClient();
   const navigate = useNavigate();
   const auth = useContext(AuthContext);
@@ -23,6 +23,32 @@ const ProfileItem = (props) => {
       console.log(err);
     }
   };
+
+  const SendConnectionRequest = async () => {
+    try {
+        var body = {
+          IssuerId: auth.userId,
+          subjectId: id,
+          approved: !props.item.profile?.isPrivate,
+          date: new Date(),  
+        };
+  console.log(String(new Date()));
+
+    await sendRequest(
+      "http://localhost:8000/connection",
+      "POST",
+      JSON.stringify(body),
+      {
+          "Content-Type": "application/json",
+          Authorization: "token " + auth.token,
+      }
+    );
+    console.log(JSON.stringify(body));
+  } catch (err) {
+    console.log(JSON.stringify(body));
+    console.log(err);
+  }
+};
 
   const AddPost = async () => {
     try {
@@ -129,6 +155,13 @@ const ProfileItem = (props) => {
             (auth.userId == id) &&
             (<Button info onClick={AddPost}>
               NEW POST
+            </Button>
+            )
+          }
+          {
+            (auth.userId != id) && (auth.isLoggedIn) && 
+            (<Button info onClick={SendConnectionRequest}>
+              CONNECT
             </Button>
             )
           }
