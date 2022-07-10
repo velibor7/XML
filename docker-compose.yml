@@ -45,37 +45,37 @@ services:
       - network
       - monitoring
 
-  # authentication_service:
-  #   image: authentication_service
-  #   build:
-  #     context: .
-  #     dockerfile: ./backend/authentication_service/Dockerfile
-  #   restart: on-failure
-  #   environment:
-  #     AUTH_DB_HOST: ${AUTHENTICATION_DB_HOST}
-  #     AUTH_DB_PORT: ${AUTHENTICATION_DB_PORT}
-  #     AUTH_SERVICE_PORT: ${AUTHENTICATION_SERVICE_PORT}
-  #     NATS_HOST: ${NATS_HOST}
-  #     NATS_PORT: ${NATS_PORT}
-  #     NATS_USER: ${NATS_USER}
-  #     NATS_PASS: ${NATS_PASS}
-  #     PROFILE_SERVICE_PORT : ${PROFILE_SERVICE_PORT}
-  #     PROFILE_SERVICE_HOST : ${PROFILE_SERVICE_HOST}
-  #     CREATE_PROFILE_COMMAND_SUBJECT: ${CREATE_PROFILE_COMMAND_SUBJECT}
-  #     CREATE_PROFILE_REPLY_SUBJECT: ${CREATE_PROFILE_REPLY_SUBJECT}
-  #     UPDATE_PROFILE_COMMAND_SUBJECT: ${UPDATE_PROFILE_COMMAND_SUBJECT}
-  #     UPDATE_PROFILE_REPLY_SUBJECT: ${UPDATE_PROFILE_REPLY_SUBJECT}
-  #     JAEGER_AGENT_HOST: ${JAEGER_HOST}
-  #     JAEGER_AGENT_PORT: 6831
-  #     JAEGER_SAMPLER_MANAGER_HOST_PORT: ${JAEGER_HOST}:5778
-  #     JAEGER_SAMPLER_TYPE: const
-  #     JAEGER_SAMPLER_PARAM: 1
-  #   depends_on:
-  #     - authentication_db
-  #   logging: *fluent-bit
-  #   networks:
-  #     - network
-  #     - monitoring
+  authentication_service:
+    image: authentication_service
+    build:
+      context: .
+      dockerfile: ./backend/authentication_service/Dockerfile
+    restart: on-failure
+    environment:
+      AUTH_DB_HOST: ${AUTHENTICATION_DB_HOST}
+      AUTH_DB_PORT: ${AUTHENTICATION_DB_PORT}
+      AUTH_SERVICE_PORT: ${AUTHENTICATION_SERVICE_PORT}
+      NATS_HOST: ${NATS_HOST}
+      NATS_PORT: ${NATS_PORT}
+      NATS_USER: ${NATS_USER}
+      NATS_PASS: ${NATS_PASS}
+      PROFILE_SERVICE_PORT : ${PROFILE_SERVICE_PORT}
+      PROFILE_SERVICE_HOST : ${PROFILE_SERVICE_HOST}
+      CREATE_PROFILE_COMMAND_SUBJECT: ${CREATE_PROFILE_COMMAND_SUBJECT}
+      CREATE_PROFILE_REPLY_SUBJECT: ${CREATE_PROFILE_REPLY_SUBJECT}
+      UPDATE_PROFILE_COMMAND_SUBJECT: ${UPDATE_PROFILE_COMMAND_SUBJECT}
+      UPDATE_PROFILE_REPLY_SUBJECT: ${UPDATE_PROFILE_REPLY_SUBJECT}
+      JAEGER_AGENT_HOST: ${JAEGER_HOST}
+      JAEGER_AGENT_PORT: 6831
+      JAEGER_SAMPLER_MANAGER_HOST_PORT: ${JAEGER_HOST}:5778
+      JAEGER_SAMPLER_TYPE: const
+      JAEGER_SAMPLER_PARAM: 1
+    depends_on:
+      - authentication_db
+    logging: *fluent-bit
+    networks:
+      - network
+      - monitoring
 
   profile_service:
     image: profile_service
@@ -138,61 +138,61 @@ services:
       - network
       - monitoring
 
-  # connection_service:
-  #   image: connection_service
-  #   container_name: connection_service
-  #   build:
-  #     context: .
-  #     dockerfile: ./backend/connection_service/Dockerfile
-  #   restart: on-failure
-  #   environment:
-  #     CONNECTION_DB_PORT: ${CONNECTION_DB_PORT}
-  #     CONNECTION_DB_HOST: ${CONNECTION_DB_HOST}
-  #     CONNECTION_SERVICE_PORT: ${CONNECTION_SERVICE_PORT}
-  #     NATS_HOST: ${NATS_HOST}
-  #     NATS_PORT: ${NATS_PORT}
-  #     NATS_USER: ${NATS_USER}
-  #     NATS_PASS: ${NATS_PASS} 
-  #     JAEGER_AGENT_HOST: ${JAEGER_HOST}
-  #     JAEGER_AGENT_PORT: 6831
-  #     JAEGER_SAMPLER_MANAGER_HOST_PORT: ${JAEGER_HOST}:5778
-  #     JAEGER_SAMPLER_TYPE: const
-  #     JAEGER_SAMPLER_PARAM: 1    
-  #   depends_on:
-  #     - connection_db
-  #   logging: *fluent-bit
-  #   networks:
-  #     - network
-  #     - monitoring
+  connection_service:
+    image: connection_service
+    container_name: connection_service
+    build:
+      context: .
+      dockerfile: ./backend/connection_service/Dockerfile
+    restart: on-failure
+    environment:
+      CONNECTION_DB_PORT: ${CONNECTION_DB_PORT}
+      CONNECTION_DB_HOST: ${CONNECTION_DB_HOST}
+      CONNECTION_SERVICE_PORT: ${CONNECTION_SERVICE_PORT}
+      NATS_HOST: ${NATS_HOST}
+      NATS_PORT: ${NATS_PORT}
+      NATS_USER: ${NATS_USER}
+      NATS_PASS: ${NATS_PASS} 
+      JAEGER_AGENT_HOST: ${JAEGER_HOST}
+      JAEGER_AGENT_PORT: 6831
+      JAEGER_SAMPLER_MANAGER_HOST_PORT: ${JAEGER_HOST}:5778
+      JAEGER_SAMPLER_TYPE: const
+      JAEGER_SAMPLER_PARAM: 1    
+    depends_on:
+      - connection_db
+    logging: *fluent-bit
+    networks:
+      - network
+      - monitoring
 
-  # comment_service:
-  #   image: comment_service
-  #   container_name: comment_service
-  #   build:
-  #     context: .
-  #     dockerfile: ./backend/comment_service/Dockerfile
-  #   restart: on-failure
-  #   environment:
-  #     COMMENT_DB_HOST: ${COMMENT_DB_HOST}
-  #     COMMENT_DB_PORT: ${COMMENT_DB_PORT}
-  #     COMMENT_SERVICE_PORT: ${COMMENT_SERVICE_PORT}
-  #     NATS_HOST: ${NATS_HOST}
-  #     NATS_PORT: ${NATS_PORT}
-  #     NATS_USER: ${NATS_USER}
-  #     NATS_PASS: ${NATS_PASS}
-  #     UPDATE_PROFILE_COMMAND_SUBJECT: ${UPDATE_PROFILE_COMMAND_SUBJECT}
-  #     UPDATE_PROFILE_REPLY_SUBJECT: ${UPDATE_PROFILE_REPLY_SUBJECT}
-  #     JAEGER_AGENT_HOST: ${JAEGER_HOST}
-  #     JAEGER_AGENT_PORT: 6831
-  #     JAEGER_SAMPLER_MANAGER_HOST_PORT: ${JAEGER_HOST}:5778
-  #     JAEGER_SAMPLER_TYPE: const
-  #     JAEGER_SAMPLER_PARAM: 1
-  #   depends_on:
-  #     - comment_db
-  #   logging: *fluent-bit
-  #   networks:
-  #     - network
-  #     - monitoring
+  comment_service:
+    image: comment_service
+    container_name: comment_service
+    build:
+      context: .
+      dockerfile: ./backend/comment_service/Dockerfile
+    restart: on-failure
+    environment:
+      COMMENT_DB_HOST: ${COMMENT_DB_HOST}
+      COMMENT_DB_PORT: ${COMMENT_DB_PORT}
+      COMMENT_SERVICE_PORT: ${COMMENT_SERVICE_PORT}
+      NATS_HOST: ${NATS_HOST}
+      NATS_PORT: ${NATS_PORT}
+      NATS_USER: ${NATS_USER}
+      NATS_PASS: ${NATS_PASS}
+      UPDATE_PROFILE_COMMAND_SUBJECT: ${UPDATE_PROFILE_COMMAND_SUBJECT}
+      UPDATE_PROFILE_REPLY_SUBJECT: ${UPDATE_PROFILE_REPLY_SUBJECT}
+      JAEGER_AGENT_HOST: ${JAEGER_HOST}
+      JAEGER_AGENT_PORT: 6831
+      JAEGER_SAMPLER_MANAGER_HOST_PORT: ${JAEGER_HOST}:5778
+      JAEGER_SAMPLER_TYPE: const
+      JAEGER_SAMPLER_PARAM: 1
+    depends_on:
+      - comment_db
+    logging: *fluent-bit
+    networks:
+      - network
+      - monitoring
 
   post_service:
     image: post_service
@@ -225,36 +225,36 @@ services:
       - network
       - monitoring
 
-  # client:
-  #     container_name: client
-  #     build:
-  #       context: .
-  #       dockerfile: ./client/Dockerfile
-  #     volumes:
-  #       - './client:/app'
-  #       - '/app/node_modules'
-  #     ports:
-  #       - 3001:3000
-  #     environment:
-  #       - CHOKIDAR_USEPOLLING=true
+  client:
+      container_name: client
+      build:
+        context: .
+        dockerfile: ./client/Dockerfile
+      volumes:
+        - './client:/app'
+        - '/app/node_modules'
+      ports:
+        - 3001:3000
+      environment:
+        - CHOKIDAR_USEPOLLING=true
 
-  # connection_db:
-  #   image: mongo
-  #   container_name: connection_db
-  #   restart: on-failure
-  #   logging: *fluent-bit
-  #   networks:
-  #     - network
-  #     - monitoring
+  connection_db:
+    image: mongo
+    container_name: connection_db
+    restart: on-failure
+    logging: *fluent-bit
+    networks:
+      - network
+      - monitoring
 
-  # comment_db:
-  #   image: mongo
-  #   container_name: comment_db
-  #   restart: on-failure
-  #   logging: *fluent-bit
-  #   networks:
-  #     - network
-  #     - monitoring
+  comment_db:
+    image: mongo
+    container_name: comment_db
+    restart: on-failure
+    logging: *fluent-bit
+    networks:
+      - network
+      - monitoring
 
   post_db:
     image: mongo
@@ -279,14 +279,14 @@ services:
       - NEO4J_AUTH=neo4j/password
       - NEO4J_dbms_memory_pagecache_size=512M
 
-  # authentication_db:
-  #   image: mongo
-  #   container_name: authentication_db
-  #   restart: on-failure
-  #   logging: *fluent-bit
-  #   networks:
-  #     - network
-  #     - monitoring
+  authentication_db:
+    image: mongo
+    container_name: authentication_db
+    restart: on-failure
+    logging: *fluent-bit
+    networks:
+      - network
+      - monitoring
 
   profile_db:
     image: mongo

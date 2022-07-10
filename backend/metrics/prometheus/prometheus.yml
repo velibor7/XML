@@ -29,7 +29,7 @@
 
     - job_name: 'grafana'
       static_configs:
-        - targets: ['grafana:3000']
+        - targets: ['grafana:3001']
 
     - job_name: 'cAdvisor'
       static_configs:
