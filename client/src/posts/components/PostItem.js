@@ -5,10 +5,9 @@ import { AuthContext } from "../../shared/context/auth-context";
 import { useParams } from 'react-router-dom' 
 import Button from "../../shared/components/FormElements/Button";
 import { useNavigate } from "react-router-dom";
-
+import CommentItemForList from "../../comments/components/CommentItemForList"
 
 const PostItem = (props) => {
-
   const id = useParams()['userId']
   const { sendRequest } = useHttpClient();
   const navigate = useNavigate();
@@ -75,6 +74,10 @@ const PostItem = (props) => {
     }
   };
 
+  const CommentsNavigate = async () => {
+    navigate("/comments/" + props.item.post?.id);
+  }
+
   return (
     <>
     <h1>A</h1>
@@ -110,6 +113,10 @@ const PostItem = (props) => {
             </Button>
             )
           }
+          <Button danger onClick={CommentsNavigate}>
+              Comments
+          </Button>
+            
         </div>
       </div>
     </>
