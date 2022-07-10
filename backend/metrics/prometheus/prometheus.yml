@@ -17,7 +17,7 @@
         - targets: ['localhost:9090']
 
     - job_name: 'api_gateway'
-      scheme: https
+      scheme: http
       tls_config:
         insecure_skip_verify: true
       static_configs:

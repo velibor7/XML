@@ -53,14 +53,21 @@ func NewCommentLogger() *logrus.Logger {
 func NewPostLogger() *logrus.Logger {
 	postLogger.SetLevel(logrus.InfoLevel)
 	postLogger.SetReportCaller(true)
-	postLogger.SetFormatter(&logrus.TextFormatter{
-		TimestampFormat: "2021-02-02T16:04:12.000Z",
+	logsFolderName := "../../logs"
+	if _, err := os.Stat(logsFolderName); os.IsNotExist(err) {
+		os.Mkdir(logsFolderName, 0777)
+	}
+	postLogger.SetFormatter(&logrus.JSONFormatter{
+		FieldMap: logrus.FieldMap{
+			logrus.FieldKeyFile: "method",
+		},
 	})
 	multiWriter := io.MultiWriter(os.Stdout, &lumberjack.Logger{
-		Filename:   "../../logs/post_service/post.log",
+		Filename:   logsFolderName + "/post_service/post.log",
 		MaxSize:    1,
 		MaxBackups: 0,
-		MaxAge:     28,
+		MaxAge:     0,
+		LocalTime:  true,
 		Compress:   true,
 	})
 	postLogger.SetOutput(multiWriter)
