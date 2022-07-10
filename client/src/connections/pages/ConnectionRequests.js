@@ -1,9 +1,9 @@
 import React, { useState, useEffect, _, useContext } from "react";
-import ConnectionList from "../components/ConnectionList";
+import ConnectionRequestList from "../components/ConnectionRequestsList";
 import { useParams } from 'react-router-dom'
 import { AuthContext } from "../../shared/context/auth-context"; 
 
-const AllConnections = () => {
+const ConnectionRequests = () => {
   const [loadedConnections, setLoadedConnections] = useState();
   var id = useParams()['id']
   const auth = useContext(AuthContext);
@@ -30,9 +30,9 @@ const AllConnections = () => {
 
   return (
     <>
-        <ConnectionList items={loadedConnections}></ConnectionList>
+        <ConnectionRequestList items={loadedConnections}></ConnectionRequestList>
     </>
   );
 };
 
-export default AllConnections;
+export default ConnectionRequests;
